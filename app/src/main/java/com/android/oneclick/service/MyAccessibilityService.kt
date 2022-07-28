@@ -8,18 +8,20 @@ import android.os.Build
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import kotlin.concurrent.thread
 
 class MyAccessibilityService: AccessibilityService() {
-    @RequiresApi(Build.VERSION_CODES.N)
+
     override fun onAccessibilityEvent(p0: AccessibilityEvent?) {
-        Log.i("AccessibilityService", "onAccessibilityEvent")
         if (rootInActiveWindow != null) {
             val rect = Rect()
             val position = getNodeText(rootInActiveWindow, "跳过", rect)
-            Log.i("getNodeText", position.toString())
-//            click(this, rect.exactCenterX(), rect.exactCenterY())
-            click(this, 500f, 1000f)
+            if (position.toShortString() != "[0,0][0,0]") {
+                click(this, rect.exactCenterX(), rect.exactCenterY())
+            }
+
         }
     }
     override fun onInterrupt() {
@@ -46,22 +48,27 @@ class MyAccessibilityService: AccessibilityService() {
         return rect
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
-    private fun click(accessibilityService: AccessibilityService, x: Float, y:Float) {
-        val builder = GestureDescription.Builder()
-        val path = Path()
-        path.moveTo(x, y)
-        path.lineTo(x, y)
-        builder.addStroke(GestureDescription.StrokeDescription(path, 0, 1))
-        val gesture = builder.build()
-        accessibilityService.dispatchGesture(gesture, object: AccessibilityService.GestureResultCallback() {
-            override fun onCancelled(gestureDescription: GestureDescription?) {
-                super.onCancelled(gestureDescription)
-            }
 
-            override fun onCompleted(gestureDescription: GestureDescription?) {
-                super.onCompleted(gestureDescription)
-            }
-        }, null)
+    private fun click(accessibilityService: AccessibilityService, x: Float, y: Float) {
+
+            val builder = GestureDescription.Builder()
+            val path = Path()
+            path.moveTo(x, y)
+            path.lineTo(x, y)
+            builder.addStroke(GestureDescription.StrokeDescription(path, 0, 1))
+            val gesture = builder.build()
+            accessibilityService.dispatchGesture(gesture, object : AccessibilityService.GestureResultCallback() {
+
+                override fun onCancelled(gestureDescription: GestureDescription) {
+                    super.onCancelled(gestureDescription)
+                    Log.i("click", "onCancel")
+                }
+
+                override fun onCompleted(gestureDescription: GestureDescription) {
+                    super.onCompleted(gestureDescription)
+                    Log.i("click", "click: ($x, $y)")
+                    Toast.makeText(accessibilityService, "已为您跳过广告", Toast.LENGTH_SHORT).show()
+                }
+            }, null)
     }
 }
