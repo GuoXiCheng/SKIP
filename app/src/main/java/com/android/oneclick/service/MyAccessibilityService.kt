@@ -4,18 +4,18 @@ import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
 import android.graphics.Path
 import android.graphics.Rect
-import android.os.Build
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Toast
-import androidx.annotation.RequiresApi
-import kotlin.concurrent.thread
 
 class MyAccessibilityService: AccessibilityService() {
 
     override fun onAccessibilityEvent(p0: AccessibilityEvent?) {
-        if (rootInActiveWindow != null) {
+
+        val rootWindow = rootInActiveWindow
+        if (rootWindow != null) {
+            Log.i("root", (rootInActiveWindow == null).toString())
             val rect = Rect()
             val position = getNodeText(rootInActiveWindow, "跳过", rect)
             if (position.toShortString() != "[0,0][0,0]") {
