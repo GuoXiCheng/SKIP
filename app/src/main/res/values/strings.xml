@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">OneClick</string>
+    <string name="initiate_mode">未启用</string>
 </resources>
