@@ -4,4 +4,5 @@
     android:canPerformGestures="true"
     android:accessibilityFeedbackType="feedbackSpoken"
     android:canRetrieveWindowContent="true"
+    android:accessibilityFlags="flagRetrieveInteractiveWindows"
     android:notificationTimeout="1000"/>

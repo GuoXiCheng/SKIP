@@ -27,6 +27,6 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         accessibilityEnabled = Settings.Secure.getInt(
             this.applicationContext.contentResolver,Settings.Secure.ACCESSIBILITY_ENABLED)
-        if (accessibilityEnabled == 1) binding.button.text = R.string.initiate_mode.toString()
+        if (accessibilityEnabled == 1) binding.button.text = resources.getString(R.string.enabled)
     }
 }
