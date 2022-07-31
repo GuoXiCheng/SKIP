@@ -21,7 +21,6 @@ class MyAccessibilityService: AccessibilityService() {
             if (position.toShortString() != "[0,0][0,0]") {
                 click(this, rect.exactCenterX(), rect.exactCenterY())
             }
-
         }
     }
     override fun onInterrupt() {
@@ -66,8 +65,8 @@ class MyAccessibilityService: AccessibilityService() {
 
                 override fun onCompleted(gestureDescription: GestureDescription) {
                     super.onCompleted(gestureDescription)
-                    Log.i("click", "click: ($x, $y)")
-                    Toast.makeText(accessibilityService, "已为您跳过广告", Toast.LENGTH_SHORT).show()
+//                    Log.i("click", "click: ($x, $y)")
+//                    Toast.makeText(accessibilityService, "已为您跳过广告", Toast.LENGTH_SHORT).show()
                 }
             }, null)
     }
