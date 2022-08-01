@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import com.android.oneclick.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -14,6 +13,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        this.window.setBackgroundDrawable(resources.getDrawable(R.drawable.simple, null))
 
         binding.button.setOnClickListener {
             if (accessibilityEnabled != 1) {
@@ -27,6 +28,6 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         accessibilityEnabled = Settings.Secure.getInt(
             this.applicationContext.contentResolver,Settings.Secure.ACCESSIBILITY_ENABLED)
-        if (accessibilityEnabled == 1) binding.button.text = R.string.initiate_mode.toString()
+        if (accessibilityEnabled == 1) binding.button.text = resources.getString(R.string.enabled)
     }
 }

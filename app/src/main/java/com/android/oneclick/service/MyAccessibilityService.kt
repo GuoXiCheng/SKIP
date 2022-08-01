@@ -12,16 +12,26 @@ import android.widget.Toast
 class MyAccessibilityService: AccessibilityService() {
 
     override fun onAccessibilityEvent(p0: AccessibilityEvent?) {
-
-        val rootWindow = rootInActiveWindow
-        if (rootWindow != null) {
-            Log.i("root", (rootInActiveWindow == null).toString())
-            val rect = Rect()
-            val position = getNodeText(rootInActiveWindow, "跳过", rect)
-            if (position.toShortString() != "[0,0][0,0]") {
-                click(this, rect.exactCenterX(), rect.exactCenterY())
+        val rect = Rect()
+        val windowNodes = windows
+        for (i in 0 until windowNodes.size) {
+            val rootWindow = windowNodes[i].root
+            if (rootWindow != null) {
+                val position = getNodeText(rootWindow, "跳过", rect)
+                if (position.toShortString() != "[0,0][0,0]") {
+                    click(this, rect.exactCenterX(), rect.exactCenterY())
+                }
             }
         }
+//        Log.i("MyAccessibilityService", windows.size.toString())
+//        val rootWindow = rootInActiveWindow
+//        if (rootWindow != null) {
+//            val rect = Rect()
+//            val position = getNodeText(rootInActiveWindow, "跳过", rect)
+//            if (position.toShortString() != "[0,0][0,0]") {
+//                click(this, rect.exactCenterX(), rect.exactCenterY())
+//            }
+//        }
     }
     override fun onInterrupt() {
         Log.i("AccessibilityService", "onInterrupt")
@@ -31,9 +41,9 @@ class MyAccessibilityService: AccessibilityService() {
         val childCounts = accessibilityNodeInfo.childCount
         if (childCounts == 0) {
             if (accessibilityNodeInfo.text != null) {
+                Log.i("MyAccessibilityService", accessibilityNodeInfo.text.toString())
                 if (accessibilityNodeInfo.text.toString().contains(nodeText)) {
                     accessibilityNodeInfo.getBoundsInScreen(rect)
-                    return rect
                 }
             }
             return rect
