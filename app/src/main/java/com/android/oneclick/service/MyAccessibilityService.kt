@@ -7,7 +7,6 @@ import android.graphics.Rect
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
-import android.widget.Toast
 
 class MyAccessibilityService: AccessibilityService() {
 

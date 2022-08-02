@@ -1,9 +1,9 @@
 package com.android.oneclick
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
+import androidx.appcompat.app.AppCompatActivity
 import com.android.oneclick.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -14,13 +14,15 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        this.window.setBackgroundDrawable(resources.getDrawable(R.drawable.simple, null))
+        this.window.setBackgroundDrawable(resources.getDrawable(R.drawable.summer_background, null))
+        this.window.navigationBarColor = resources.getColor(R.color.teal_500, null)
 
-        binding.button.setOnClickListener {
-            if (accessibilityEnabled != 1) {
+        binding.switchButton.setOnClickListener {
+            if (binding.switchButton.isChecked && accessibilityEnabled != 1) {
                 val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
                 this.startActivity(intent)
             }
+            binding.switchButton.isChecked = accessibilityEnabled == 1
         }
     }
 
@@ -28,6 +30,6 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         accessibilityEnabled = Settings.Secure.getInt(
             this.applicationContext.contentResolver,Settings.Secure.ACCESSIBILITY_ENABLED)
-        if (accessibilityEnabled == 1) binding.button.text = resources.getString(R.string.enabled)
+        binding.switchButton.isChecked = accessibilityEnabled == 1
     }
 }
