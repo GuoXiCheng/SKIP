@@ -2,5 +2,6 @@
     <string name="app_name">OneClick</string>
     <string name="not_enabled">未启用</string>
     <string name="enabled">已启用</string>
-    <string name="service_status">服务状态</string>
+    <string name="service_status">启用/停用</string>
+    <string name="version">version 1.0.0</string>
 </resources>

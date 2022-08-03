@@ -16,6 +16,7 @@ class MyAccessibilityService: AccessibilityService() {
         for (i in 0 until windowNodes.size) {
             val rootWindow = windowNodes[i].root
             if (rootWindow != null) {
+//                Log.i("MyAccessibility", rootWindow.packageName.toString())
                 val position = getNodeText(rootWindow, "跳过", rect)
                 if (position.toShortString() != "[0,0][0,0]") {
                     click(this, rect.exactCenterX(), rect.exactCenterY())
@@ -40,7 +41,7 @@ class MyAccessibilityService: AccessibilityService() {
         val childCounts = accessibilityNodeInfo.childCount
         if (childCounts == 0) {
             if (accessibilityNodeInfo.text != null) {
-                Log.i("MyAccessibilityService", accessibilityNodeInfo.text.toString())
+//                Log.i("MyAccessibilityService", accessibilityNodeInfo.text.toString())
                 if (accessibilityNodeInfo.text.toString().contains(nodeText)) {
                     accessibilityNodeInfo.getBoundsInScreen(rect)
                 }
