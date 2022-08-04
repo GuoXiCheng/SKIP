@@ -13,9 +13,11 @@ class MyAccessibilityService: AccessibilityService() {
     override fun onAccessibilityEvent(p0: AccessibilityEvent?) {
         val rect = Rect()
         val windowNodes = windows
+        val rootNode = rootInActiveWindow
         for (i in 0 until windowNodes.size) {
             val rootWindow = windowNodes[i].root
-            if (rootWindow != null) {
+            if (rootWindow != null && rootNode == rootWindow) {
+//                Log.i("MyAccessibility", rootWindow.packageName.toString())
 //                Log.i("MyAccessibility", rootWindow.packageName.toString())
                 val position = getNodeText(rootWindow, "跳过", rect)
                 if (position.toShortString() != "[0,0][0,0]") {

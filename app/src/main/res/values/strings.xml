@@ -4,4 +4,5 @@
     <string name="enabled">已启用</string>
     <string name="service_status">启用/停用</string>
     <string name="version">version 1.0.0</string>
+    <string name="title_activity_main2">MainActivity2</string>
 </resources>
