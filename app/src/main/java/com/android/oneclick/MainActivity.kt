@@ -1,35 +1,77 @@
 package com.android.oneclick
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
-import androidx.appcompat.app.AppCompatActivity
-import com.android.oneclick.databinding.ActivityMainBinding
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.android.oneclick.ui.theme.OneClickTheme
+import com.android.oneclick.ui.theme.Teal500
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var binding:ActivityMainBinding
+var accessibilityState by mutableStateOf(false)
+class MainActivity : ComponentActivity() {
     private var accessibilityEnabled = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        this.window.setBackgroundDrawable(resources.getDrawable(R.drawable.summer_background, null))
         this.window.navigationBarColor = resources.getColor(R.color.teal_500, null)
-
-        binding.switchButton.setOnClickListener {
-            if (binding.switchButton.isChecked && accessibilityEnabled != 1) {
-                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                this.startActivity(intent)
-            }
-            binding.switchButton.isChecked = accessibilityEnabled == 1
+        setContent {
+            DefaultPreview(this)
         }
+
     }
 
     override fun onResume() {
         super.onResume()
         accessibilityEnabled = Settings.Secure.getInt(
             this.applicationContext.contentResolver,Settings.Secure.ACCESSIBILITY_ENABLED)
-        binding.switchButton.isChecked = accessibilityEnabled == 1
+        accessibilityState = accessibilityEnabled == 1
     }
 }
+
+@Composable
+fun DefaultPreview(context: Context) {
+    OneClickTheme {
+        Surface(modifier = Modifier.fillMaxSize(), color= Teal500) {
+
+        }
+        Button(
+            onClick = {
+                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                context.startActivity(intent)
+            },
+            contentPadding = ButtonDefaults.TextButtonContentPadding,
+            modifier = Modifier.absoluteOffset(120.dp, 700.dp)
+        ) {
+            Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+            if(!accessibilityState) {
+                Icon(
+                    Icons.Filled.PlayArrow,
+                    contentDescription = "PlayArrow",
+                    modifier = Modifier.size(ButtonDefaults.IconSize).offset((-5).dp,0.dp)
+                )
+                Text("启用无障碍服务")
+            } else {
+                Icon(
+                    Icons.Filled.Close,
+                    contentDescription = "Close",
+                    modifier = Modifier.size(ButtonDefaults.IconSize).offset((-5).dp,0.dp)
+                )
+                Text("停用无障碍服务")
+            }
+
+        }
+    }
+}
+
