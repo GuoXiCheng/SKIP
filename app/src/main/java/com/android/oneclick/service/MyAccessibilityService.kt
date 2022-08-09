@@ -20,27 +20,16 @@ class MyAccessibilityService: AccessibilityService() {
             if (rootWindow != null && rootNode == rootWindow) {
                 scanTime += 1
                 if (currentPackage == rootWindow.packageName.toString()) {
-                    if (scanTime > 15) return
+                    if (scanTime > 30) return
                 }
                 else scanTime = 0
-//                Log.i("MyAccessibility", scanTime.toString())
                 val position = getNodeText(rootWindow, "跳过", rect)
                 if (position.toShortString() != "[0,0][0,0]") {
                     click(this, rect.exactCenterX(), rect.exactCenterY())
                 }
                 currentPackage = rootWindow.packageName.toString()
-//                Log.i("MyAccessibility", rootWindow.packageName.toString())
             }
         }
-//        Log.i("MyAccessibilityService", windows.size.toString())
-//        val rootWindow = rootInActiveWindow
-//        if (rootWindow != null) {
-//            val rect = Rect()
-//            val position = getNodeText(rootInActiveWindow, "跳过", rect)
-//            if (position.toShortString() != "[0,0][0,0]") {
-//                click(this, rect.exactCenterX(), rect.exactCenterY())
-//            }
-//        }
     }
     override fun onInterrupt() {
         Log.i("AccessibilityService", "onInterrupt")
@@ -50,7 +39,6 @@ class MyAccessibilityService: AccessibilityService() {
         val childCounts = accessibilityNodeInfo.childCount
         if (childCounts == 0) {
             if (accessibilityNodeInfo.text != null) {
-//                Log.i("MyAccessibility", accessibilityNodeInfo.text.toString())
                 if (accessibilityNodeInfo.text.toString().contains(nodeText)) {
                     accessibilityNodeInfo.getBoundsInScreen(rect)
                 }
@@ -79,13 +67,10 @@ class MyAccessibilityService: AccessibilityService() {
 
                 override fun onCancelled(gestureDescription: GestureDescription) {
                     super.onCancelled(gestureDescription)
-                    Log.i("click", "onCancel")
                 }
 
                 override fun onCompleted(gestureDescription: GestureDescription) {
                     super.onCompleted(gestureDescription)
-//                    Log.i("click", "click: ($x, $y)")
-//                    Toast.makeText(accessibilityService, "已为您跳过广告", Toast.LENGTH_SHORT).show()
                 }
             }, null)
     }
