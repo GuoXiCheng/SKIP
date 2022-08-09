@@ -16,7 +16,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/title_activity_main2"
+            android:label="@string/activity_main"
             android:excludeFromRecents="true"
             android:theme="@style/Theme.OneClick">
             <intent-filter>

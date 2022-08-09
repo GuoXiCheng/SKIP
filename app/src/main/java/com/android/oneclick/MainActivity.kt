@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.android.oneclick.ui.theme.OneClickTheme
 import com.android.oneclick.ui.theme.Teal500
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 var accessibilityState by mutableStateOf(false)
 class MainActivity : ComponentActivity() {
@@ -48,8 +49,21 @@ fun DefaultPreview(context: Context) {
         }
         Button(
             onClick = {
-                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                context.startActivity(intent)
+                MaterialAlertDialogBuilder(context)
+                    .setTitle("开启无障碍服务")
+                    .setMessage("""
+                        1.点击【已下载的应用】
+                        2.点击【OneClick】
+                        3.开启【使用OneClick】
+                    """.trimIndent())
+                    .setNegativeButton("再想想", null)
+                    .setPositiveButton("去开启") { _, _ ->
+                        run {
+                            val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                            context.startActivity(intent)
+                        }
+                    }
+                    .show()
             },
             contentPadding = ButtonDefaults.TextButtonContentPadding,
             modifier = Modifier.absoluteOffset(120.dp, 700.dp)
