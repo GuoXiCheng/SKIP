@@ -49,21 +49,36 @@ fun DefaultPreview(context: Context) {
         }
         Button(
             onClick = {
-                MaterialAlertDialogBuilder(context)
-                    .setTitle("开启无障碍服务")
-                    .setMessage("""
+                if (!accessibilityState) {
+                    MaterialAlertDialogBuilder(context)
+                        .setTitle("启用无障碍服务")
+                        .setMessage(
+                            """
                         1.点击【已下载的应用】
                         2.点击【OneClick】
                         3.开启【使用OneClick】
-                    """.trimIndent())
-                    .setNegativeButton("再想想", null)
-                    .setPositiveButton("去开启") { _, _ ->
-                        run {
-                            val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                            context.startActivity(intent)
+                    """.trimIndent()
+                        )
+                        .setNegativeButton("再想想", null)
+                        .setPositiveButton("去开启") { _, _ ->
+                            run {
+                                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                                context.startActivity(intent)
+                            }
                         }
-                    }
-                    .show()
+                        .show()
+                } else {
+                    MaterialAlertDialogBuilder(context)
+                        .setTitle("停用无障碍服务")
+                        .setNegativeButton("再想想", null)
+                        .setPositiveButton("去停用") { _, _ ->
+                            run {
+                                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                                context.startActivity(intent)
+                            }
+                        }
+                        .show()
+                }
             },
             contentPadding = ButtonDefaults.TextButtonContentPadding,
             modifier = Modifier.absoluteOffset(120.dp, 700.dp)

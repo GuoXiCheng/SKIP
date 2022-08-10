@@ -23,7 +23,7 @@ class MyAccessibilityService: AccessibilityService() {
                     if (scanTime > 30) return
                 }
                 else scanTime = 0
-                val position = getNodeText(rootWindow, "跳过", rect)
+                val position = getNodeText(rootWindow,  rect)
                 if (position.toShortString() != "[0,0][0,0]") {
                     click(this, rect.exactCenterX(), rect.exactCenterY())
                 }
@@ -35,11 +35,12 @@ class MyAccessibilityService: AccessibilityService() {
         Log.i("AccessibilityService", "onInterrupt")
     }
 
-    private fun getNodeText(accessibilityNodeInfo: AccessibilityNodeInfo, nodeText: String, rect: Rect): Rect {
+    private fun getNodeText(accessibilityNodeInfo: AccessibilityNodeInfo, rect: Rect): Rect {
         val childCounts = accessibilityNodeInfo.childCount
         if (childCounts == 0) {
             if (accessibilityNodeInfo.text != null) {
-                if (accessibilityNodeInfo.text.toString().contains(nodeText)) {
+                val nodeText = accessibilityNodeInfo.text.toString()
+                if (nodeText.contains("跳过")) {
                     accessibilityNodeInfo.getBoundsInScreen(rect)
                 }
             }
@@ -48,7 +49,7 @@ class MyAccessibilityService: AccessibilityService() {
         for (i in 0 until childCounts) {
             val node = accessibilityNodeInfo.getChild(i)
             if (node != null) {
-                getNodeText(node, nodeText, rect)
+                getNodeText(node, rect)
             }
         }
         return rect
