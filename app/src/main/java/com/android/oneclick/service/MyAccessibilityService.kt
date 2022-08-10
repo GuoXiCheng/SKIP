@@ -8,7 +8,7 @@ import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 
-class MyAccessibilityService: AccessibilityService() {
+class MyAccessibilityService : AccessibilityService() {
     private var currentPackage = ""
     private var scanTime = 0
     override fun onAccessibilityEvent(p0: AccessibilityEvent?) {
@@ -21,9 +21,8 @@ class MyAccessibilityService: AccessibilityService() {
                 scanTime += 1
                 if (currentPackage == rootWindow.packageName.toString()) {
                     if (scanTime > 30) return
-                }
-                else scanTime = 0
-                val position = getNodeText(rootWindow,  rect)
+                } else scanTime = 0
+                val position = getNodeText(rootWindow, rect)
                 if (position.toShortString() != "[0,0][0,0]") {
                     click(this, rect.exactCenterX(), rect.exactCenterY())
                 }
@@ -31,6 +30,7 @@ class MyAccessibilityService: AccessibilityService() {
             }
         }
     }
+
     override fun onInterrupt() {
         Log.i("AccessibilityService", "onInterrupt")
     }
@@ -58,13 +58,15 @@ class MyAccessibilityService: AccessibilityService() {
 
     private fun click(accessibilityService: AccessibilityService, x: Float, y: Float) {
 
-            val builder = GestureDescription.Builder()
-            val path = Path()
-            path.moveTo(x, y)
-            path.lineTo(x, y)
-            builder.addStroke(GestureDescription.StrokeDescription(path, 0, 1))
-            val gesture = builder.build()
-            accessibilityService.dispatchGesture(gesture, object : AccessibilityService.GestureResultCallback() {
+        val builder = GestureDescription.Builder()
+        val path = Path()
+        path.moveTo(x, y)
+        path.lineTo(x, y)
+        builder.addStroke(GestureDescription.StrokeDescription(path, 0, 1))
+        val gesture = builder.build()
+        accessibilityService.dispatchGesture(
+            gesture,
+            object : AccessibilityService.GestureResultCallback() {
 
                 override fun onCancelled(gestureDescription: GestureDescription) {
                     super.onCancelled(gestureDescription)
@@ -73,6 +75,8 @@ class MyAccessibilityService: AccessibilityService() {
                 override fun onCompleted(gestureDescription: GestureDescription) {
                     super.onCompleted(gestureDescription)
                 }
-            }, null)
+            },
+            null
+        )
     }
 }
