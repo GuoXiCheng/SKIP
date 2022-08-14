@@ -15,18 +15,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.oneclick.ui.theme.OneClickTheme
 import com.android.oneclick.ui.theme.Teal500
+import com.android.oneclick.ui.theme.black
 import com.android.oneclick.ui.theme.grey
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 var accessibilityState by mutableStateOf(false)
 var accessibilityButtonClickState by mutableStateOf(false)
 var alertDialogPositiveButtonClickState by mutableStateOf(false)
+var expanded by mutableStateOf(false)
+var selectedCurrentMobile by mutableStateOf(0)
 
 class MainActivity : ComponentActivity() {
     private var accessibilityEnabled = 0
@@ -93,6 +97,75 @@ fun MainSurface() {
             Modifier.absoluteOffset(160.dp, 800.dp), fontSize = 13.sp,
             color = grey
         )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentSize(Alignment.Center)
+        ) {
+            TextButton(onClick = {
+                expanded = !expanded
+            }) {
+                Text("当前手机", color = black)
+                when (selectedCurrentMobile) {
+                    0 -> Text("小米", color = grey)
+                    1 -> Text("华为", color = grey)
+                    2 -> Text("OPPO", color = grey)
+                    3 -> Text("VIVO", color = grey)
+                    4 -> Text("魅族", color = grey)
+                    5 -> Text("其他手机", color = grey)
+                }
+            }
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+            ) {
+                DropdownMenuItem(
+                    text = { Text("小米") },
+                    onClick = {
+                        selectedCurrentMobile = 0
+                        expanded = false
+                    })
+                DropdownMenuItem(
+                    text = { Text("华为") },
+                    onClick = {
+                        selectedCurrentMobile = 1
+                        expanded = false
+                    })
+                DropdownMenuItem(
+                    text = { Text("OPPO") },
+                    onClick = {
+                        selectedCurrentMobile = 2
+                        expanded = false
+                    })
+                DropdownMenuItem(
+                    text = { Text("VIVO") },
+                    onClick = {
+                        selectedCurrentMobile = 3
+                        expanded = false
+                    })
+                DropdownMenuItem(
+                    text = { Text("魅族") },
+                    onClick = {
+                        selectedCurrentMobile = 4
+                        expanded = false
+                    })
+                DropdownMenuItem(
+                    text = { Text("其他手机") },
+                    onClick = {
+                        selectedCurrentMobile = 5
+                        expanded = false
+                    })
+            }
+        }
+        when (selectedCurrentMobile) {
+            0 -> Text("小米手机开启后台权限")
+            1 -> Text("华为手机开启后台权限")
+            2 -> Text("OPPO手机开启后台权限")
+            3 -> Text("VIVO手机开启后台权限")
+            4 -> Text("魅族手机开启后台权限")
+            5 -> Text("其他手机开启后台权限")
+        }
+
     }
 }
 
@@ -145,4 +218,6 @@ fun AlertDialog(
         }
         .show()
 }
+
+
 
