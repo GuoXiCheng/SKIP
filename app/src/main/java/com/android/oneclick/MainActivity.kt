@@ -112,7 +112,7 @@ fun MainSurface() {
                     2 -> Text("OPPO", color = grey)
                     3 -> Text("VIVO", color = grey)
                     4 -> Text("魅族", color = grey)
-                    5 -> Text("其他手机", color = grey)
+                    5 -> Text("一加", color=grey)
                 }
             }
             DropdownMenu(
@@ -150,7 +150,7 @@ fun MainSurface() {
                         expanded = false
                     })
                 DropdownMenuItem(
-                    text = { Text("其他手机") },
+                    text = { Text("一加") },
                     onClick = {
                         selectedCurrentMobile = 5
                         expanded = false
@@ -158,12 +158,37 @@ fun MainSurface() {
             }
         }
         when (selectedCurrentMobile) {
-            0 -> Text("小米手机开启后台权限")
-            1 -> Text("华为手机开启后台权限")
-            2 -> Text("OPPO手机开启后台权限")
-            3 -> Text("VIVO手机开启后台权限")
-            4 -> Text("魅族手机开启后台权限")
-            5 -> Text("其他手机开启后台权限")
+            0 -> TurnOnBackgroundPermissionText("""
+                先打开OneClick，后前往后台应用管理，长按应用，点击右侧锁定，锁定后台。
+                长按OneClick应用图标，点击进入应用信息，打开自启动。
+                点击省电策略，将后台配置设置为无限制。
+            """.trimIndent())
+            1 -> TurnOnBackgroundPermissionText("""
+                先打开OneClick，后前往后台应用管理，下滑应用，锁定后台。
+                打开手机管家，选择应用启动管理，点击进入。
+                找到OneClick，关闭自动管理。
+                在手动管理设置中，打开允许自启动，允许关联启动，允许后台活动。
+            """.trimIndent())
+            2 -> TurnOnBackgroundPermissionText("""
+                先打开OneClick，后前往后台应用管理，点击右上角的更多，点击锁定，锁定后台。
+                长按应用图标，点击应用信息，打开允许自动启动。
+                打开系统设置，点击电池，点击自定义耗电保护，找到OneClick，设置为允许后台运行。
+                返回上一页，找到应用速冻，关闭OneClick的自动速冻。
+            """.trimIndent())
+            3 -> TurnOnBackgroundPermissionText("""
+                先打开OneClick，后前往后台应用管理，下滑应用，锁定后台。
+                打开i管家，点击应用管理，点击权限管理，点击自启动，允许OneClick的自启动权限。
+                打开系统设置，点击电池，点击后台耗电管理，找到OneClick，并且允许后台高耗电。
+            """.trimIndent())
+            4 -> TurnOnBackgroundPermissionText("""
+                先打开OneClick，后前往后台应用管理，长按应用，点击锁定，锁定后台。
+                打开手机管理，点击隐私和权限，点击后台管理，设置OneClick为允许后台运行。
+            """.trimIndent())
+            5 -> TurnOnBackgroundPermissionText(
+                """
+                 先打开OneClick，后前往后台应用管理，长按应用，点击锁定，锁定后台。
+                 前往系统设置，点击电池，点击电量优化，找到OneClick并设置为不优化。
+                """.trimIndent())
         }
 
     }
@@ -217,6 +242,11 @@ fun AlertDialog(
             alertDialogPositiveButtonClickState = true
         }
         .show()
+}
+
+@Composable
+fun TurnOnBackgroundPermissionText(tx: String) {
+    Text(tx, modifier=Modifier.padding(10.dp))
 }
 
 
