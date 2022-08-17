@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
+import android.text.Html
+import android.text.SpannableString
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -21,6 +23,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.text.HtmlCompat
+import androidx.core.text.toHtml
 import com.android.oneclick.ui.theme.OneClickTheme
 import com.android.oneclick.ui.theme.Teal500
 import com.android.oneclick.ui.theme.black
@@ -168,44 +172,40 @@ fun MainSurface() {
         when (selectedCurrentMobile) {
             Mobile.XIAOMI -> TurnOnBackgroundPermissionText(
                 """
-                1. 先打开OneClick，后前往后台应用管理，长按应用，点击右侧锁定，锁定后台。
-                2. 长按OneClick应用图标，点击进入应用信息，打开自启动。
-                3. 点击省电策略，将后台配置设置为无限制。
+                1. 打开应用后，前往后台应用管理，长按应用，点击右侧锁定锁定后台。
+                2. 长按应用图标，点击进入应用信息，打开自启动；点击省电策略，选择无限制。
             """.trimIndent()
             )
             Mobile.HUAWEI -> TurnOnBackgroundPermissionText(
                 """
-                1. 先打开OneClick，后前往后台应用管理，下滑应用，锁定后台。
-                2. 打开手机管家，选择应用启动管理，点击进入。
-                3. 找到OneClick，关闭自动管理。
-                4. 在手动管理设置中，打开允许自启动，允许关联启动，允许后台活动。
+                1. 打开应用后，前往后台应用管理，下滑应用锁定后台。
+                2. 打开手机管家，选择应用启动管理，找到OneClick，关闭自动管理。在手动管理中打开：允许自启动、允许管理启动、允许后台活动。
             """.trimIndent()
             )
             Mobile.OPPO -> TurnOnBackgroundPermissionText(
                 """
-                1. 先打开OneClick，后前往后台应用管理，点击右上角的更多，点击锁定，锁定后台。
+                1. 打开应用后，前往后台应用管理，点击右上角的更多，点击锁定锁定后台。
                 2. 长按应用图标，点击应用信息，打开允许自动启动。
-                3. 打开系统设置，点击电池，点击自定义耗电保护，找到OneClick，设置为允许后台运行。
-                4. 返回上一页，找到应用速冻，关闭OneClick的自动速冻。
+                3. 打开系统设置，点击电池，点击自定义耗电保护，找到OneClick，设置为允许后台运行。返回上一页，找到应用速冻，关闭OneClick的自动速冻。
             """.trimIndent()
             )
             Mobile.VIVO -> TurnOnBackgroundPermissionText(
                 """
-                1. 先打开OneClick，后前往后台应用管理，下滑应用，锁定后台。
+                1. 打开应用后，前往后台应用管理，下滑应用锁定后台。
                 2. 打开i管家，点击应用管理，点击权限管理，点击自启动，允许OneClick的自启动权限。
-                3. 打开系统设置，点击电池，点击后台耗电管理，找到OneClick，并且允许后台高耗电。
+                3. 打开系统设置，点击电池，点击后台耗电管理，找到OneClick，并允许后台高耗电。
             """.trimIndent()
             )
             Mobile.MEIZU -> TurnOnBackgroundPermissionText(
                 """
-                1. 先打开OneClick，后前往后台应用管理，长按应用，点击锁定，锁定后台。
+                1. 打开应用后，前往后台应用管理，长按应用，点击锁定锁定后台。
                 2. 打开手机管理，点击隐私和权限，点击后台管理，设置OneClick为允许后台运行。
             """.trimIndent()
             )
             Mobile.ONEPLUS -> TurnOnBackgroundPermissionText(
                 """
-                 1. 先打开OneClick，后前往后台应用管理，长按应用，点击锁定，锁定后台。
-                 2. 前往系统设置，点击电池，点击电量优化，找到OneClick并设置为不优化。
+                 1. 打开应用后，前往后台应用管理，长按应用，点击锁定锁定后台。
+                 2. 打开系统设置，点击电池，点击电量优化，找到OneClick并设置为不优化。
                 """.trimIndent()
             )
         }
