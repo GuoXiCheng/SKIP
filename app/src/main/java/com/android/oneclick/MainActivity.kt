@@ -4,10 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
-import android.text.Html
-import android.text.SpannableString
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -19,16 +18,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.text.HtmlCompat
-import androidx.core.text.toHtml
 import com.android.oneclick.ui.theme.OneClickTheme
-import com.android.oneclick.ui.theme.Teal500
-import com.android.oneclick.ui.theme.black
-import com.android.oneclick.ui.theme.grey
+import com.android.oneclick.ui.theme.green
+import com.android.oneclick.ui.theme.white
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 var accessibilityState by mutableStateOf(false)
@@ -36,12 +32,15 @@ var accessibilityButtonClickState by mutableStateOf(false)
 var alertDialogPositiveButtonClickState by mutableStateOf(false)
 var expanded by mutableStateOf(false)
 var selectedCurrentMobile by mutableStateOf(Mobile.XIAOMI)
+var accessibilityIsEnabled by mutableStateOf(false)
 
 class MainActivity : ComponentActivity() {
     private var accessibilityEnabled = 0
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
-        this.window.navigationBarColor = resources.getColor(R.color.teal_500, null)
+        this.window.navigationBarColor = resources.getColor(R.color.green, null)
+
         setContent {
             MainSurface()
 
@@ -70,10 +69,14 @@ class MainActivity : ComponentActivity() {
                 accessibilityButtonClickState = false
             }
 
-            if (alertDialogPositiveButtonClickState) {
+//            if (alertDialogPositiveButtonClickState) {
+//                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+//                this.startActivity(intent)
+//                alertDialogPositiveButtonClickState = false
+//            }
+            if (accessibilityIsEnabled) {
                 val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
                 this.startActivity(intent)
-                alertDialogPositiveButtonClickState = false
             }
         }
 
@@ -82,16 +85,25 @@ class MainActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-        accessibilityEnabled = Settings.Secure.getInt(
-            this.applicationContext.contentResolver, Settings.Secure.ACCESSIBILITY_ENABLED
-        )
-        accessibilityState = accessibilityEnabled == 1
+//        accessibilityEnabled = Settings.Secure.getInt(
+//            this.applicationContext.contentResolver, Settings.Secure.ACCESSIBILITY_ENABLED
+//        )
+//        accessibilityState = accessibilityEnabled == 1
     }
 }
 
 @Composable
 @Preview
 fun MainSurface() {
+    OneClickTheme {
+        Surface(modifier = Modifier.fillMaxSize(), color = green) {
+
+        }
+        TopBox()
+        CenterBox()
+//        BottomBox()
+    }
+    /*
     OneClickTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = Teal500) {
 
@@ -216,6 +228,64 @@ fun MainSurface() {
             modifier = Modifier.absoluteOffset(0.dp, 200.dp)
         )
     }
+     */
+}
+
+@Composable
+fun TopBox() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .wrapContentSize(Alignment.TopCenter)
+    ) {
+        Column(modifier = Modifier.padding(0.dp, 20.dp)) {
+            Text("OneClick", color = white, fontSize = 36.sp)
+            Row {
+                Text("是一款免费开源的自动", color = white, fontSize = 16.sp)
+                Text("跳过", color = white)
+                Text("APP开屏广告的工具", color = white, fontSize = 16.sp)
+            }
+        }
+    }
+}
+
+@Composable
+fun CenterBox() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .wrapContentSize(Alignment.Center)
+    ) {
+        Button(onClick = {
+            accessibilityIsEnabled = !accessibilityIsEnabled
+        }, contentPadding = PaddingValues(0.dp), colors = ButtonDefaults.textButtonColors()) {
+            if (accessibilityIsEnabled) {
+                Image(
+                    painter = painterResource(id = R.drawable.disabled),
+                    contentDescription = "disabled",
+                )
+            } else {
+                Image(
+                    painter = painterResource(id = R.drawable.enabled),
+                    contentDescription = "enabled",
+                )
+            }
+
+
+        }
+
+    }
+}
+
+@Composable
+fun BottomBox() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .wrapContentSize(Alignment.BottomStart)
+    ) {
+
+    }
 }
 
 @Composable
@@ -270,9 +340,11 @@ fun AlertDialog(
 
 @Composable
 fun TurnOnBackgroundPermissionText(tx: String) {
-    Text(tx, modifier = Modifier
-        .padding(10.dp)
-        .absoluteOffset(0.dp, 450.dp))
+    Text(
+        tx, modifier = Modifier
+            .padding(10.dp)
+            .absoluteOffset(0.dp, 450.dp)
+    )
 }
 
 
