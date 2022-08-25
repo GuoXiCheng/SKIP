@@ -240,11 +240,11 @@ fun TopBox() {
             .fillMaxSize()
             .wrapContentSize(Alignment.TopCenter)
     ) {
-        Column(modifier = Modifier.padding(0.dp, 20.dp)) {
+        Column(modifier = Modifier.padding(0.dp, 60.dp)) {
             Text("OneClick", color = Color.White, fontSize = 36.sp)
             Row {
                 Text("是一款免费开源的自动", color = Color.White, fontSize = 16.sp)
-                Text("跳过", color = Color.White)
+                Text("跳过", color = Color.White, fontSize = 16.sp)
                 Text("APP开屏广告的工具", color = Color.White, fontSize = 16.sp)
             }
         }
@@ -287,10 +287,12 @@ fun BottomBox() {
             .wrapContentSize(Alignment.BottomStart)
     ) {
 
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .height(260.dp)
-            .background(color = Color.White)) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(260.dp)
+                .background(color = Color.White)
+        ) {
             Text(
                 "操作方式",
                 fontWeight = FontWeight.Bold,
