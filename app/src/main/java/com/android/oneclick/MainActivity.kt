@@ -6,13 +6,14 @@ import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,11 +23,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.android.oneclick.ui.theme.OneClickTheme
-import com.android.oneclick.ui.theme.green
+import com.android.oneclick.ui.theme.*
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 var accessibilityState by mutableStateOf(false)
@@ -102,7 +103,24 @@ fun MainSurface() {
 
         }
         TopBox()
-        CenterBox()
+//        CenterTextBox()
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                "机型选择",
+                color = Color.White,
+                fontSize = 12.sp,
+                modifier = Modifier.offset(0.dp, 250.dp)
+            )
+            TextButton(onClick = {
+                expanded = !expanded
+            }, modifier = Modifier.offset(0.dp, 250.dp)) {
+                Text("XIAOMI", color = Color.White, fontSize = 18.sp)
+            }
+        }
+        CenterButtonBox()
         BottomBox()
     }
     /*
@@ -247,33 +265,149 @@ fun TopBox() {
                 Text("跳过", color = Color.White, fontSize = 16.sp)
                 Text("APP开屏广告的工具", color = Color.White, fontSize = 16.sp)
             }
+
         }
+
     }
+
 }
 
+//@Composable
+//fun CenterTextBox() {
+//    Box(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .wrapContentSize(Alignment.Center)
+//    ) {
+//        AnimatedVisibility(visible = expanded) {
+//            Surface(
+//                modifier = Modifier.size(140.dp, 120.dp),
+//                color = lightGrey,
+//                shape = shapes.small
+//            ) {
+//                Column {
+//                    Text(
+//                        "XIAOMI",
+//                        color = lightGrey3,
+//                        modifier = Modifier
+//                            .size(140.dp, 40.dp)
+//                            .padding(5.dp),
+//                        fontSize = 18.sp,
+//                        textAlign = TextAlign.Center
+//                    )
+//                    Divider(modifier = Modifier.height(1.dp), color = lightGrey2)
+//                    Text(
+//                        "HUAWEI",
+//                        color = lightGrey3,
+//                        modifier = Modifier
+//                            .size(140.dp, 40.dp)
+//                            .padding(5.dp),
+//                        fontSize = 18.sp,
+//                        textAlign = TextAlign.Center
+//                    )
+//                    Divider(modifier = Modifier.height(1.dp), color = lightGrey2)
+//                    Text(
+//                        "VIVO",
+//                        color = lightGrey3,
+//                        modifier = Modifier
+//                            .size(140.dp, 40.dp)
+//                            .padding(5.dp),
+//                        fontSize = 18.sp,
+//                        textAlign = TextAlign.Center
+//                    )
+//                }
+//            }
+//        }
+//        Text(
+//            "机型选择",
+//            color = Color.White,
+//            fontSize = 12.sp,
+//            modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 100.dp)
+//        )
+//        TextButton(onClick = {
+//            expanded = !expanded
+//        }) {
+//            Text("XIAOMI", color = Color.White)
+//        }
+//    }
+//
+//}
+
 @Composable
-fun CenterBox() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .wrapContentSize(Alignment.Center)
-    ) {
+fun CenterButtonBox() {
+    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
         Button(onClick = {
             accessibilityIsEnabled = !accessibilityIsEnabled
         }, contentPadding = PaddingValues(0.dp), colors = ButtonDefaults.textButtonColors()) {
             if (accessibilityIsEnabled) {
                 Image(
+                    modifier = Modifier.size(140.dp, 140.dp),
                     painter = painterResource(id = R.drawable.disabled),
                     contentDescription = "disabled",
                 )
             } else {
                 Image(
+                    modifier = Modifier.size(140.dp, 140.dp),
                     painter = painterResource(id = R.drawable.enabled),
                     contentDescription = "enabled",
                 )
             }
+        }
+    }
+    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
 
-
+        AnimatedVisibility(
+            visible = expanded,
+            enter = expandVertically(expandFrom = Alignment.Top),
+            exit = shrinkVertically(shrinkTowards = Alignment.Top)
+        ) {
+            Surface(
+                modifier = Modifier.size(140.dp, 160.dp),
+                color = lightGrey,
+                shape = shapes.small
+            ) {
+                Column {
+                    Text(
+                        "XIAOMI",
+                        color = lightGrey3,
+                        modifier = Modifier
+                            .size(140.dp, 40.dp)
+                            .padding(5.dp),
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Center
+                    )
+                    Divider(modifier = Modifier.height(1.dp), color = lightGrey2)
+                    Text(
+                        "HUAWEI",
+                        color = lightGrey3,
+                        modifier = Modifier
+                            .size(140.dp, 40.dp)
+                            .padding(5.dp),
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Center
+                    )
+                    Divider(modifier = Modifier.height(1.dp), color = lightGrey2)
+                    Text(
+                        "VIVO",
+                        color = lightGrey3,
+                        modifier = Modifier
+                            .size(140.dp, 40.dp)
+                            .padding(5.dp),
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Center
+                    )
+                    Divider(modifier = Modifier.height(1.dp), color = lightGrey2)
+                    Text(
+                        "MEIZU",
+                        color = lightGrey3,
+                        modifier = Modifier
+                            .size(140.dp, 40.dp)
+                            .padding(5.dp),
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
         }
 
     }
@@ -327,39 +461,39 @@ fun BottomBox() {
     }
 }
 
-@Composable
-fun AccessibilityButton() {
-    Button(
-        onClick = {
-            accessibilityButtonClickState = true
-        },
-        contentPadding = ButtonDefaults.TextButtonContentPadding,
-        modifier = Modifier.absoluteOffset(120.dp, 700.dp)
-    ) {
-        Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-        if (!accessibilityState) {
-            Icon(
-                Icons.Filled.PlayArrow,
-                contentDescription = "PlayArrow",
-                modifier = Modifier
-                    .size(ButtonDefaults.IconSize)
-                    .offset((-5).dp, 0.dp)
-            )
-            Text("启用无障碍服务")
-        } else {
-            Icon(
-                Icons.Filled.Close,
-                contentDescription = "Close",
-                modifier = Modifier
-                    .size(ButtonDefaults.IconSize)
-                    .offset((-5).dp, 0.dp)
-            )
-            Text("停用无障碍服务")
-        }
-
-    }
-
-}
+//@Composable
+//fun AccessibilityButton() {
+//    Button(
+//        onClick = {
+//            accessibilityButtonClickState = true
+//        },
+//        contentPadding = ButtonDefaults.TextButtonContentPadding,
+//        modifier = Modifier.absoluteOffset(120.dp, 700.dp)
+//    ) {
+//        Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+//        if (!accessibilityState) {
+//            Icon(
+//                Icons.Filled.PlayArrow,
+//                contentDescription = "PlayArrow",
+//                modifier = Modifier
+//                    .size(ButtonDefaults.IconSize)
+//                    .offset((-5).dp, 0.dp)
+//            )
+//            Text("启用无障碍服务")
+//        } else {
+//            Icon(
+//                Icons.Filled.Close,
+//                contentDescription = "Close",
+//                modifier = Modifier
+//                    .size(ButtonDefaults.IconSize)
+//                    .offset((-5).dp, 0.dp)
+//            )
+//            Text("停用无障碍服务")
+//        }
+//
+//    }
+//
+//}
 
 @Composable
 fun AlertDialog(
@@ -377,14 +511,14 @@ fun AlertDialog(
         .show()
 }
 
-@Composable
-fun TurnOnBackgroundPermissionText(tx: String) {
-    Text(
-        tx, modifier = Modifier
-            .padding(10.dp)
-            .absoluteOffset(0.dp, 450.dp)
-    )
-}
+//@Composable
+//fun TurnOnBackgroundPermissionText(tx: String) {
+//    Text(
+//        tx, modifier = Modifier
+//            .padding(10.dp)
+//            .absoluteOffset(0.dp, 450.dp)
+//    )
+//}
 
 
 
