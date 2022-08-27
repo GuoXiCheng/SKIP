@@ -11,6 +11,8 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.shapes
@@ -24,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,7 +37,7 @@ var accessibilityState by mutableStateOf(false)
 var accessibilityButtonClickState by mutableStateOf(false)
 var alertDialogPositiveButtonClickState by mutableStateOf(false)
 var expanded by mutableStateOf(false)
-var selectedCurrentMobile by mutableStateOf(Mobile.XIAOMI)
+var selectedCurrentMobile by mutableStateOf(Mobile.XIAOMI.name)
 var accessibilityIsEnabled by mutableStateOf(false)
 
 class MainActivity : ComponentActivity() {
@@ -112,12 +115,12 @@ fun MainSurface() {
                 "机型选择",
                 color = Color.White,
                 fontSize = 12.sp,
-                modifier = Modifier.offset(0.dp, 250.dp)
+                modifier = Modifier.offset(0.dp, 200.dp)
             )
             TextButton(onClick = {
                 expanded = !expanded
-            }, modifier = Modifier.offset(0.dp, 250.dp)) {
-                Text("XIAOMI", color = Color.White, fontSize = 18.sp)
+            }, modifier = Modifier.offset(0.dp, 200.dp)) {
+                Text(selectedCurrentMobile, color = Color.White, fontSize = 18.sp)
             }
         }
         CenterButtonBox()
@@ -259,7 +262,7 @@ fun TopBox() {
             .wrapContentSize(Alignment.TopCenter)
     ) {
         Column(modifier = Modifier.padding(0.dp, 60.dp)) {
-            Text("OneClick", color = Color.White, fontSize = 36.sp)
+            Text("SKIP", color = Color.White, fontSize = 36.sp)
             Row {
                 Text("是一款免费开源的自动", color = Color.White, fontSize = 16.sp)
                 Text("跳过", color = Color.White, fontSize = 16.sp)
@@ -332,10 +335,68 @@ fun TopBox() {
 //    }
 //
 //}
+@Composable
+fun CenterMenu(mobileList: List<String>) {
+    Text("", modifier = Modifier.size(140.dp, (mobileList.size * 40).dp))
+    AnimatedVisibility(
+        visible = expanded,
+        enter = expandVertically(expandFrom = Alignment.Top),
+        exit = shrinkVertically(shrinkTowards = Alignment.Bottom)
+    ) {
+        Surface(
+            modifier = Modifier.size(140.dp, (mobileList.size * 40).dp),
+            color = lightGrey,
+            shape = shapes.small
+        ) {
+            Column {
+                for (item in mobileList) {
+                    Text(
+                        item,
+                        color = lightGrey3,
+                        modifier = Modifier
+                            .size(140.dp, 40.dp)
+                            .border(0.5.dp, lightGrey2)
+                            .padding(5.dp)
+                            .clickable {
+                                selectedCurrentMobile = item
+                                expanded = false
+                            },
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        }
+    }
+}
 
 @Composable
 fun CenterButtonBox() {
-    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+//    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+//        Button(onClick = {
+//            accessibilityIsEnabled = !accessibilityIsEnabled
+//        }, contentPadding = PaddingValues(0.dp), colors = ButtonDefaults.textButtonColors()) {
+//            if (accessibilityIsEnabled) {
+//                Image(
+//                    modifier = Modifier.size(140.dp, 140.dp),
+//                    painter = painterResource(id = R.drawable.disabled),
+//                    contentDescription = "disabled",
+//                )
+//            } else {
+//                Image(
+//                    modifier = Modifier.size(140.dp, 140.dp),
+//                    painter = painterResource(id = R.drawable.enabled),
+//                    contentDescription = "enabled",
+//                )
+//            }
+//        }
+//    }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .wrapContentSize(Alignment.Center)
+    ) {
+
         Button(onClick = {
             accessibilityIsEnabled = !accessibilityIsEnabled
         }, contentPadding = PaddingValues(0.dp), colors = ButtonDefaults.textButtonColors()) {
@@ -353,63 +414,16 @@ fun CenterButtonBox() {
                 )
             }
         }
-    }
-    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-
-        AnimatedVisibility(
-            visible = expanded,
-            enter = expandVertically(expandFrom = Alignment.Top),
-            exit = shrinkVertically(shrinkTowards = Alignment.Top)
-        ) {
-            Surface(
-                modifier = Modifier.size(140.dp, 160.dp),
-                color = lightGrey,
-                shape = shapes.small
-            ) {
-                Column {
-                    Text(
-                        "XIAOMI",
-                        color = lightGrey3,
-                        modifier = Modifier
-                            .size(140.dp, 40.dp)
-                            .padding(5.dp),
-                        fontSize = 18.sp,
-                        textAlign = TextAlign.Center
-                    )
-                    Divider(modifier = Modifier.height(1.dp), color = lightGrey2)
-                    Text(
-                        "HUAWEI",
-                        color = lightGrey3,
-                        modifier = Modifier
-                            .size(140.dp, 40.dp)
-                            .padding(5.dp),
-                        fontSize = 18.sp,
-                        textAlign = TextAlign.Center
-                    )
-                    Divider(modifier = Modifier.height(1.dp), color = lightGrey2)
-                    Text(
-                        "VIVO",
-                        color = lightGrey3,
-                        modifier = Modifier
-                            .size(140.dp, 40.dp)
-                            .padding(5.dp),
-                        fontSize = 18.sp,
-                        textAlign = TextAlign.Center
-                    )
-                    Divider(modifier = Modifier.height(1.dp), color = lightGrey2)
-                    Text(
-                        "MEIZU",
-                        color = lightGrey3,
-                        modifier = Modifier
-                            .size(140.dp, 40.dp)
-                            .padding(5.dp),
-                        fontSize = 18.sp,
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
-        }
-
+        CenterMenu(
+            listOf(
+                Mobile.XIAOMI.name,
+                Mobile.HUAWEI.name,
+                Mobile.MEIZU.name,
+                Mobile.VIVO.name,
+                Mobile.OPPO.name,
+                Mobile.ONEPLUS.name
+            )
+        )
     }
 }
 
@@ -424,38 +438,75 @@ fun BottomBox() {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(260.dp)
+                .height(300.dp)
                 .background(color = Color.White)
         ) {
             Text(
                 "操作方式",
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
-                modifier = Modifier.padding(32.dp, 24.dp, 32.dp, 0.dp)
+                modifier = Modifier.padding(32.dp, 20.dp, 32.dp, 0.dp)
             )
-            Text(
-                "1.打开应用后，前往后台管理应用，打开该应用的后台锁定",
-                fontSize = 14.sp,
-                modifier = Modifier.padding(32.dp, 8.dp, 32.dp, 0.dp),
-                color = Color.Gray
-            )
-            Text(
-                "2.打开应用自启动，省电策略选择无限制",
-                fontSize = 14.sp,
-                modifier = Modifier.padding(32.dp, 8.dp, 32.dp, 0.dp),
-                color = Color.Gray
-            )
+            val operationList = when (selectedCurrentMobile) {
+                Mobile.XIAOMI.name -> listOf(
+                    "1.打开应用后，前往后台应用管理，长按应用，点击右侧锁定锁定后台。",
+                    "2.长按应用图标，点击进入应用信息，打开自启动；点击省电策略，选择无限制。"
+                )
+                Mobile.HUAWEI.name -> listOf(
+                    "1.打开应用后，前往后台应用管理，下滑应用锁定后台。",
+                    "2.打开手机管家，选择应用启动管理，找到OneClick，关闭自动管理。在手动管理中打开：允许自启动、允许管理启动、允许后台活动。"
+                )
+                Mobile.OPPO.name -> listOf(
+                    "1.打开应用后，前往后台应用管理，点击右上角的更多，点击锁定锁定后台。",
+                    "2.长按应用图标，点击应用信息，打开允许自动启动。",
+                    "3.打开系统设置，点击电池，点击自定义耗电保护，找到OneClick，设置为允许后台运行。返回上一页，找到应用速冻，关闭OneClick的自动速冻。"
+                )
+                Mobile.VIVO.name -> listOf(
+                    "1.打开应用后，前往后台应用管理，下滑应用锁定后台。",
+                    "2.打开i管家，点击应用管理，点击权限管理，点击自启动，允许OneClick的自启动权限。",
+                    "3.打开系统设置，点击电池，点击后台耗电管理，找到OneClick，并允许后台高耗电。"
+                )
+                Mobile.MEIZU.name -> listOf(
+                    "1.打开应用后，前往后台应用管理，长按应用，点击锁定锁定后台。",
+                    "2.打开手机管理，点击隐私和权限，点击后台管理，设置OneClick为允许后台运行。"
+                )
+                Mobile.ONEPLUS.name -> listOf(
+                    "1.打开应用后，前往后台应用管理，长按应用，点击锁定锁定后台。",
+                    "2.打开系统设置，点击电池，点击电量优化，找到OneClick并设置为不优化。"
+                )
+                else -> listOf("")
+            }
+            for (item in operationList) {
+                Text(
+                    item,
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(32.dp, 4.dp, 32.dp, 0.dp),
+                    color = Color.Gray
+                )
+            }
+//            Text(
+//                "1.打开应用后，前往后台管理应用，打开该应用的后台锁定",
+//                fontSize = 14.sp,
+//                modifier = Modifier.padding(32.dp, 8.dp, 32.dp, 0.dp),
+//                color = Color.Gray
+//            )
+//            Text(
+//                "2.打开应用自启动，省电策略选择无限制",
+//                fontSize = 14.sp,
+//                modifier = Modifier.padding(32.dp, 8.dp, 32.dp, 0.dp),
+//                color = Color.Gray
+//            )
             Text(
                 "注意事项",
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
-                modifier = Modifier.padding(32.dp, 24.dp, 32.dp, 0.dp)
+                modifier = Modifier.padding(32.dp, 20.dp, 32.dp, 0.dp)
             )
             Text(
                 "由于无障碍服务会在应用进程结束后自动关闭，因此需要开启应用后台运行权限",
                 fontSize = 14.sp,
                 color = Color.Gray,
-                modifier = Modifier.padding(32.dp, 8.dp, 32.dp, 0.dp)
+                modifier = Modifier.padding(32.dp, 4.dp, 32.dp, 0.dp),
             )
         }
     }
