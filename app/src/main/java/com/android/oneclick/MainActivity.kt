@@ -2,8 +2,10 @@ package com.android.oneclick
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
@@ -16,17 +18,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.shapes
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,6 +37,7 @@ var alertDialogPositiveButtonClickState by mutableStateOf(false)
 var expanded by mutableStateOf(false)
 var selectedCurrentMobile by mutableStateOf(Mobile.XIAOMI.name)
 var accessibilityIsEnabled by mutableStateOf(false)
+
 
 class MainActivity : ComponentActivity() {
     private var accessibilityEnabled = 0
@@ -75,26 +74,24 @@ class MainActivity : ComponentActivity() {
                 accessibilityButtonClickState = false
             }
 
-//            if (alertDialogPositiveButtonClickState) {
-//                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-//                this.startActivity(intent)
-//                alertDialogPositiveButtonClickState = false
-//            }
-            if (accessibilityIsEnabled) {
+            if (alertDialogPositiveButtonClickState) {
                 val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
                 this.startActivity(intent)
+                alertDialogPositiveButtonClickState = false
             }
+//            if (accessibilityButtonClickState) {
+//                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+//                this.startActivity(intent)
+//            }
         }
-
-
     }
 
     override fun onResume() {
         super.onResume()
-//        accessibilityEnabled = Settings.Secure.getInt(
-//            this.applicationContext.contentResolver, Settings.Secure.ACCESSIBILITY_ENABLED
-//        )
-//        accessibilityState = accessibilityEnabled == 1
+        accessibilityEnabled = Settings.Secure.getInt(
+            this.applicationContext.contentResolver, Settings.Secure.ACCESSIBILITY_ENABLED
+        )
+        accessibilityState = accessibilityEnabled == 1
     }
 }
 
@@ -123,8 +120,9 @@ fun MainSurface() {
                 Text(selectedCurrentMobile, color = Color.White, fontSize = 18.sp)
             }
         }
-        CenterButtonBox()
         BottomBox()
+        CenterButtonBox()
+
     }
     /*
     OneClickTheme {
@@ -264,9 +262,7 @@ fun TopBox() {
         Column(modifier = Modifier.padding(0.dp, 60.dp)) {
             Text("SKIP", color = Color.White, fontSize = 36.sp)
             Row {
-                Text("是一款免费开源的自动", color = Color.White, fontSize = 16.sp)
-                Text("跳过", color = Color.White, fontSize = 16.sp)
-                Text("APP开屏广告的工具", color = Color.White, fontSize = 16.sp)
+                Text("是一款免费开源的自动跳过APP开屏广告的工具", color = Color.White, fontSize = 16.sp)
             }
 
         }
@@ -398,9 +394,9 @@ fun CenterButtonBox() {
     ) {
 
         Button(onClick = {
-            accessibilityIsEnabled = !accessibilityIsEnabled
+            accessibilityButtonClickState = true
         }, contentPadding = PaddingValues(0.dp), colors = ButtonDefaults.textButtonColors()) {
-            if (accessibilityIsEnabled) {
+            if (accessibilityState) {
                 Image(
                     modifier = Modifier.size(140.dp, 140.dp),
                     painter = painterResource(id = R.drawable.disabled),
@@ -436,17 +432,11 @@ fun BottomBox() {
     ) {
 
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp)
-                .background(color = Color.White)
+            modifier = Modifier.background(color = Color.White).padding(32.dp, 20.dp, 32.dp, 20.dp),
+            verticalArrangement = Arrangement.Center
         ) {
-            Text(
-                "操作方式",
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp,
-                modifier = Modifier.padding(32.dp, 20.dp, 32.dp, 0.dp)
-            )
+            Text("操作方式", fontWeight = FontWeight.Bold, fontSize = 18.sp, modifier = Modifier.padding(0.dp, 2.5.dp, 0.dp, 2.5.dp))
+
             val operationList = when (selectedCurrentMobile) {
                 Mobile.XIAOMI.name -> listOf(
                     "1.打开应用后，前往后台应用管理，长按应用，点击右侧锁定锁定后台。",
@@ -480,33 +470,21 @@ fun BottomBox() {
                 Text(
                     item,
                     fontSize = 14.sp,
-                    modifier = Modifier.padding(32.dp, 4.dp, 32.dp, 0.dp),
-                    color = Color.Gray
+                    color = Color.Gray,
+                    modifier = Modifier.padding(0.dp, 2.5.dp, 0.dp, 2.5.dp)
                 )
             }
-//            Text(
-//                "1.打开应用后，前往后台管理应用，打开该应用的后台锁定",
-//                fontSize = 14.sp,
-//                modifier = Modifier.padding(32.dp, 8.dp, 32.dp, 0.dp),
-//                color = Color.Gray
-//            )
-//            Text(
-//                "2.打开应用自启动，省电策略选择无限制",
-//                fontSize = 14.sp,
-//                modifier = Modifier.padding(32.dp, 8.dp, 32.dp, 0.dp),
-//                color = Color.Gray
-//            )
             Text(
                 "注意事项",
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
-                modifier = Modifier.padding(32.dp, 20.dp, 32.dp, 0.dp)
+                modifier = Modifier.padding(0.dp, 2.5.dp, 0.dp, 2.5.dp)
             )
             Text(
                 "由于无障碍服务会在应用进程结束后自动关闭，因此需要开启应用后台运行权限",
                 fontSize = 14.sp,
                 color = Color.Gray,
-                modifier = Modifier.padding(32.dp, 4.dp, 32.dp, 0.dp),
+                modifier = Modifier.padding(0.dp, 2.5.dp, 0.dp, 2.5.dp)
             )
         }
     }
