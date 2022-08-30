@@ -54,11 +54,7 @@ class MainActivity : ComponentActivity() {
                     AlertDialog(
                         context = this,
                         title = "启用无障碍服务",
-                        message = """
-                            1.点击已下载的应用
-                            2.点击SKIP
-                            3.开启使用SKIP
-                        """.trimIndent(),
+                        message = "已下载的应用>SKIP>使用SKIP".trimIndent(),
                         negativeText = "再想想",
                         positiveText = "去开启"
                     )
