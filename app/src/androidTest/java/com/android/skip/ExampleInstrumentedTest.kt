@@ -1,4 +1,4 @@
-package com.android.oneclick
+package com.android.skip
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

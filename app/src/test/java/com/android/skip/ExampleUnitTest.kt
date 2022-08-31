@@ -1,4 +1,4 @@
-package com.android.oneclick
+package com.android.skip
 
 import org.junit.Test
 
