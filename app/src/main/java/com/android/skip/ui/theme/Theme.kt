@@ -1,4 +1,4 @@
-package com.android.oneclick.ui.theme
+package com.android.skip.ui.theme
 
 import android.app.Activity
 import android.os.Build

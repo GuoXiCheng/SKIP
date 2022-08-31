@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.android.oneclick">
+    package="com.android.skip">
 
     <application
         android:allowBackup="true"
@@ -14,7 +14,7 @@
         android:theme="@style/Theme.OneClick"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name="com.android.skip.MainActivity"
             android:exported="true"
             android:label="@string/activity_main"
             android:excludeFromRecents="true"
@@ -27,7 +27,7 @@
         </activity>
 
         <service
-            android:name=".service.MyAccessibilityService"
+            android:name="com.android.skip.service.MyAccessibilityService"
             android:exported="true"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>

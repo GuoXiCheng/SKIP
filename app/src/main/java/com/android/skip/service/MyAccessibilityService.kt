@@ -1,4 +1,4 @@
-package com.android.oneclick.service
+package com.android.skip.service
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription

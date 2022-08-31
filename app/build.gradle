@@ -7,7 +7,7 @@ android {
     compileSdk 32
 
     defaultConfig {
-        applicationId "com.android.oneclick"
+        applicationId "com.android.skip"
         minSdk 24
         targetSdk 32
         versionCode 1
