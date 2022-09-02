@@ -4,5 +4,4 @@
 
 因为服务器流量有限，所以每日下载次数有设限，如果出现“今日下载次数已用完”，可以次日再试。
 
-<img src="\attachment\SKIP下载二维码.png" style="zoom: 50%;" />
-
+<img src="/GuoXiCheng/SKIP/blob/dev/attachment/SKIP%E4%B8%8B%E8%BD%BD%E4%BA%8C%E7%BB%B4%E7%A0%81.png?raw=true" alt="SKIP下载二维码.png">
