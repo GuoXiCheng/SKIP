@@ -37,10 +37,16 @@ class MyAccessibilityService : AccessibilityService() {
 
     private fun getNodeText(accessibilityNodeInfo: AccessibilityNodeInfo, rect: Rect): Rect {
         val childCounts = accessibilityNodeInfo.childCount
+
         if (childCounts == 0) {
             if (accessibilityNodeInfo.text != null) {
                 val nodeText = accessibilityNodeInfo.text.toString()
                 if (nodeText.contains("跳过")) {
+                    accessibilityNodeInfo.getBoundsInScreen(rect)
+                }
+            } else if (accessibilityNodeInfo.contentDescription != null) {
+                val content = accessibilityNodeInfo.contentDescription.toString()
+                if (content.contains("跳过")) {
                     accessibilityNodeInfo.getBoundsInScreen(rect)
                 }
             }
