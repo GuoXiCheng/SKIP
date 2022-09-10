@@ -7,10 +7,12 @@ import android.graphics.Rect
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
+import android.widget.Toast
 
 class MyAccessibilityService : AccessibilityService() {
     private var currentPackage = ""
     private var scanTime = 0
+    private var clickTime = 0
     override fun onAccessibilityEvent(p0: AccessibilityEvent?) {
         val rect = Rect()
         val windowNodes = windows
@@ -20,11 +22,16 @@ class MyAccessibilityService : AccessibilityService() {
             if (rootWindow != null && rootNode == rootWindow) {
                 scanTime += 1
                 if (currentPackage == rootWindow.packageName.toString()) {
+                    if (clickTime == 1) return
                     if (scanTime > 30) return
-                } else scanTime = 0
+                } else {
+                    scanTime = 0
+                    clickTime = 0
+                }
                 val position = getNodeText(rootWindow, rect)
                 if (position.toShortString() != "[0,0][0,0]") {
                     click(this, rect.exactCenterX(), rect.exactCenterY())
+                    clickTime += 1
                 }
                 currentPackage = rootWindow.packageName.toString()
             }
@@ -41,12 +48,12 @@ class MyAccessibilityService : AccessibilityService() {
         if (childCounts == 0) {
             if (accessibilityNodeInfo.text != null) {
                 val nodeText = accessibilityNodeInfo.text.toString()
-                if (nodeText.contains("跳过")) {
+                if (nodeText.length <= 6 && nodeText.contains("跳过")) {
                     accessibilityNodeInfo.getBoundsInScreen(rect)
                 }
             } else if (accessibilityNodeInfo.contentDescription != null) {
                 val content = accessibilityNodeInfo.contentDescription.toString()
-                if (content.contains("跳过")) {
+                if (content.length <= 6 && content.contains("跳过")) {
                     accessibilityNodeInfo.getBoundsInScreen(rect)
                 }
             }
@@ -63,7 +70,7 @@ class MyAccessibilityService : AccessibilityService() {
 
 
     private fun click(accessibilityService: AccessibilityService, x: Float, y: Float) {
-
+        val service = this
         val builder = GestureDescription.Builder()
         val path = Path()
         path.moveTo(x, y)
@@ -80,6 +87,7 @@ class MyAccessibilityService : AccessibilityService() {
 
                 override fun onCompleted(gestureDescription: GestureDescription) {
                     super.onCompleted(gestureDescription)
+                    Toast.makeText(service, "已为您跳过广告", Toast.LENGTH_SHORT).show()
                 }
             },
             null
