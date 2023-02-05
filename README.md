@@ -4,6 +4,8 @@
 
 ## 下载链接
 
+[github下载](https://github.com/GuoXiCheng/SKIP/raw/main/apk/SKIP-v1.2.apk)
+
 [夸克网盘下载](https://pan.quark.cn/s/eb59f61232ef)
 
 ## 小米开启无障碍服务参考
