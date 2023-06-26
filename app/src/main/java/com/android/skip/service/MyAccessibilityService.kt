@@ -70,7 +70,6 @@ class MyAccessibilityService : AccessibilityService() {
 
 
     private fun click(accessibilityService: AccessibilityService, x: Float, y: Float) {
-        val service = this
         val builder = GestureDescription.Builder()
         val path = Path()
         path.moveTo(x, y)
@@ -80,17 +79,13 @@ class MyAccessibilityService : AccessibilityService() {
         accessibilityService.dispatchGesture(
             gesture,
             object : AccessibilityService.GestureResultCallback() {
-
-                override fun onCancelled(gestureDescription: GestureDescription) {
-                    super.onCancelled(gestureDescription)
-                }
-
                 override fun onCompleted(gestureDescription: GestureDescription) {
                     super.onCompleted(gestureDescription)
-                    Toast.makeText(service, "已为您跳过广告", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(accessibilityService, "已为您跳过广告", Toast.LENGTH_SHORT).show()
                 }
             },
             null
         )
     }
+
 }
