@@ -6,17 +6,23 @@ import android.graphics.Path
 import android.graphics.Rect
 import android.view.accessibility.AccessibilityEvent
 import android.widget.Toast
+import com.android.skip.AnalyticsManager
 
 class MyAccessibilityService : AccessibilityService() {
     override fun onAccessibilityEvent(p0: AccessibilityEvent?) {
         val rect = Rect()
         val rootNode = rootInActiveWindow
         if (rootNode != null) {
+
+            if (!AnalyticsManager.isPerformScan(rootNode.packageName.toString())) return
+
             val skipNodes = rootNode.findAccessibilityNodeInfosByText("跳过")
             if (skipNodes.isNotEmpty()) {
                 skipNodes[0].getBoundsInScreen(rect)
                 click(this, rect.exactCenterX(), rect.exactCenterY())
             }
+
+            AnalyticsManager.increaseScanCount()
         }
     }
 
@@ -34,7 +40,12 @@ class MyAccessibilityService : AccessibilityService() {
             object : AccessibilityService.GestureResultCallback() {
                 override fun onCompleted(gestureDescription: GestureDescription) {
                     super.onCompleted(gestureDescription)
-                    Toast.makeText(accessibilityService, "已为您跳过广告", Toast.LENGTH_SHORT).show()
+
+                    if (AnalyticsManager.isShowToast()) {
+                        Toast.makeText(accessibilityService, "已为您跳过广告", Toast.LENGTH_SHORT).show()
+                        AnalyticsManager.setShowToastCount()
+                    }
+
                 }
             },
             null
