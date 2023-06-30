@@ -3,6 +3,7 @@ package com.android.skip
 import android.content.Context
 import android.provider.Settings
 import android.text.TextUtils
+import android.view.accessibility.AccessibilityNodeInfo
 import com.android.skip.service.MyAccessibilityService
 
 object MyUtils {
@@ -36,5 +37,12 @@ object MyUtils {
             }
         }
         return false
+    }
+
+    fun handleRootNodeByPackageName (rootNode: AccessibilityNodeInfo): MutableList<AccessibilityNodeInfo> {
+        return when (rootNode.packageName.toString()) {
+            "com.qiyi.video.lite", "com.qiyi.video" -> rootNode.findAccessibilityNodeInfosByText("关闭")
+            else -> rootNode.findAccessibilityNodeInfosByText("跳过")
+        }
     }
 }

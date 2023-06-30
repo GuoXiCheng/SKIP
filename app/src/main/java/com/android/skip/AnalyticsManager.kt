@@ -1,5 +1,6 @@
 package com.android.skip
 
+
 object AnalyticsManager {
     private var packageName = ""
     private var showToastCount = 0
