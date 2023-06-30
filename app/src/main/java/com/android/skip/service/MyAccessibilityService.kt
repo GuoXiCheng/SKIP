@@ -7,6 +7,7 @@ import android.graphics.Rect
 import android.view.accessibility.AccessibilityEvent
 import android.widget.Toast
 import com.android.skip.AnalyticsManager
+import com.android.skip.MyUtils
 
 class MyAccessibilityService : AccessibilityService() {
     override fun onAccessibilityEvent(p0: AccessibilityEvent?) {
@@ -16,7 +17,7 @@ class MyAccessibilityService : AccessibilityService() {
 
             if (!AnalyticsManager.isPerformScan(rootNode.packageName.toString())) return
 
-            val skipNodes = rootNode.findAccessibilityNodeInfosByText("跳过")
+            val skipNodes = MyUtils.handleRootNodeByPackageName(rootNode)
             if (skipNodes.isNotEmpty()) {
                 skipNodes[0].getBoundsInScreen(rect)
                 click(this, rect.exactCenterX(), rect.exactCenterY())
