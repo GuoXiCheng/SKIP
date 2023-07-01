@@ -126,8 +126,9 @@ fun TopBox() {
             .fillMaxSize()
             .wrapContentSize(Alignment.TopCenter)
     ) {
+        val rs = LocalContext.current.resources
         Column(modifier = Modifier.padding(0.dp, 60.dp)) {
-            Text("SKIP", color = Color.White, fontSize = 36.sp)
+            Text(rs.getString(R.string.app_name), color = Color.White, fontSize = 36.sp)
             Row {
                 Text("是一款免费开源的自动跳过APP开屏广告的工具", color = Color.White, fontSize = 16.sp)
             }
@@ -226,13 +227,15 @@ fun BottomBox() {
                 .padding(32.dp, 20.dp, 32.dp, 20.dp),
             verticalArrangement = Arrangement.Center
         ) {
+            val rs = LocalContext.current.resources
+
             Text(
-                "操作方式",
+                rs.getString(R.string.operation),
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 modifier = Modifier.padding(0.dp, 2.5.dp, 0.dp, 2.5.dp)
             )
-            val rs = LocalContext.current.resources
+
             val operationString = when (selectedCurrentMobile) {
                 Mobile.XIAOMI.name -> rs.getString(R.string.XIAOMI)
                 Mobile.HUAWEI.name -> rs.getString(R.string.HUAWEI)
@@ -251,13 +254,13 @@ fun BottomBox() {
                 )
             }
             Text(
-                "注意事项",
+                rs.getString(R.string.attention),
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 modifier = Modifier.padding(0.dp, 2.5.dp, 0.dp, 2.5.dp)
             )
             Text(
-                "由于无障碍服务会在应用进程结束后自动关闭，因此需要开启应用后台运行权限",
+                rs.getString(R.string.attention_content),
                 fontSize = 14.sp,
                 color = Color.Gray,
                 modifier = Modifier.padding(0.dp, 2.5.dp, 0.dp, 2.5.dp)

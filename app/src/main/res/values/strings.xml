@@ -8,4 +8,7 @@
     <string name="VIVO">1.打开SKIP>最近任务管理>下滑SKIP窗口锁定后台。#2.打开i管家>应用管理>权限管理>自启动>允许SKIP的自启动权限。#3.打开系统设置>电池>后台耗电管理>找到SKIP并允许后台高耗电。</string>
     <string name="MEIZU">1.打开SKIP>最近任务管理>长按SKIP窗口>点击锁定锁定后台。#2.打开手机管理>隐私和权限>后台管理>设置SKIP允许后台运行。</string>
     <string name="ONEPLUS">1.打开SKIP>最近任务管理>长按SKIP窗口>点击锁定锁定后台。#2.打开系统设置>电池>电量优化>找到SKIP并设置为不优化。</string>
+    <string name="attention">注意事项</string>
+    <string name="attention_content">由于无障碍服务会在应用进程结束后自动关闭，因此需要开启应用后台运行权限</string>
+    <string name="operation">操作方式</string>
 </resources>
