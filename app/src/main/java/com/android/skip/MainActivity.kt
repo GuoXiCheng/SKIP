@@ -41,7 +41,7 @@ var selectedCurrentMobile by mutableStateOf(Mobile.XIAOMI.name)
 
 
 class MainActivity : ComponentActivity() {
-    private var accessibilityEnabled = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -224,6 +224,7 @@ fun BottomBox() {
         Column(
             modifier = Modifier
                 .background(color = Color.White)
+                .height(300.dp)
                 .padding(32.dp, 20.dp, 32.dp, 20.dp),
             verticalArrangement = Arrangement.Center
         ) {

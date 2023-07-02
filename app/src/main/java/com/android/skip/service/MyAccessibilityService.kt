@@ -10,8 +10,12 @@ import com.android.skip.AnalyticsManager
 import com.android.skip.MyUtils
 
 class MyAccessibilityService : AccessibilityService() {
+
+    private val path = Path()
+    private val builder = GestureDescription.Builder()
+    private val rect = Rect()
+
     override fun onAccessibilityEvent(p0: AccessibilityEvent?) {
-        val rect = Rect()
         val rootNode = rootInActiveWindow
         if (rootNode != null) {
 
@@ -30,12 +34,13 @@ class MyAccessibilityService : AccessibilityService() {
     override fun onInterrupt() {}
 
     private fun click(accessibilityService: AccessibilityService, x: Float, y: Float) {
-        val builder = GestureDescription.Builder()
-        val path = Path()
+        path.reset()
         path.moveTo(x, y)
         path.lineTo(x, y)
+
         builder.addStroke(GestureDescription.StrokeDescription(path, 0, 1))
         val gesture = builder.build()
+
         accessibilityService.dispatchGesture(
             gesture,
             object : AccessibilityService.GestureResultCallback() {
