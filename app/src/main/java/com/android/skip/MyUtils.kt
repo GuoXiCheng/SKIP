@@ -1,9 +1,12 @@
 package com.android.skip
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.provider.Settings
 import android.text.TextUtils
 import android.view.accessibility.AccessibilityNodeInfo
+import androidx.appcompat.app.AppCompatActivity
 import com.android.skip.service.MyAccessibilityService
 
 object MyUtils {
@@ -44,5 +47,12 @@ object MyUtils {
             "com.qiyi.video.lite", "com.qiyi.video" -> rootNode.findAccessibilityNodeInfosByText("关闭")
             else -> rootNode.findAccessibilityNodeInfosByText("跳过")
         }
+    }
+
+    fun openAppSettings(activity: MainActivity, packageName: String = "com.android.skip") {
+        val intent = Intent()
+        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+        intent.data = Uri.fromParts("package", packageName, null)
+        activity.startActivity(intent)
     }
 }

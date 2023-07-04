@@ -16,10 +16,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.shapes
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -86,63 +83,108 @@ class MainActivity : ComponentActivity() {
 }
 
 
-
-
-
 @Composable
 @Preview
 fun MainSurface() {
     OneClickTheme {
-        Surface(modifier = Modifier.fillMaxSize(), color = green) {
 
-        }
-        TopBox()
-        Column(
+        val res = LocalContext.current.resources
+
+        PageHeader(res.getString(R.string.app_name), "是一款免费开源的自动跳过APP开屏广告的工具")
+
+        Box(
             modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            contentAlignment = Alignment.Center
         ) {
-            Text(
-                "机型选择",
-                color = Color.White,
-                fontSize = 12.sp,
-                modifier = Modifier.offset(0.dp, 200.dp)
+            Box(modifier = Modifier.offset(y = (-150).dp)) {
+                ModelSelectionBtn()
+            }
+        }
+
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            ModelSelectionMenu(
+                listOf(
+                    Mobile.XIAOMI.name,
+                    Mobile.HUAWEI.name,
+                    Mobile.MEIZU.name,
+                    Mobile.VIVO.name,
+                    Mobile.OPPO.name,
+                    Mobile.ONEPLUS.name
+                )
             )
-            TextButton(onClick = {
-                expanded = !expanded
-            }, modifier = Modifier.offset(0.dp, 200.dp)) {
-                Text(selectedCurrentMobile, color = Color.White, fontSize = 18.sp)
-            }
         }
-        BottomBox()
-        CenterButtonBox()
+
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            AccessibilityControlBtn()
+        }
+
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            PromptBox()
+            PageFooter()
+        }
 
     }
 }
 
 @Composable
-fun TopBox() {
-    Box(
+fun PageHeader(title: String, subtitle: String) {
+    Column(
         modifier = Modifier
-            .fillMaxSize()
-            .wrapContentSize(Alignment.TopCenter)
+            .fillMaxWidth()
+            .padding(16.dp)
+            .padding(top = 60.dp)
     ) {
-        val rs = LocalContext.current.resources
-        Column(modifier = Modifier.padding(0.dp, 60.dp)) {
-            Text(rs.getString(R.string.app_name), color = Color.White, fontSize = 36.sp)
-            Row {
-                Text("是一款免费开源的自动跳过APP开屏广告的工具", color = Color.White, fontSize = 16.sp)
-            }
+        Text(
+            text = title,
+            color = Color.White,
+            fontSize = 36.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        Text(
+            text = subtitle,
+            color = Color.White,
+            fontSize = 16.sp,
+        )
+    }
+}
 
+@Composable
+fun ModelSelectionBtn() {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "机型选择",
+            color = Color.White,
+            fontSize = 12.sp
+        )
+
+        TextButton(
+            onClick = { expanded = !expanded }
+        ) {
+            Text(selectedCurrentMobile, color = Color.White, fontSize = 18.sp)
         }
 
     }
+
 
 }
 
 
 @Composable
-fun CenterMenu(mobileList: List<String>) {
-    Text("", modifier = Modifier.size(140.dp, (mobileList.size * 40).dp))
+fun ModelSelectionMenu(mobileList: List<String>) {
     AnimatedVisibility(
         visible = expanded,
         enter = expandVertically(expandFrom = Alignment.Top),
@@ -175,98 +217,98 @@ fun CenterMenu(mobileList: List<String>) {
     }
 }
 
-@Composable
-fun CenterButtonBox() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .wrapContentSize(Alignment.Center)
-    ) {
 
-        Button(onClick = {
+@Composable
+fun AccessibilityControlBtn() {
+    Button(
+        onClick = {
             accessibilityButtonClickState = true
-        }, contentPadding = PaddingValues(0.dp), colors = ButtonDefaults.textButtonColors()) {
-            if (accessibilityState) {
-                Image(
-                    modifier = Modifier.size(140.dp, 140.dp),
-                    painter = painterResource(id = R.drawable.disabled),
-                    contentDescription = "disabled",
-                )
-            } else {
-                Image(
-                    modifier = Modifier.size(140.dp, 140.dp),
-                    painter = painterResource(id = R.drawable.enabled),
-                    contentDescription = "enabled",
-                )
-            }
-        }
-        CenterMenu(
-            listOf(
-                Mobile.XIAOMI.name,
-                Mobile.HUAWEI.name,
-                Mobile.MEIZU.name,
-                Mobile.VIVO.name,
-                Mobile.OPPO.name,
-                Mobile.ONEPLUS.name
+        },
+        contentPadding = PaddingValues(0.dp),
+        colors = ButtonDefaults.textButtonColors()
+    ) {
+        if (accessibilityState) {
+            Image(
+                modifier = Modifier.size(140.dp, 140.dp),
+                painter = painterResource(id = R.drawable.disabled),
+                contentDescription = "disabled",
             )
-        )
+        } else {
+            Image(
+                modifier = Modifier.size(140.dp, 140.dp),
+                painter = painterResource(id = R.drawable.enabled),
+                contentDescription = "enabled",
+            )
+        }
     }
 }
 
 @Composable
-fun BottomBox() {
-    Box(
+fun PromptBox() {
+    Column(
         modifier = Modifier
-            .fillMaxSize()
-            .wrapContentSize(Alignment.BottomStart)
+            .background(color = Color.White)
+            .height(300.dp)
+            .padding(32.dp, 20.dp, 32.dp, 20.dp),
+        verticalArrangement = Arrangement.Center
     ) {
+        val rs = LocalContext.current.resources
 
-        Column(
-            modifier = Modifier
-                .background(color = Color.White)
-                .height(300.dp)
-                .padding(32.dp, 20.dp, 32.dp, 20.dp),
-            verticalArrangement = Arrangement.Center
-        ) {
-            val rs = LocalContext.current.resources
+        Text(
+            rs.getString(R.string.operation),
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
+            modifier = Modifier.padding(0.dp, 2.5.dp, 0.dp, 2.5.dp)
+        )
 
+        val operationString = when (selectedCurrentMobile) {
+            Mobile.XIAOMI.name -> rs.getString(R.string.XIAOMI)
+            Mobile.HUAWEI.name -> rs.getString(R.string.HUAWEI)
+            Mobile.OPPO.name -> rs.getString(R.string.OPPO)
+            Mobile.VIVO.name -> rs.getString(R.string.VIVO)
+            Mobile.MEIZU.name -> rs.getString(R.string.MEIZU)
+            Mobile.ONEPLUS.name -> rs.getString(R.string.ONEPLUS)
+            else -> ""
+        }
+        for (item in operationString.split("#")) {
             Text(
-                rs.getString(R.string.operation),
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp,
-                modifier = Modifier.padding(0.dp, 2.5.dp, 0.dp, 2.5.dp)
-            )
-
-            val operationString = when (selectedCurrentMobile) {
-                Mobile.XIAOMI.name -> rs.getString(R.string.XIAOMI)
-                Mobile.HUAWEI.name -> rs.getString(R.string.HUAWEI)
-                Mobile.OPPO.name -> rs.getString(R.string.OPPO)
-                Mobile.VIVO.name -> rs.getString(R.string.VIVO)
-                Mobile.MEIZU.name -> rs.getString(R.string.MEIZU)
-                Mobile.ONEPLUS.name -> rs.getString(R.string.ONEPLUS)
-                else -> ""
-            }
-            for (item in operationString.split("#")) {
-                Text(
-                    item,
-                    fontSize = 14.sp,
-                    color = Color.Gray,
-                    modifier = Modifier.padding(0.dp, 2.5.dp, 0.dp, 2.5.dp)
-                )
-            }
-            Text(
-                rs.getString(R.string.attention),
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp,
-                modifier = Modifier.padding(0.dp, 2.5.dp, 0.dp, 2.5.dp)
-            )
-            Text(
-                rs.getString(R.string.attention_content),
+                item,
                 fontSize = 14.sp,
                 color = Color.Gray,
                 modifier = Modifier.padding(0.dp, 2.5.dp, 0.dp, 2.5.dp)
             )
         }
+        Text(
+            rs.getString(R.string.attention),
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
+            modifier = Modifier.padding(0.dp, 2.5.dp, 0.dp, 2.5.dp)
+        )
+        Text(
+            rs.getString(R.string.attention_content),
+            fontSize = 14.sp,
+            color = Color.Gray,
+            modifier = Modifier.padding(0.dp, 2.5.dp, 0.dp, 2.5.dp)
+        )
+    }
+
+}
+
+@Composable
+fun PageFooter() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(56.dp)
+            .background(color = Color.White),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "Copyright © 2023 Your App. All rights reserved.",
+            color = Color.Black,
+            fontSize = 12.sp
+        )
     }
 }
 
