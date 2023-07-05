@@ -20,6 +20,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -105,24 +106,35 @@ fun MainSurface() {
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            ModelSelectionMenu(
-                listOf(
-                    Mobile.XIAOMI.name,
-                    Mobile.HUAWEI.name,
-                    Mobile.MEIZU.name,
-                    Mobile.VIVO.name,
-                    Mobile.OPPO.name,
-                    Mobile.ONEPLUS.name
-                )
-            )
+            AccessibilityControlBtn()
         }
 
         Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            modifier = Modifier.fillMaxSize()
         ) {
-            AccessibilityControlBtn()
+            val configuration = LocalConfiguration.current
+            val screenWidthDp = configuration.screenWidthDp
+            val screenHeightDp = configuration.screenHeightDp
+
+            val xOffset = screenWidthDp / 2
+            val yOffset = screenHeightDp / 2.5
+
+            Box(modifier = Modifier.offset(x = (xOffset).dp - 70.dp, y = (yOffset).dp)) {
+                ModelSelectionMenu(
+                    listOf(
+                        Mobile.XIAOMI.name,
+                        Mobile.HUAWEI.name,
+                        Mobile.MEIZU.name,
+                        Mobile.VIVO.name,
+                        Mobile.OPPO.name,
+                        Mobile.ONEPLUS.name
+                    )
+                )
+            }
+
         }
+
+
 
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -170,16 +182,12 @@ fun ModelSelectionBtn() {
             color = Color.White,
             fontSize = 12.sp
         )
-
         TextButton(
             onClick = { expanded = !expanded }
         ) {
             Text(selectedCurrentMobile, color = Color.White, fontSize = 18.sp)
         }
-
     }
-
-
 }
 
 
@@ -248,7 +256,7 @@ fun PromptBox() {
     Column(
         modifier = Modifier
             .background(color = Color.White)
-            .height(300.dp)
+            .height(270.dp)
             .padding(32.dp, 20.dp, 32.dp, 20.dp),
         verticalArrangement = Arrangement.Center
     ) {
@@ -299,7 +307,7 @@ fun PageFooter() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(56.dp)
+            .height(10.dp)
             .background(color = Color.White),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
