@@ -5,29 +5,42 @@ import android.accessibilityservice.GestureDescription
 import android.graphics.Path
 import android.graphics.Rect
 import android.view.accessibility.AccessibilityEvent
+import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Toast
 import com.android.skip.AnalyticsManager
-import com.android.skip.MyUtils
 
 class MyAccessibilityService : AccessibilityService() {
 
     private val path = Path()
-    private val builder = GestureDescription.Builder()
     private val rect = Rect()
 
     override fun onAccessibilityEvent(p0: AccessibilityEvent?) {
-        val rootNode = rootInActiveWindow
-        if (rootNode != null) {
 
-            if (!AnalyticsManager.isPerformScan(rootNode.packageName.toString())) return
+        try {
+            if (!AnalyticsManager.isPerformScan(getCurrentRootNode().packageName.toString())) return
 
-            val skipNodes = MyUtils.handleRootNodeByPackageName(rootNode)
+            val skipNodes = handleRootNodeByPackageName()
             if (skipNodes.isNotEmpty()) {
                 skipNodes[0].getBoundsInScreen(rect)
                 click(this, rect.exactCenterX(), rect.exactCenterY())
             }
 
             AnalyticsManager.increaseScanCount()
+        } catch (e: Exception) {
+            println(e)
+        }
+    }
+
+    private fun getCurrentRootNode(): AccessibilityNodeInfo {
+        val rootNode = rootInActiveWindow
+        if (rootNode != null) return rootNode
+        else throw IllegalStateException("No valid root node available");
+    }
+
+    fun handleRootNodeByPackageName (): MutableList<AccessibilityNodeInfo> {
+        return when (getCurrentRootNode().packageName.toString()) {
+            "com.qiyi.video.lite", "com.qiyi.video" -> getCurrentRootNode().findAccessibilityNodeInfosByText("关闭")
+            else -> getCurrentRootNode().findAccessibilityNodeInfosByText("跳过")
         }
     }
 
@@ -38,6 +51,7 @@ class MyAccessibilityService : AccessibilityService() {
         path.moveTo(x, y)
         path.lineTo(x, y)
 
+        val builder = GestureDescription.Builder()
         builder.addStroke(GestureDescription.StrokeDescription(path, 0, 1))
         val gesture = builder.build()
 

@@ -5,8 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import android.text.TextUtils
-import android.view.accessibility.AccessibilityNodeInfo
-import androidx.appcompat.app.AppCompatActivity
 import com.android.skip.service.MyAccessibilityService
 
 object MyUtils {
@@ -40,13 +38,6 @@ object MyUtils {
             }
         }
         return false
-    }
-
-    fun handleRootNodeByPackageName (rootNode: AccessibilityNodeInfo): MutableList<AccessibilityNodeInfo> {
-        return when (rootNode.packageName.toString()) {
-            "com.qiyi.video.lite", "com.qiyi.video" -> rootNode.findAccessibilityNodeInfosByText("关闭")
-            else -> rootNode.findAccessibilityNodeInfosByText("跳过")
-        }
     }
 
     fun openAppSettings(activity: MainActivity, packageName: String = "com.android.skip") {
