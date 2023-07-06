@@ -2,6 +2,7 @@ package com.android.skip
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.ComponentActivity
@@ -14,6 +15,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.runtime.*
@@ -23,13 +25,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.skip.ui.theme.*
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.launch
 
 var accessibilityState by mutableStateOf(false)
 var accessibilityButtonClickState by mutableStateOf(false)
@@ -53,7 +59,7 @@ class MainActivity : ComponentActivity() {
                     AlertDialog(
                         context = this,
                         title = "启用无障碍服务",
-                        message = "已下载的应用>SKIP>使用SKIP".trimIndent(),
+                        message = "已下载的应用 > SKIP > 使用SKIP".trimIndent(),
                         negativeText = "再想想",
                         positiveText = "去开启"
                     )
@@ -119,7 +125,7 @@ fun MainSurface() {
             val xOffset = screenWidthDp / 2
             val yOffset = screenHeightDp / 2.5
 
-            Box(modifier = Modifier.offset(x = (xOffset).dp - 70.dp, y = (yOffset).dp)) {
+            Box(modifier = Modifier.offset(x = (xOffset).dp - 75.dp, y = (yOffset).dp)) {
                 ModelSelectionMenu(
                     listOf(
                         Mobile.XIAOMI.name,
@@ -199,7 +205,7 @@ fun ModelSelectionMenu(mobileList: List<String>) {
         exit = shrinkVertically(shrinkTowards = Alignment.Bottom)
     ) {
         Surface(
-            modifier = Modifier.size(140.dp, (mobileList.size * 40).dp),
+            modifier = Modifier.size(150.dp, (mobileList.size * 40).dp),
             color = lightGrey,
             shape = shapes.small
         ) {
@@ -209,7 +215,7 @@ fun ModelSelectionMenu(mobileList: List<String>) {
                         item,
                         color = lightGrey3,
                         modifier = Modifier
-                            .size(140.dp, 40.dp)
+                            .size(150.dp, 40.dp)
                             .border(0.5.dp, lightGrey2)
                             .padding(5.dp)
                             .clickable {
@@ -304,21 +310,44 @@ fun PromptBox() {
 
 @Composable
 fun PageFooter() {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(10.dp)
+            .height(25.dp)
             .background(color = Color.White),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        Text(
-            text = "Copyright © 2023 Your App. All rights reserved.",
-            color = Color.Black,
-            fontSize = 12.sp
+        val annotatedString = buildAnnotatedString {
+            withStyle(style = SpanStyle(color = Color.Black, fontSize = 12.sp)) {
+                append("Github")
+                addStringAnnotation(tag = "URL", annotation = "https://github.com/GuoXiCheng/SKIP", start = 0, end = 6)
+                append(" | ")
+                append("Document")
+                addStringAnnotation(tag = "URL", annotation = "https://guoxicheng.github.io/SKIP-Docs/introduction", start = 9, end = 18)
+                append(" | Version " + BuildConfig.VERSION_NAME)
+            }
+        }
+        ClickableText(
+            text = annotatedString,
+            onClick = { offset ->
+                annotatedString.getStringAnnotations("URL", start = offset, end = offset)
+                    .firstOrNull()?.let { annotation ->
+                        val url = annotation.item
+                        coroutineScope.launch {
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                            context.startActivity(intent)
+                        }
+                    }
+            }
         )
     }
 }
+
+
 
 
 @Composable
