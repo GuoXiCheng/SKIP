@@ -22,7 +22,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -30,10 +29,12 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.android.skip.ui.theme.*
+import com.android.skip.ui.theme.OneClickTheme
+import com.android.skip.ui.theme.lightGrey
+import com.android.skip.ui.theme.lightGrey2
+import com.android.skip.ui.theme.lightGrey3
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 
@@ -42,9 +43,18 @@ var accessibilityButtonClickState by mutableStateOf(false)
 var alertDialogPositiveButtonClickState by mutableStateOf(false)
 var expanded by mutableStateOf(false)
 var selectedCurrentMobile by mutableStateOf(Mobile.XIAOMI.name)
+var isAppInfoBtnClicked by mutableStateOf(false)
 
 
 class MainActivity : ComponentActivity() {
+    private fun openAppInfo() {
+        val packageName = packageName
+        val intent = Intent(
+            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.parse("package:$packageName")
+        )
+        startActivity(intent)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -80,6 +90,11 @@ class MainActivity : ComponentActivity() {
                 this.startActivity(intent)
                 alertDialogPositiveButtonClickState = false
             }
+
+            if (isAppInfoBtnClicked) {
+                openAppInfo()
+                isAppInfoBtnClicked = false
+            }
         }
     }
 
@@ -91,7 +106,6 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-@Preview
 fun MainSurface() {
     OneClickTheme {
 
@@ -99,14 +113,14 @@ fun MainSurface() {
 
         PageHeader(res.getString(R.string.app_name), "是一款免费开源的自动跳过APP开屏广告的工具")
 
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Box(modifier = Modifier.offset(y = (-150).dp)) {
-                ModelSelectionBtn()
-            }
-        }
+//        Box(
+//            modifier = Modifier.fillMaxSize(),
+//            contentAlignment = Alignment.Center
+//        ) {
+//            Box(modifier = Modifier.offset(y = (-150).dp)) {
+//                ModelSelectionBtn()
+//            }
+//        }
 
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -115,38 +129,37 @@ fun MainSurface() {
             AccessibilityControlBtn()
         }
 
-        Box(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            val configuration = LocalConfiguration.current
-            val screenWidthDp = configuration.screenWidthDp
-            val screenHeightDp = configuration.screenHeightDp
-
-            val xOffset = screenWidthDp / 2
-            val yOffset = screenHeightDp / 2.5
-
-            Box(modifier = Modifier.offset(x = (xOffset).dp - 75.dp, y = (yOffset).dp)) {
-                ModelSelectionMenu(
-                    listOf(
-                        Mobile.XIAOMI.name,
-                        Mobile.HUAWEI.name,
-                        Mobile.MEIZU.name,
-                        Mobile.VIVO.name,
-                        Mobile.OPPO.name,
-                        Mobile.ONEPLUS.name
-                    )
-                )
-            }
-
-        }
-
+//        Box(
+//            modifier = Modifier.fillMaxSize()
+//        ) {
+//            val configuration = LocalConfiguration.current
+//            val screenWidthDp = configuration.screenWidthDp
+//            val screenHeightDp = configuration.screenHeightDp
+//
+//            val xOffset = screenWidthDp / 2
+//            val yOffset = screenHeightDp / 2.5
+//
+//            Box(modifier = Modifier.offset(x = (xOffset).dp - 75.dp, y = (yOffset).dp)) {
+//                ModelSelectionMenu(
+//                    listOf(
+//                        Mobile.XIAOMI.name,
+//                        Mobile.HUAWEI.name,
+//                        Mobile.MEIZU.name,
+//                        Mobile.VIVO.name,
+//                        Mobile.OPPO.name,
+//                        Mobile.ONEPLUS.name
+//                    )
+//                )
+//            }
+//
+//        }
 
 
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
         ) {
-            PromptBox()
+            TipBox()
             PageFooter()
         }
 
@@ -175,6 +188,95 @@ fun PageHeader(title: String, subtitle: String) {
         )
     }
 }
+
+@Composable
+fun TipBox() {
+
+    Column(
+        modifier = Modifier
+            .background(color = Color.White)
+            .height(270.dp)
+            .fillMaxWidth()
+            .padding(30.dp, 20.dp)
+    ) {
+        Text(
+            "操作方式",
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
+            modifier = Modifier.padding(0.dp, 5.dp, 0.dp, 5.dp)
+        )
+
+        Text(
+            "第一步：进入「后台任务管理」,长按「SKIP」,锁定",
+            fontSize = 14.sp,
+            color = Color.Gray,
+            modifier = Modifier.padding(0.dp, 2.5.dp, 0.dp, 2.5.dp)
+        )
+
+        Row {
+            TipText("第二步：进入「")
+            ClickableText("应用信息")
+            TipText("」,省电策略, 无限制")
+        }
+
+        Row {
+            TipText("第三步：进入「")
+            ClickableText("应用信息")
+            TipText("」,自启动, 允许")
+        }
+
+        Text(
+            "注意事项",
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
+            modifier = Modifier.padding(0.dp, 5.dp, 0.dp, 5.dp)
+        )
+
+        TipText("由于无障碍服务会在应用进程结束后自动关闭，因此需要完成上述操作开启应用后台运行权限")
+
+
+    }
+}
+
+@Composable
+fun TipText(text: String) {
+    Text(
+        text,
+        fontSize = 14.sp,
+        color = Color.Gray,
+        modifier = Modifier.padding(0.dp, 2.5.dp, 0.dp, 2.5.dp)
+    )
+}
+
+@Composable
+fun ClickableText(text: String) {
+    val annotatedString = buildAnnotatedString {
+        append(text)
+        addStyle(
+            style = SpanStyle(textDecoration = androidx.compose.ui.text.style.TextDecoration.Underline),
+            start = 0,
+            end = length
+        )
+        addStringAnnotation(
+            tag = "Clickable",
+            annotation = "Details",
+            start = 0,
+            end = length
+        )
+    }
+
+    ClickableText(
+        text = annotatedString,
+        modifier = Modifier.padding(0.dp, 2.5.dp, 0.dp, 2.5.dp),
+        onClick = { offset ->
+            annotatedString.getStringAnnotations("Clickable", offset, offset)
+                .firstOrNull()?.let { _ ->
+                    isAppInfoBtnClicked = true
+                }
+        }
+    )
+}
+
 
 @Composable
 fun ModelSelectionBtn() {
@@ -316,7 +418,7 @@ fun PageFooter() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(25.dp)
+            .height(50.dp)
             .background(color = Color.White),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
@@ -324,10 +426,20 @@ fun PageFooter() {
         val annotatedString = buildAnnotatedString {
             withStyle(style = SpanStyle(color = Color.Black, fontSize = 12.sp)) {
                 append("Github")
-                addStringAnnotation(tag = "URL", annotation = "https://github.com/GuoXiCheng/SKIP", start = 0, end = 6)
+                addStringAnnotation(
+                    tag = "URL",
+                    annotation = "https://github.com/GuoXiCheng/SKIP",
+                    start = 0,
+                    end = 6
+                )
                 append(" | ")
                 append("Document")
-                addStringAnnotation(tag = "URL", annotation = "https://guoxicheng.github.io/SKIP-Docs/introduction", start = 9, end = 18)
+                addStringAnnotation(
+                    tag = "URL",
+                    annotation = "https://guoxicheng.github.io/SKIP-Docs/introduction",
+                    start = 9,
+                    end = 18
+                )
                 append(" | Version " + BuildConfig.VERSION_NAME)
             }
         }
@@ -346,8 +458,6 @@ fun PageFooter() {
         )
     }
 }
-
-
 
 
 @Composable
