@@ -187,7 +187,18 @@ fun MainSurface() {
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            AccessibilityControlBtn()
+            Box (modifier = Modifier.offset(y=(-50).dp)) {
+                AccessibilityControlBtn()
+            }
+        }
+
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Box (modifier = Modifier.offset(y=(100).dp)) {
+                AccessibilityTextBox()
+            }
         }
 
 //        Box(
@@ -246,6 +257,18 @@ fun PageHeader(title: String, subtitle: String) {
             color = Color.White,
             fontSize = 16.sp,
         )
+    }
+}
+
+@Composable
+fun AccessibilityTextBox() {
+    Row  {
+        if(accessibilityState) {
+            Text(text = "无障碍服务功能: 启用中", color = Color.White)
+        } else {
+            Text(text = "无障碍服务功能: 未启用", color = Color.White)
+        }
+
     }
 }
 
