@@ -40,10 +40,4 @@ object MyUtils {
         return false
     }
 
-    fun openAppSettings(activity: MainActivity, packageName: String = "com.android.skip") {
-        val intent = Intent()
-        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-        intent.data = Uri.fromParts("package", packageName, null)
-        activity.startActivity(intent)
-    }
 }
