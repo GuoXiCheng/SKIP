@@ -1,8 +1,10 @@
 package com.android.skip
 
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.ComponentActivity
@@ -34,17 +36,22 @@ import androidx.compose.ui.unit.sp
 import com.android.skip.ui.theme.*
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
+import java.util.*
 
 var accessibilityState by mutableStateOf(false)
-var accessibilityButtonClickState by mutableStateOf(false)
+
 var alertDialogPositiveButtonClickState by mutableStateOf(false)
 var expanded by mutableStateOf(false)
 var selectedCurrentMobile by mutableStateOf(Mobile.XIAOMI.name)
 
-// 应用信息按钮
-var isAppInfoBtnClicked by mutableStateOf(false)
+// 无障碍服务启用停用按钮
+var isAccessibilityBtnClicked by mutableStateOf(false)
 // 后台任务管理
 var isBackendTaskBtnClicked by mutableStateOf(false)
+// 自启动管理
+var isAutoStartBtnClicked by mutableStateOf(false)
+// 省电策略按钮
+var isPowerSavingBtnClicked by mutableStateOf(false)
 
 
 class MainActivity : ComponentActivity() {
@@ -57,6 +64,49 @@ class MainActivity : ComponentActivity() {
         startActivity(intent)
     }
 
+    private fun openAutoStartSettings(context: Context) {
+        try {
+            val intent = Intent()
+
+            val manufacturer = Build.MANUFACTURER.lowercase(Locale.ENGLISH)
+            when {
+                manufacturer.contains("xiaomi") -> {
+                    intent.component = ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity")
+                }
+                manufacturer.contains("oppo") -> {
+                    intent.component = ComponentName("com.coloros.safecenter", "com.coloros.safecenter.permission.startup.StartupAppListActivity")
+                }
+                manufacturer.contains("vivo") -> {
+                    intent.component = ComponentName("com.vivo.permissionmanager", "com.vivo.permissionmanager.activity.BgStartUpManagerActivity")
+                }
+                manufacturer.contains("oneplus") -> {
+                    intent.component = ComponentName("com.oneplus.security", "com.oneplus.security.chainlaunch.view.ChainLaunchAppListAct‌​ivity")
+                }
+                manufacturer.contains("huawei") -> {
+                    intent.component = ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.startupmgr.ui.StartupNormalAppListActivity")
+                }
+                else -> {
+                    openAppInfo()
+                }
+            }
+
+            context.startActivity(intent)
+        } catch (e: Exception) {
+            openAppInfo()
+        }
+    }
+
+    private fun openBatteryOptimizationSettings(context: Context) {
+        try {
+            val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+            intent.data = Uri.parse("package:${context.packageName}")
+            context.startActivity(intent)
+        } catch (e: Exception) {
+            openAppInfo()
+        }
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -65,7 +115,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MainSurface()
 
-            if (accessibilityButtonClickState) {
+            if (isAccessibilityBtnClicked) {
                 if (!accessibilityState) {
                     AlertDialog(
                         context = this,
@@ -83,23 +133,29 @@ class MainActivity : ComponentActivity() {
                         positiveText = "去停用"
                     )
                 }
-                accessibilityButtonClickState = false
+                isAccessibilityBtnClicked = false
             }
 
-            if (alertDialogPositiveButtonClickState) {
-                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                this.startActivity(intent)
-                alertDialogPositiveButtonClickState = false
+
+            when {
+                alertDialogPositiveButtonClickState -> {
+                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                    this.startActivity(intent)
+                    alertDialogPositiveButtonClickState = false
+                }
+                isAutoStartBtnClicked -> {
+                    openAutoStartSettings(this)
+                    isAutoStartBtnClicked = false
+                }
+                isPowerSavingBtnClicked -> {
+                    openBatteryOptimizationSettings(this)
+                    isPowerSavingBtnClicked = false
+                }
+                isBackendTaskBtnClicked -> {
+                    ImageDialog()
+                }
             }
 
-            if (isAppInfoBtnClicked) {
-                openAppInfo()
-                isAppInfoBtnClicked = false
-            }
-
-            if (isBackendTaskBtnClicked) {
-                ImageDialog()
-            }
         }
     }
 
@@ -218,14 +274,14 @@ fun TipBox() {
 
         Row {
             TipText("第二步：进入「")
-            ClickableText("应用信息", onClick = { clicked -> isAppInfoBtnClicked = clicked })
-            TipText("」,省电策略, 无限制")
+            ClickableText("省电策略", onClick = { clicked -> isPowerSavingBtnClicked = clicked })
+            TipText("」,无限制")
         }
 
         Row {
             TipText("第三步：进入「")
-            ClickableText("应用信息", onClick = { clicked -> isAppInfoBtnClicked = clicked })
-            TipText("」,自启动, 允许")
+            ClickableText("自启动管理", onClick = { clicked -> isAutoStartBtnClicked = clicked })
+            TipText("」,找到「SKIP」,允许")
         }
 
         Text(
@@ -342,7 +398,7 @@ fun ModelSelectionMenu(mobileList: List<String>) {
 fun AccessibilityControlBtn() {
     Button(
         onClick = {
-            accessibilityButtonClickState = true
+            isAccessibilityBtnClicked = true
         },
         contentPadding = PaddingValues(0.dp),
         colors = ButtonDefaults.textButtonColors()
