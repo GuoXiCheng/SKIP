@@ -31,10 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.android.skip.ui.theme.OneClickTheme
-import com.android.skip.ui.theme.lightGrey
-import com.android.skip.ui.theme.lightGrey2
-import com.android.skip.ui.theme.lightGrey3
+import com.android.skip.ui.theme.*
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 
@@ -43,7 +40,11 @@ var accessibilityButtonClickState by mutableStateOf(false)
 var alertDialogPositiveButtonClickState by mutableStateOf(false)
 var expanded by mutableStateOf(false)
 var selectedCurrentMobile by mutableStateOf(Mobile.XIAOMI.name)
+
+// 应用信息按钮
 var isAppInfoBtnClicked by mutableStateOf(false)
+// 后台任务管理
+var isBackendTaskBtnClicked by mutableStateOf(false)
 
 
 class MainActivity : ComponentActivity() {
@@ -69,7 +70,7 @@ class MainActivity : ComponentActivity() {
                     AlertDialog(
                         context = this,
                         title = "启用无障碍服务",
-                        message = "已下载的应用 > SKIP > 使用SKIP".trimIndent(),
+                        message = "已下载的应用 > SKIP > 打开「使用SKIP」",
                         negativeText = "再想想",
                         positiveText = "去开启"
                     )
@@ -77,7 +78,7 @@ class MainActivity : ComponentActivity() {
                     AlertDialog(
                         context = this,
                         title = "停用无障碍服务",
-                        message = null,
+                        message = "已下载的应用 > SKIP > 关闭「使用SKIP」",
                         negativeText = "再想想",
                         positiveText = "去停用"
                     )
@@ -94,6 +95,10 @@ class MainActivity : ComponentActivity() {
             if (isAppInfoBtnClicked) {
                 openAppInfo()
                 isAppInfoBtnClicked = false
+            }
+
+            if (isBackendTaskBtnClicked) {
+                ImageDialog()
             }
         }
     }
@@ -171,8 +176,7 @@ fun PageHeader(title: String, subtitle: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
-            .padding(top = 60.dp)
+            .padding(top = 100.dp, start = 20.dp)
     ) {
         Text(
             text = title,
@@ -206,22 +210,21 @@ fun TipBox() {
             modifier = Modifier.padding(0.dp, 5.dp, 0.dp, 5.dp)
         )
 
-        Text(
-            "第一步：进入「后台任务管理」,长按「SKIP」,锁定",
-            fontSize = 14.sp,
-            color = Color.Gray,
-            modifier = Modifier.padding(0.dp, 2.5.dp, 0.dp, 2.5.dp)
-        )
+        Row {
+            TipText("第一步：进入「")
+            ClickableText("后台任务管理", onClick = { clicked -> isBackendTaskBtnClicked = clicked })
+            TipText("」,长按「SKIP」,锁定")
+        }
 
         Row {
             TipText("第二步：进入「")
-            ClickableText("应用信息")
+            ClickableText("应用信息", onClick = { clicked -> isAppInfoBtnClicked = clicked })
             TipText("」,省电策略, 无限制")
         }
 
         Row {
             TipText("第三步：进入「")
-            ClickableText("应用信息")
+            ClickableText("应用信息", onClick = { clicked -> isAppInfoBtnClicked = clicked })
             TipText("」,自启动, 允许")
         }
 
@@ -248,8 +251,9 @@ fun TipText(text: String) {
     )
 }
 
+
 @Composable
-fun ClickableText(text: String) {
+fun ClickableText(text: String, onClick: (Boolean) -> Unit) {
     val annotatedString = buildAnnotatedString {
         append(text)
         addStyle(
@@ -271,7 +275,7 @@ fun ClickableText(text: String) {
         onClick = { offset ->
             annotatedString.getStringAnnotations("Clickable", offset, offset)
                 .firstOrNull()?.let { _ ->
-                    isAppInfoBtnClicked = true
+                    onClick(true)
                 }
         }
     )
@@ -474,6 +478,37 @@ fun AlertDialog(
             alertDialogPositiveButtonClickState = true
         }
         .show()
+}
+
+@Composable
+fun ImageDialog() {
+    AlertDialog(
+        onDismissRequest = {isBackendTaskBtnClicked= false },
+        containerColor = Color.White,
+        text = {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Image(
+                    painter = painterResource(R.drawable.backend_lock), // 设置要显示的图片
+                    contentDescription = "Image",
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        },
+        confirmButton = {
+            Row (
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+                    ) {
+                TextButton(
+                    onClick = { isBackendTaskBtnClicked = false },
+                    colors = ButtonDefaults.textButtonColors(contentColor = green)
+                ) {
+                    Text(text = "我知道了")
+                }
+            }
+
+        }
+    )
 }
 
 
