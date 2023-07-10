@@ -9,17 +9,11 @@ import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.*
-import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,11 +23,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.android.skip.ui.theme.*
+import com.android.skip.ui.theme.OneClickTheme
+import com.android.skip.ui.theme.green
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 import java.util.*
@@ -41,8 +35,6 @@ import java.util.*
 var accessibilityState by mutableStateOf(false)
 
 var alertDialogPositiveButtonClickState by mutableStateOf(false)
-var expanded by mutableStateOf(false)
-var selectedCurrentMobile by mutableStateOf(Mobile.XIAOMI.name)
 
 // 无障碍服务启用停用按钮
 var isAccessibilityBtnClicked by mutableStateOf(false)
@@ -174,14 +166,6 @@ fun MainSurface() {
 
         PageHeader(res.getString(R.string.app_name), "是一款免费开源的自动跳过APP开屏广告的工具")
 
-//        Box(
-//            modifier = Modifier.fillMaxSize(),
-//            contentAlignment = Alignment.Center
-//        ) {
-//            Box(modifier = Modifier.offset(y = (-150).dp)) {
-//                ModelSelectionBtn()
-//            }
-//        }
 
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -196,36 +180,10 @@ fun MainSurface() {
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Box (modifier = Modifier.offset(y=(100).dp)) {
+            Box (modifier = Modifier.offset(y=(90).dp)) {
                 AccessibilityTextBox()
             }
         }
-
-//        Box(
-//            modifier = Modifier.fillMaxSize()
-//        ) {
-//            val configuration = LocalConfiguration.current
-//            val screenWidthDp = configuration.screenWidthDp
-//            val screenHeightDp = configuration.screenHeightDp
-//
-//            val xOffset = screenWidthDp / 2
-//            val yOffset = screenHeightDp / 2.5
-//
-//            Box(modifier = Modifier.offset(x = (xOffset).dp - 75.dp, y = (yOffset).dp)) {
-//                ModelSelectionMenu(
-//                    listOf(
-//                        Mobile.XIAOMI.name,
-//                        Mobile.HUAWEI.name,
-//                        Mobile.MEIZU.name,
-//                        Mobile.VIVO.name,
-//                        Mobile.OPPO.name,
-//                        Mobile.ONEPLUS.name
-//                    )
-//                )
-//            }
-//
-//        }
-
 
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -362,62 +320,6 @@ fun ClickableText(text: String, onClick: (Boolean) -> Unit) {
 
 
 @Composable
-fun ModelSelectionBtn() {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = "机型选择",
-            color = Color.White,
-            fontSize = 12.sp
-        )
-        TextButton(
-            onClick = { expanded = !expanded }
-        ) {
-            Text(selectedCurrentMobile, color = Color.White, fontSize = 18.sp)
-        }
-    }
-}
-
-
-@Composable
-fun ModelSelectionMenu(mobileList: List<String>) {
-    AnimatedVisibility(
-        visible = expanded,
-        enter = expandVertically(expandFrom = Alignment.Top),
-        exit = shrinkVertically(shrinkTowards = Alignment.Bottom)
-    ) {
-        Surface(
-            modifier = Modifier.size(150.dp, (mobileList.size * 40).dp),
-            color = lightGrey,
-            shape = shapes.small
-        ) {
-            Column {
-                for (item in mobileList) {
-                    Text(
-                        item,
-                        color = lightGrey3,
-                        modifier = Modifier
-                            .size(150.dp, 40.dp)
-                            .border(0.5.dp, lightGrey2)
-                            .padding(5.dp)
-                            .clickable {
-                                selectedCurrentMobile = item
-                                expanded = false
-                            },
-                        fontSize = 18.sp,
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
-        }
-    }
-}
-
-
-@Composable
 fun AccessibilityControlBtn() {
     Button(
         onClick = {
@@ -440,57 +342,6 @@ fun AccessibilityControlBtn() {
             )
         }
     }
-}
-
-@Composable
-fun PromptBox() {
-    Column(
-        modifier = Modifier
-            .background(color = Color.White)
-            .height(270.dp)
-            .padding(32.dp, 20.dp, 32.dp, 20.dp),
-        verticalArrangement = Arrangement.Center
-    ) {
-        val rs = LocalContext.current.resources
-
-        Text(
-            rs.getString(R.string.operation),
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
-            modifier = Modifier.padding(0.dp, 2.5.dp, 0.dp, 2.5.dp)
-        )
-
-        val operationString = when (selectedCurrentMobile) {
-            Mobile.XIAOMI.name -> rs.getString(R.string.XIAOMI)
-            Mobile.HUAWEI.name -> rs.getString(R.string.HUAWEI)
-            Mobile.OPPO.name -> rs.getString(R.string.OPPO)
-            Mobile.VIVO.name -> rs.getString(R.string.VIVO)
-            Mobile.MEIZU.name -> rs.getString(R.string.MEIZU)
-            Mobile.ONEPLUS.name -> rs.getString(R.string.ONEPLUS)
-            else -> ""
-        }
-        for (item in operationString.split("#")) {
-            Text(
-                item,
-                fontSize = 14.sp,
-                color = Color.Gray,
-                modifier = Modifier.padding(0.dp, 2.5.dp, 0.dp, 2.5.dp)
-            )
-        }
-        Text(
-            rs.getString(R.string.attention),
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
-            modifier = Modifier.padding(0.dp, 2.5.dp, 0.dp, 2.5.dp)
-        )
-        Text(
-            rs.getString(R.string.attention_content),
-            fontSize = 14.sp,
-            color = Color.Gray,
-            modifier = Modifier.padding(0.dp, 2.5.dp, 0.dp, 2.5.dp)
-        )
-    }
-
 }
 
 @Composable
@@ -519,7 +370,7 @@ fun PageFooter() {
                 append("Document")
                 addStringAnnotation(
                     tag = "URL",
-                    annotation = "https://guoxicheng.github.io/SKIP-Docs/introduction",
+                    annotation = "https://guoxicheng.github.io/SKIP-Docs/1-introduction",
                     start = 9,
                     end = 18
                 )
