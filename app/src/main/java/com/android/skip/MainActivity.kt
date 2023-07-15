@@ -19,11 +19,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.skip.ui.theme.OneClickTheme
@@ -47,6 +49,7 @@ var isPowerSavingBtnClicked by mutableStateOf(false)
 
 
 class MainActivity : ComponentActivity() {
+
     private fun openAppInfo() {
         val packageName = packageName
         val intent = Intent(
@@ -98,14 +101,26 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         this.window.navigationBarColor = resources.getColor(R.color.white, null)
 
         setContent {
-            MainSurface()
+
+            val displayMetrics = LocalContext.current.resources.displayMetrics
+            val widthPixels = displayMetrics.widthPixels
+            val fontScale = LocalDensity.current.fontScale
+
+            CompositionLocalProvider(
+                LocalDensity provides Density(
+                    density = widthPixels / 360.0f,
+                    fontScale = fontScale
+                )
+            ) {
+                MainSurface()
+            }
+
 
             if (isAccessibilityBtnClicked) {
                 if (!accessibilityState) {
@@ -164,7 +179,7 @@ fun MainSurface() {
 
         val res = LocalContext.current.resources
 
-        PageHeader(res.getString(R.string.app_name), "是一款免费开源的自动跳过APP开屏广告的工具")
+        PageHeader(res.getString(R.string.app_name), "是一款免费开源的自动跳过开屏广告的工具")
 
 
         Box(
@@ -201,7 +216,7 @@ fun PageHeader(title: String, subtitle: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 100.dp, start = 20.dp)
+            .padding(top = 60.dp, start = 20.dp)
     ) {
         Text(
             text = title,
@@ -236,9 +251,9 @@ fun TipBox() {
     Column(
         modifier = Modifier
             .background(color = Color.White)
-            .height(270.dp)
+            .height(240.dp)
             .fillMaxWidth()
-            .padding(30.dp, 20.dp)
+            .padding(start = 15.dp, top = 10.dp)
     ) {
         Text(
             "操作方式",
@@ -352,7 +367,7 @@ fun PageFooter() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(50.dp)
+            .height(45.dp)
             .background(color = Color.White),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
