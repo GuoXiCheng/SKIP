@@ -40,6 +40,7 @@ class MyAccessibilityService : AccessibilityService() {
     fun handleRootNodeByPackageName (): MutableList<AccessibilityNodeInfo> {
         return when (getCurrentRootNode().packageName.toString()) {
             "com.qiyi.video.lite", "com.qiyi.video" -> getCurrentRootNode().findAccessibilityNodeInfosByText("关闭")
+            "com.MobileTicket" -> getCurrentRootNode().findAccessibilityNodeInfosByViewId("com.MobileTicket:id/tv_skip")
             else -> getCurrentRootNode().findAccessibilityNodeInfosByText("跳过")
         }
     }
