@@ -25,6 +25,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -46,6 +47,8 @@ var isBackendTaskBtnClicked by mutableStateOf(false)
 var isAutoStartBtnClicked by mutableStateOf(false)
 // 省电策略按钮
 var isPowerSavingBtnClicked by mutableStateOf(false)
+// 应用白名单
+var isWhitelistBtnClicked by mutableStateOf(false)
 
 
 class MainActivity : ComponentActivity() {
@@ -161,6 +164,9 @@ class MainActivity : ComponentActivity() {
                 isBackendTaskBtnClicked -> {
                     ImageDialog()
                 }
+                isWhitelistBtnClicked -> {
+
+                }
             }
 
         }
@@ -174,6 +180,7 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
+@Preview(showBackground = true)
 fun MainSurface() {
     OneClickTheme {
 
@@ -186,7 +193,7 @@ fun MainSurface() {
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Box (modifier = Modifier.offset(y=(-50).dp)) {
+            Box (modifier = Modifier.offset(y=(-40).dp)) {
                 AccessibilityControlBtn()
             }
         }
@@ -195,7 +202,7 @@ fun MainSurface() {
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Box (modifier = Modifier.offset(y=(90).dp)) {
+            Box (modifier = Modifier.offset(y=(80).dp)) {
                 AccessibilityTextBox()
             }
         }
@@ -251,7 +258,7 @@ fun TipBox() {
     Column(
         modifier = Modifier
             .background(color = Color.White)
-            .height(240.dp)
+            .height(270.dp)
             .fillMaxWidth()
             .padding(start = 15.dp, top = 10.dp)
     ) {
@@ -278,6 +285,12 @@ fun TipBox() {
             TipText("第三步：进入「")
             ClickableText("自启动管理", onClick = { clicked -> isAutoStartBtnClicked = clicked })
             TipText("」,找到「SKIP」,允许")
+        }
+
+        Row {
+            TipText(text = "第四步：进入「")
+            ClickableText("应用白名单", onClick = { clicked -> isWhitelistBtnClicked = clicked })
+            TipText(text = "」,启用或停用")
         }
 
         Text(
