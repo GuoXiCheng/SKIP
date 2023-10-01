@@ -165,7 +165,9 @@ class MainActivity : ComponentActivity() {
                     ImageDialog()
                 }
                 isWhitelistBtnClicked -> {
-
+                    val intent = Intent(this, WhitelistActivity::class.java)
+                    startActivity(intent)
+                    isWhitelistBtnClicked = false
                 }
             }
 
