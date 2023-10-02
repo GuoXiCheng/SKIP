@@ -4,6 +4,7 @@ import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
 import android.graphics.Path
 import android.graphics.Rect
+import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Toast
@@ -27,7 +28,7 @@ class MyAccessibilityService : AccessibilityService() {
 
             AnalyticsManager.increaseScanCount()
         } catch (e: Exception) {
-            println(e)
+            Log.i("SKIPS", e.message.toString())
         }
     }
 
@@ -41,6 +42,7 @@ class MyAccessibilityService : AccessibilityService() {
         return when (getCurrentRootNode().packageName.toString()) {
             "com.qiyi.video.lite", "com.qiyi.video" -> getCurrentRootNode().findAccessibilityNodeInfosByText("关闭")
             "com.MobileTicket" -> getCurrentRootNode().findAccessibilityNodeInfosByViewId("com.MobileTicket:id/tv_skip")
+            "com.coolapk.market" -> getCurrentRootNode().findAccessibilityNodeInfosByViewId("com.coolapk.market:id/tt_splash_skip_btn")
             else -> getCurrentRootNode().findAccessibilityNodeInfosByText("跳过")
         }
     }
