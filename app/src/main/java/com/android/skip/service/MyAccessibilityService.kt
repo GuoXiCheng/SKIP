@@ -9,6 +9,8 @@ import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Toast
 import com.android.skip.AnalyticsManager
+import com.android.skip.node.NodeCount
+import com.android.skip.node.recursionNodes
 
 class MyAccessibilityService : AccessibilityService() {
 
@@ -28,7 +30,7 @@ class MyAccessibilityService : AccessibilityService() {
 
             AnalyticsManager.increaseScanCount()
         } catch (e: Exception) {
-            Log.i("SKIPS", e.message.toString())
+            Log.d("SKIPS", e.message.toString())
         }
     }
 
@@ -39,12 +41,20 @@ class MyAccessibilityService : AccessibilityService() {
     }
 
     fun handleRootNodeByPackageName (): MutableList<AccessibilityNodeInfo> {
+        if (!isStartUpPage()) return mutableListOf()
         return when (getCurrentRootNode().packageName.toString()) {
             "com.qiyi.video.lite", "com.qiyi.video" -> getCurrentRootNode().findAccessibilityNodeInfosByText("关闭")
             "com.MobileTicket" -> getCurrentRootNode().findAccessibilityNodeInfosByViewId("com.MobileTicket:id/tv_skip")
             "com.coolapk.market" -> getCurrentRootNode().findAccessibilityNodeInfosByViewId("com.coolapk.market:id/tt_splash_skip_btn")
             else -> getCurrentRootNode().findAccessibilityNodeInfosByText("跳过")
         }
+    }
+
+    private fun isStartUpPage(): Boolean {
+        val countCallBack = NodeCount()
+        countCallBack.cleanCount()
+        recursionNodes(getCurrentRootNode(), countCallBack)
+        return countCallBack.getCount() < 10
     }
 
     override fun onInterrupt() {}
