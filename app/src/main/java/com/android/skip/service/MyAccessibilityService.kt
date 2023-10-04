@@ -19,7 +19,6 @@ class MyAccessibilityService : AccessibilityService() {
 
     override fun onAccessibilityEvent(p0: AccessibilityEvent?) {
         try {
-
             if (!AnalyticsManager.isPerformScan(getCurrentRootNode().packageName.toString())) return
             val skipNodes = handleRootNodeByPackageName()
             if (skipNodes.isNotEmpty()) {
