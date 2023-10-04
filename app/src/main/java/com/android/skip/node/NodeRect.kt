@@ -10,9 +10,7 @@ class NodeRect: NodeCallBack {
     private val list = mutableListOf<AccessibilityNodeInfo>()
     override fun onCallback(accessibilityNodeInfo: AccessibilityNodeInfo) {
         accessibilityNodeInfo.getBoundsInScreen(rect)
-
-        Log.i("SKIPS", rect.exactCenterX().toString() + "---" + rect.exactCenterY().toString())
-        if (rect.exactCenterY() < 500) {
+        if (rect.exactCenterX() > 800 && rect.exactCenterY() < 200) {
             list.clear()
             list.add(accessibilityNodeInfo)
         }

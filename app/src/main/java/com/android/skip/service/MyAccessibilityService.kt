@@ -10,22 +10,29 @@ import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Toast
 import com.android.skip.AnalyticsManager
 import com.android.skip.node.NodeCount
+import com.android.skip.node.NodeRect
 import com.android.skip.node.recursionNodes
 
 class MyAccessibilityService : AccessibilityService() {
 
     private val path = Path()
     private val rect = Rect()
+    private val dataMap = mapOf(
+        "com.example.pptv" to 25
+    )
 
     override fun onAccessibilityEvent(p0: AccessibilityEvent?) {
 
         try {
             if (!AnalyticsManager.isPerformScan(getCurrentRootNode().packageName.toString())) return
-
             val skipNodes = handleRootNodeByPackageName()
             if (skipNodes.isNotEmpty()) {
                 skipNodes[0].getBoundsInScreen(rect)
                 click(this, rect.exactCenterX(), rect.exactCenterY())
+            }
+
+            if (getCurrentRootNode().packageName == "com.coolapk.market") {
+                click(this, 980.toFloat(), 170.toFloat())
             }
 
             AnalyticsManager.increaseScanCount()
@@ -40,13 +47,11 @@ class MyAccessibilityService : AccessibilityService() {
         else throw IllegalStateException("No valid root node available");
     }
 
-    fun handleRootNodeByPackageName (): MutableList<AccessibilityNodeInfo> {
+    private fun handleRootNodeByPackageName (): MutableList<AccessibilityNodeInfo> {
         if (!isStartUpPage()) return mutableListOf()
         return when (getCurrentRootNode().packageName.toString()) {
             "com.qiyi.video.lite", "com.qiyi.video" -> getCurrentRootNode().findAccessibilityNodeInfosByText("关闭")
-            "com.MobileTicket" -> getCurrentRootNode().findAccessibilityNodeInfosByViewId("com.MobileTicket:id/tv_skip")
-            "com.coolapk.market" -> getCurrentRootNode().findAccessibilityNodeInfosByViewId("com.coolapk.market:id/tt_splash_skip_btn")
-            else -> getCurrentRootNode().findAccessibilityNodeInfosByText("跳过")
+            else -> getNeedsClickNode()
         }
     }
 
@@ -54,7 +59,18 @@ class MyAccessibilityService : AccessibilityService() {
         val countCallBack = NodeCount()
         countCallBack.cleanCount()
         recursionNodes(getCurrentRootNode(), countCallBack)
-        return countCallBack.getCount() < 10
+        return countCallBack.getCount() < (dataMap[getCurrentRootNode().packageName] ?: 10)
+    }
+
+    private fun getNeedsClickNode(): MutableList<AccessibilityNodeInfo> {
+        val nodes = getCurrentRootNode().findAccessibilityNodeInfosByText("跳过")
+        return if (nodes.isEmpty()) {
+            val nodeRectCallBack = NodeRect()
+            recursionNodes(getCurrentRootNode(), nodeRectCallBack)
+            nodeRectCallBack.getList()
+        } else {
+            nodes
+        }
     }
 
     override fun onInterrupt() {}

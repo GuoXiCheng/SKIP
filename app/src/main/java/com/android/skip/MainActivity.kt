@@ -47,8 +47,6 @@ var isBackendTaskBtnClicked by mutableStateOf(false)
 var isAutoStartBtnClicked by mutableStateOf(false)
 // 省电策略按钮
 var isPowerSavingBtnClicked by mutableStateOf(false)
-// 应用白名单
-var isWhitelistBtnClicked by mutableStateOf(false)
 
 
 class MainActivity : ComponentActivity() {
@@ -164,11 +162,6 @@ class MainActivity : ComponentActivity() {
                 isBackendTaskBtnClicked -> {
                     ImageDialog()
                 }
-                isWhitelistBtnClicked -> {
-                    val intent = Intent(this, WhitelistActivity::class.java)
-                    startActivity(intent)
-                    isWhitelistBtnClicked = false
-                }
             }
 
         }
@@ -195,7 +188,7 @@ fun MainSurface() {
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Box (modifier = Modifier.offset(y=(-40).dp)) {
+            Box (modifier = Modifier.offset(y=(-50).dp)) {
                 AccessibilityControlBtn()
             }
         }
@@ -204,7 +197,7 @@ fun MainSurface() {
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Box (modifier = Modifier.offset(y=(80).dp)) {
+            Box (modifier = Modifier.offset(y=(90).dp)) {
                 AccessibilityTextBox()
             }
         }
@@ -260,7 +253,7 @@ fun TipBox() {
     Column(
         modifier = Modifier
             .background(color = Color.White)
-            .height(270.dp)
+            .height(240.dp)
             .fillMaxWidth()
             .padding(start = 15.dp, top = 10.dp)
     ) {
@@ -287,12 +280,6 @@ fun TipBox() {
             TipText("第三步：进入「")
             ClickableText("自启动管理", onClick = { clicked -> isAutoStartBtnClicked = clicked })
             TipText("」,找到「SKIP」,允许")
-        }
-
-        Row {
-            TipText(text = "第四步：进入「")
-            ClickableText("应用白名单", onClick = { clicked -> isWhitelistBtnClicked = clicked })
-            TipText(text = "」,启用或停用")
         }
 
         Text(
