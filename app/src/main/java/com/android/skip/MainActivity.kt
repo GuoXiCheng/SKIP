@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.android.skip.manager.RectManager
 import com.android.skip.ui.theme.OneClickTheme
 import com.android.skip.ui.theme.green
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -106,7 +107,7 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
         this.window.navigationBarColor = resources.getColor(R.color.white, null)
-
+        RectManager.setMaxRect(this)
         setContent {
 
             val displayMetrics = LocalContext.current.resources.displayMetrics

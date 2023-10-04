@@ -1,4 +1,4 @@
-package com.android.skip
+package com.android.skip.manager
 
 
 object AnalyticsManager {
@@ -9,35 +9,35 @@ object AnalyticsManager {
 
     fun isPerformScan(currentPackageName: String): Boolean {
         if (packageName != currentPackageName) {
-            this.cleanScanCount()
-            this.cleanShowToastCount()
-            this.setPackageName(currentPackageName)
+            cleanScanCount()
+            cleanShowToastCount()
+            setPackageName(currentPackageName)
             return true
         } else if (scanCount <= maxScanCount) return true
         return false
     }
 
     fun isShowToast(): Boolean {
-        return this.showToastCount == 0
+        return showToastCount == 0
     }
 
     private fun setPackageName(currentPackageName: String) {
-        this.packageName = currentPackageName
+        packageName = currentPackageName
     }
 
     fun setShowToastCount() {
-        this.showToastCount = 1
+        showToastCount = 1
     }
 
     private fun cleanShowToastCount() {
-        this.showToastCount = 0
+        showToastCount = 0
     }
 
     fun increaseScanCount() {
-        this.scanCount += 1
+        scanCount += 1
     }
 
     private fun cleanScanCount() {
-        this.scanCount = 0
+        scanCount = 0
     }
 }
