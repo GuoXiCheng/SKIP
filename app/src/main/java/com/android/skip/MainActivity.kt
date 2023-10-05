@@ -25,9 +25,12 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.android.skip.manager.RectManager
+import com.android.skip.manager.SkipConfigManager
 import com.android.skip.ui.theme.OneClickTheme
 import com.android.skip.ui.theme.green
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -164,6 +167,10 @@ class MainActivity : ComponentActivity() {
             }
 
         }
+
+        RectManager.setMaxRect(this)
+        val skipConfig = resources.openRawResource(R.raw.skip_config_v1).bufferedReader().use{it.readText()}
+        SkipConfigManager.setConfig(skipConfig)
     }
 
     override fun onResume() {
@@ -174,6 +181,7 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
+@Preview(showBackground = true)
 fun MainSurface() {
     OneClickTheme {
 

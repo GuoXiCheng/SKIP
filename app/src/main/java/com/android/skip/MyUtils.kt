@@ -1,10 +1,16 @@
 package com.android.skip
 
+import android.accessibilityservice.AccessibilityService
+import android.accessibilityservice.GestureDescription
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
+import android.graphics.Path
+import android.graphics.Rect
 import android.provider.Settings
 import android.text.TextUtils
+import android.widget.Toast
+import com.android.skip.manager.AnalyticsManager
 import com.android.skip.service.MyAccessibilityService
 
 object MyUtils {
@@ -40,4 +46,44 @@ object MyUtils {
         return false
     }
 
+    fun isExcludeApplication (appName: String, packageName: String, packageManager: PackageManager): Boolean {
+        if (appName == packageName) return true
+        return try {
+            // 获取应用程序的 ApplicationInfo
+            val applicationInfo = packageManager.getApplicationInfo(packageName, 0)
+
+            // 判断应用是否来自系统预装或者是用户手动安装的
+            (applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
+        } catch (e: PackageManager.NameNotFoundException) {
+            // 应用未找到，可能是无效的包名
+            true
+        }
+    }
+
+    fun click(accessibilityService: AccessibilityService, rect: Rect) {
+        val path = Path()
+        path.reset()
+        path.moveTo(rect.exactCenterX(), rect.exactCenterY())
+        path.lineTo(rect.exactCenterX(), rect.exactCenterY())
+
+        val builder = GestureDescription.Builder()
+        builder.addStroke(GestureDescription.StrokeDescription(path, 0, 1))
+        val gesture = builder.build()
+
+        accessibilityService.dispatchGesture(
+            gesture,
+            object : AccessibilityService.GestureResultCallback() {
+                override fun onCompleted(gestureDescription: GestureDescription) {
+                    super.onCompleted(gestureDescription)
+
+                    if (AnalyticsManager.isShowToast()) {
+                        Toast.makeText(accessibilityService, "已为您跳过广告", Toast.LENGTH_SHORT).show()
+                        AnalyticsManager.setShowToastCount()
+                    }
+
+                }
+            },
+            null
+        )
+    }
 }
