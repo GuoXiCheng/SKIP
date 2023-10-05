@@ -20,8 +20,13 @@
     "start_page_node": 0
   },
   {
+    "package_name": "com.eg.android.AlipayGphone",
+    "start_page_node": 0
+  },
+  {
     "package_name": "com.qq.qcloud",
-    "skip_id": "com.qq.qcloud:id/gdt_ad_text"
+    "skip_id": "com.qq.qcloud:id/gdt_ad_text",
+    "skip_point": "0.91,0.086"
   },
   {
     "package_name": "com.coolapk.market",
@@ -30,5 +35,9 @@
   {
     "package_name": "com.example.pptv",
     "start_page_node": 25
+  },
+  {
+    "package_name": "com.wuba.zhuanzhuan",
+    "skip_point": "0.92,0.047"
   }
 ]
