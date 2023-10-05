@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.skip.manager.RectManager
+import com.android.skip.manager.SkipConfigManager
 import com.android.skip.ui.theme.OneClickTheme
 import com.android.skip.ui.theme.green
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -107,7 +108,7 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
         this.window.navigationBarColor = resources.getColor(R.color.white, null)
-        RectManager.setMaxRect(this)
+
         setContent {
 
             val displayMetrics = LocalContext.current.resources.displayMetrics
@@ -166,6 +167,10 @@ class MainActivity : ComponentActivity() {
             }
 
         }
+
+        RectManager.setMaxRect(this)
+        val skipConfig = resources.openRawResource(R.raw.skip_config_v1).bufferedReader().use{it.readText()}
+        SkipConfigManager.setConfig(skipConfig)
     }
 
     override fun onResume() {

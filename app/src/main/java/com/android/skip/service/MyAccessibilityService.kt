@@ -5,8 +5,9 @@ import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import com.android.skip.MyUtils.click
+import com.android.skip.handler.IdNodeHandler
+import com.android.skip.handler.TextNodeHandler
 import com.android.skip.manager.AnalyticsManager
-import com.android.skip.manager.RectManager
 import com.android.skip.node.NodeCount
 import com.android.skip.node.NodeRect
 import com.android.skip.node.recursionNodes
@@ -20,15 +21,25 @@ class MyAccessibilityService : AccessibilityService() {
     override fun onAccessibilityEvent(p0: AccessibilityEvent?) {
         try {
             if (!AnalyticsManager.isPerformScan(getCurrentRootNode().packageName.toString())) return
-            val skipNodes = handleRootNodeByPackageName()
-            if (skipNodes.isNotEmpty()) {
-                skipNodes[0].getBoundsInScreen(RectManager.getRect())
-                click(this, RectManager.getRect())
-            }
 
-            if (getCurrentRootNode().packageName == "com.coolapk.market") {
-                click(this, RectManager.getRect(0.9f, 0.07f))
+            val textNodeHandler = TextNodeHandler()
+            val idNodeHandler = IdNodeHandler()
+
+            textNodeHandler.setNextHandler(idNodeHandler)
+
+            val listOfRect = textNodeHandler.handle(getCurrentRootNode())
+            for (rect in listOfRect) {
+                click(this, rect)
             }
+//            val skipNodes = handleRootNodeByPackageName()
+//            if (skipNodes.isNotEmpty()) {
+//                skipNodes[0].getBoundsInScreen(RectManager.getRect())
+//                click(this, RectManager.getRect())
+//            }
+//
+//            if (getCurrentRootNode().packageName == "com.coolapk.market") {
+//                click(this, RectManager.getRect(0.9f, 0.07f))
+//            }
 
             AnalyticsManager.increaseScanCount()
         } catch (e: Exception) {
