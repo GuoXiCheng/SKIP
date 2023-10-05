@@ -10,5 +10,25 @@
   {
     "package_name": "com.MobileTicket",
     "skip_id": "com.MobileTicket:id/tv_skip"
+  },
+  {
+    "package_name": "com.tencent.mm",
+    "start_page_node": 0
+  },
+  {
+    "package_name": "com.github.android",
+    "start_page_node": 0
+  },
+  {
+    "package_name": "com.qq.qcloud",
+    "skip_id": "com.qq.qcloud:id/gdt_ad_text"
+  },
+  {
+    "package_name": "com.coolapk.market",
+    "skip_point": "0.9,0.07"
+  },
+  {
+    "package_name": "com.example.pptv",
+    "start_page_node": 25
   }
 ]

@@ -6,8 +6,10 @@ import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import com.android.skip.MyUtils.click
 import com.android.skip.handler.IdNodeHandler
+import com.android.skip.handler.PointHandler
 import com.android.skip.handler.TextNodeHandler
 import com.android.skip.manager.AnalyticsManager
+import com.android.skip.manager.SkipConfigManager
 import com.android.skip.node.NodeCount
 import com.android.skip.node.NodeRect
 import com.android.skip.node.recursionNodes
@@ -24,12 +26,16 @@ class MyAccessibilityService : AccessibilityService() {
 
             val textNodeHandler = TextNodeHandler()
             val idNodeHandler = IdNodeHandler()
+            val pointHandler = PointHandler()
 
-            textNodeHandler.setNextHandler(idNodeHandler)
+            textNodeHandler.setNextHandler(idNodeHandler).setNextHandler(pointHandler)
 
             val listOfRect = textNodeHandler.handle(getCurrentRootNode())
+            Log.i("SKIPS", listOfRect.toString())
             for (rect in listOfRect) {
-                click(this, rect)
+                if (isStartUpPage()) {
+                    click(this, rect)
+                }
             }
 //            val skipNodes = handleRootNodeByPackageName()
 //            if (skipNodes.isNotEmpty()) {
@@ -39,6 +45,7 @@ class MyAccessibilityService : AccessibilityService() {
 //
 //            if (getCurrentRootNode().packageName == "com.coolapk.market") {
 //                click(this, RectManager.getRect(0.9f, 0.07f))
+//                Log.i("SKIPS", "test coolapk: ${RectManager.getRect(0.9f, 0.07f)}")
 //            }
 
             AnalyticsManager.increaseScanCount()
@@ -64,8 +71,10 @@ class MyAccessibilityService : AccessibilityService() {
     private fun isStartUpPage(): Boolean {
         val countCallBack = NodeCount()
         countCallBack.cleanCount()
-        recursionNodes(getCurrentRootNode(), countCallBack)
-        return countCallBack.getCount() < (dataMap[getCurrentRootNode().packageName] ?: 10)
+        val currentNode = getCurrentRootNode()
+        recursionNodes(currentNode, countCallBack)
+        Log.i("SKIPS", "${currentNode.packageName}: ${countCallBack.getCount()}")
+        return countCallBack.getCount() < SkipConfigManager.getStartPageNodeCount(currentNode.packageName.toString())
     }
 
     private fun getNeedsClickNode(): MutableList<AccessibilityNodeInfo> {

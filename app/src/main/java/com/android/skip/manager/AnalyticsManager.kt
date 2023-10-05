@@ -5,7 +5,7 @@ object AnalyticsManager {
     private var packageName = ""
     private var showToastCount = 0
     private var scanCount = 0
-    private const val maxScanCount = 20
+    private const val maxScanCount = 30
 
     fun isPerformScan(currentPackageName: String): Boolean {
         if (packageName != currentPackageName) {
