@@ -13,7 +13,7 @@ object RectManager {
         maxRectY = metrics.heightPixels
     }
 
-    fun getRect(percentX: Float, percentY: Float): Rect {
+    fun getPointRect(percentX: Float, percentY: Float): Rect {
         val rect = Rect()
         val actualX = (percentX * maxRectX).toInt()
         val actualY = (percentY * maxRectY).toInt()

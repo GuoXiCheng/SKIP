@@ -30,7 +30,7 @@ object SkipConfigManager {
         if (pointParts?.size == 2 && isBetweenZeroAndOne(pointParts[0]) && isBetweenZeroAndOne(pointParts[1])) {
             val (x, y) = pointParts
             if (x is Float && y is Float) {
-                return RectManager.getRect(x, y)
+                return RectManager.getPointRect(x, y)
             }
         }
         return null
