@@ -17,7 +17,7 @@ object RectManager {
         val rect = Rect()
         val actualX = (percentX * maxRectX).toInt()
         val actualY = (percentY * maxRectY).toInt()
-        rect.set(actualX - 10, actualY - 10, actualX + 10, actualY + 10)
+        rect.set(actualX - 1, actualY - 1, actualX + 1, actualY + 1)
         return rect
     }
 }
