@@ -4,6 +4,7 @@ import android.accessibilityservice.AccessibilityService
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
+import android.widget.Toast
 import com.android.skip.MyUtils.click
 import com.android.skip.handler.IdNodeHandler
 import com.android.skip.handler.PointHandler
@@ -49,7 +50,7 @@ class MyAccessibilityService : AccessibilityService() {
         countCallBack.cleanCount()
         val currentNode = getCurrentRootNode()
         recursionNodes(currentNode, countCallBack)
-//        Log.i("SKIPS", currentNode.packageName.toString() + " 节点数: " + countCallBack.getCount())
+        Toast.makeText(this, "当前页节点数: ${countCallBack.getCount()}", Toast.LENGTH_SHORT).show()
         return countCallBack.getCount() < SkipConfigManager.getStartPageNodeCount(currentNode.packageName.toString())
     }
 
