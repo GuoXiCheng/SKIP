@@ -1,4 +1,5 @@
 package com.android.skip.manager
+
 import android.graphics.Rect
 import com.android.skip.dataclass.PackageInfo
 import com.google.gson.Gson
@@ -8,12 +9,36 @@ object SkipConfigManager {
     private lateinit var appInfoMap: Map<String, PackageInfo>
     fun setConfig(config: String) {
         val gson = Gson()
-        val appInfoList: List<PackageInfo> = gson.fromJson(config, object : TypeToken<List<PackageInfo>>() {}.type)
+        val appInfoList: List<PackageInfo> =
+            gson.fromJson(config, object : TypeToken<List<PackageInfo>>() {}.type)
         appInfoMap = appInfoList.associateBy { it.package_name }
+        handleConfig(appInfoList)
     }
 
     fun setConfig(appInfoList: List<PackageInfo>) {
-        appInfoMap = appInfoList.associateBy { it.package_name }
+        handleConfig(appInfoList)
+    }
+
+    private fun handleConfig(appInfoList: List<PackageInfo>) {
+        val newAppInfoList = appInfoList.map { it->
+            if (it.skip_points is List && it.skip_points.isNotEmpty()) {
+                it.skip_rect_list = mutableListOf()
+                for (point in it.skip_points) {
+                    val pointParts = point.split(",").map { it.toFloatOrNull() }
+                    if (pointParts.size == 2 && isBetweenZeroAndOne(pointParts[0]) && isBetweenZeroAndOne(
+                            pointParts[1]
+                        )
+                    ) {
+                        val (x, y) = pointParts
+                        if (x is Float && y is Float) {
+                            it.skip_rect_list.add(RectManager.getPointRect(x, y))
+                        }
+                    }
+                }
+            }
+            it
+        }
+        appInfoMap = newAppInfoList.associateBy { it.package_name }
     }
 
     fun getSkipText(packageName: String): String {
@@ -28,16 +53,8 @@ object SkipConfigManager {
         return appInfoMap[packageName]?.start_page_node ?: 10
     }
 
-    fun getSkipPoint(packageName: String): Rect? {
-        val skipPoint = appInfoMap[packageName]?.skip_point
-        val pointParts = skipPoint?.split(",")?.map { it.toFloatOrNull() }
-        if (pointParts?.size == 2 && isBetweenZeroAndOne(pointParts[0]) && isBetweenZeroAndOne(pointParts[1])) {
-            val (x, y) = pointParts
-            if (x is Float && y is Float) {
-                return RectManager.getPointRect(x, y)
-            }
-        }
-        return null
+    fun getSkipRectList(packageName: String): MutableList<Rect> {
+        return appInfoMap[packageName]?.skip_rect_list ?: mutableListOf()
     }
 
     private fun isBetweenZeroAndOne(value: Float?): Boolean {

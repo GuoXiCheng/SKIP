@@ -26,19 +26,23 @@
   {
     "package_name": "com.qq.qcloud",
     "skip_id": "com.qq.qcloud:id/gdt_ad_text",
-    "skip_point": "0.91,0.086"
+    "skip_points": ["0.91,0.086"]
   },
   {
     "package_name": "com.coolapk.market",
-    "skip_point": "0.9,0.07"
+    "skip_points": ["0.9,0.07"]
   },
   {
     "package_name": "com.example.pptv",
     "start_page_node": 25
   },
   {
-    "package_name": "com.wuba.zhuanzhuan",
+    "package_name": "com.miui.systemAdSolution",
     "start_page_node": 20,
-    "skip_point": "0.92,0.047"
+    "skip_points": ["0.92,0.047"]
+  },
+  {
+    "package_name": "tv.danmaku.bili",
+    "start_page_node": 70
   }
 ]

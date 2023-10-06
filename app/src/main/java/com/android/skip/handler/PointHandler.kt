@@ -6,11 +6,11 @@ import com.android.skip.manager.SkipConfigManager
 
 class PointHandler: AbstractHandler() {
     override fun handle(node: AccessibilityNodeInfo): List<Rect> {
-        val skipPoint = SkipConfigManager.getSkipPoint(node.packageName.toString())
-        return if (skipPoint != null) {
-            listOf(skipPoint)
-        } else {
+        val skipRectList = SkipConfigManager.getSkipRectList(node.packageName.toString())
+        return if (skipRectList.isEmpty()) {
             super.handle(node)
+        } else {
+            skipRectList
         }
     }
 }
