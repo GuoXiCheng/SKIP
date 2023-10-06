@@ -38,6 +38,7 @@
   },
   {
     "package_name": "com.wuba.zhuanzhuan",
+    "start_page_node": 20,
     "skip_point": "0.92,0.047"
   }
 ]

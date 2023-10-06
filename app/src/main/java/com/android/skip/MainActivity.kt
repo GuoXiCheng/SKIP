@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -29,13 +30,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.android.skip.dataclass.PackageInfo
 import com.android.skip.manager.RectManager
 import com.android.skip.manager.SkipConfigManager
+import com.android.skip.service.SkipConfigService
 import com.android.skip.ui.theme.OneClickTheme
 import com.android.skip.ui.theme.green
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
+import kotlin.concurrent.thread
 
 var accessibilityState by mutableStateOf(false)
 
@@ -43,10 +52,13 @@ var alertDialogPositiveButtonClickState by mutableStateOf(false)
 
 // 无障碍服务启用停用按钮
 var isAccessibilityBtnClicked by mutableStateOf(false)
+
 // 后台任务管理
 var isBackendTaskBtnClicked by mutableStateOf(false)
+
 // 自启动管理
 var isAutoStartBtnClicked by mutableStateOf(false)
+
 // 省电策略按钮
 var isPowerSavingBtnClicked by mutableStateOf(false)
 
@@ -69,19 +81,34 @@ class MainActivity : ComponentActivity() {
             val manufacturer = Build.MANUFACTURER.lowercase(Locale.ENGLISH)
             when {
                 manufacturer.contains("xiaomi") -> {
-                    intent.component = ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity")
+                    intent.component = ComponentName(
+                        "com.miui.securitycenter",
+                        "com.miui.permcenter.autostart.AutoStartManagementActivity"
+                    )
                 }
                 manufacturer.contains("oppo") -> {
-                    intent.component = ComponentName("com.coloros.safecenter", "com.coloros.safecenter.permission.startup.StartupAppListActivity")
+                    intent.component = ComponentName(
+                        "com.coloros.safecenter",
+                        "com.coloros.safecenter.permission.startup.StartupAppListActivity"
+                    )
                 }
                 manufacturer.contains("vivo") -> {
-                    intent.component = ComponentName("com.vivo.permissionmanager", "com.vivo.permissionmanager.activity.BgStartUpManagerActivity")
+                    intent.component = ComponentName(
+                        "com.vivo.permissionmanager",
+                        "com.vivo.permissionmanager.activity.BgStartUpManagerActivity"
+                    )
                 }
                 manufacturer.contains("oneplus") -> {
-                    intent.component = ComponentName("com.oneplus.security", "com.oneplus.security.chainlaunch.view.ChainLaunchAppListAct‌​ivity")
+                    intent.component = ComponentName(
+                        "com.oneplus.security",
+                        "com.oneplus.security.chainlaunch.view.ChainLaunchAppListAct‌​ivity"
+                    )
                 }
                 manufacturer.contains("huawei") -> {
-                    intent.component = ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.startupmgr.ui.StartupNormalAppListActivity")
+                    intent.component = ComponentName(
+                        "com.huawei.systemmanager",
+                        "com.huawei.systemmanager.startupmgr.ui.StartupNormalAppListActivity"
+                    )
                 }
                 else -> {
                     openAppInfo()
@@ -169,13 +196,35 @@ class MainActivity : ComponentActivity() {
         }
 
         RectManager.setMaxRect(this)
-        val skipConfig = resources.openRawResource(R.raw.skip_config_v1).bufferedReader().use{it.readText()}
+        val skipConfig =
+            resources.openRawResource(R.raw.skip_config_v1).bufferedReader().use { it.readText() }
         SkipConfigManager.setConfig(skipConfig)
     }
 
     override fun onResume() {
         super.onResume()
         accessibilityState = MyUtils.isAccessibilitySettingsOn(this)
+
+        thread {
+            val retrofit = Retrofit.Builder()
+                .baseUrl("https://raw.githubusercontent.com/GuoXiCheng/SKIP/main/app/src/main/res/raw/")
+                .addConverterFactory(GsonConverterFactory.create()).build()
+            val skipConfigService = retrofit.create(SkipConfigService::class.java)
+            skipConfigService.getPackageInfo().enqueue(object : Callback<List<PackageInfo>> {
+                override fun onResponse(
+                    call: Call<List<PackageInfo>>,
+                    response: Response<List<PackageInfo>>
+                ) {
+                    response.body()?.let { SkipConfigManager.setConfig(it) }
+                    Toast.makeText(applicationContext, "更新配置成功", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onFailure(call: Call<List<PackageInfo>>, t: Throwable) {
+                    Toast.makeText(applicationContext, "更新配置失败", Toast.LENGTH_SHORT).show()
+                }
+
+            })
+        }
     }
 }
 
@@ -194,7 +243,7 @@ fun MainSurface() {
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Box (modifier = Modifier.offset(y=(-50).dp)) {
+            Box(modifier = Modifier.offset(y = (-50).dp)) {
                 AccessibilityControlBtn()
             }
         }
@@ -203,7 +252,7 @@ fun MainSurface() {
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Box (modifier = Modifier.offset(y=(90).dp)) {
+            Box(modifier = Modifier.offset(y = (90).dp)) {
                 AccessibilityTextBox()
             }
         }
@@ -243,8 +292,8 @@ fun PageHeader(title: String, subtitle: String) {
 
 @Composable
 fun AccessibilityTextBox() {
-    Row  {
-        if(accessibilityState) {
+    Row {
+        if (accessibilityState) {
             Text(text = "无障碍服务功能: 启用中", color = Color.White)
         } else {
             Text(text = "无障碍服务功能: 未启用", color = Color.White)
@@ -436,7 +485,7 @@ fun AlertDialog(
 @Composable
 fun ImageDialog() {
     AlertDialog(
-        onDismissRequest = {isBackendTaskBtnClicked= false },
+        onDismissRequest = { isBackendTaskBtnClicked = false },
         containerColor = Color.White,
         text = {
             Box(modifier = Modifier.fillMaxWidth()) {
@@ -448,10 +497,10 @@ fun ImageDialog() {
             }
         },
         confirmButton = {
-            Row (
+            Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
-                    ) {
+            ) {
                 TextButton(
                     onClick = { isBackendTaskBtnClicked = false },
                     colors = ButtonDefaults.textButtonColors(contentColor = green)

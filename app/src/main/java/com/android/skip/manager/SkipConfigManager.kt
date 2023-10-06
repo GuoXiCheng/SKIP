@@ -12,6 +12,10 @@ object SkipConfigManager {
         appInfoMap = appInfoList.associateBy { it.package_name }
     }
 
+    fun setConfig(appInfoList: List<PackageInfo>) {
+        appInfoMap = appInfoList.associateBy { it.package_name }
+    }
+
     fun getSkipText(packageName: String): String {
         return appInfoMap[packageName]?.skip_text ?: "跳过"
     }

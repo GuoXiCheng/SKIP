@@ -49,6 +49,7 @@ class MyAccessibilityService : AccessibilityService() {
         countCallBack.cleanCount()
         val currentNode = getCurrentRootNode()
         recursionNodes(currentNode, countCallBack)
+//        Log.i("SKIPS", currentNode.packageName.toString() + " 节点数: " + countCallBack.getCount())
         return countCallBack.getCount() < SkipConfigManager.getStartPageNodeCount(currentNode.packageName.toString())
     }
 
