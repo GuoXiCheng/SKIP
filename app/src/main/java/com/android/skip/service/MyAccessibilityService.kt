@@ -4,7 +4,6 @@ import android.accessibilityservice.AccessibilityService
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
-import android.widget.Toast
 import com.android.skip.MyUtils.click
 import com.android.skip.handler.IdNodeHandler
 import com.android.skip.handler.PointHandler
@@ -13,6 +12,7 @@ import com.android.skip.manager.AnalyticsManager
 import com.android.skip.manager.SkipConfigManager
 import com.android.skip.node.NodeCount
 import com.android.skip.node.recursionNodes
+
 
 class MyAccessibilityService : AccessibilityService() {
 
@@ -27,11 +27,16 @@ class MyAccessibilityService : AccessibilityService() {
             textNodeHandler.setNextHandler(idNodeHandler).setNextHandler(pointHandler)
 
             val listOfRect = textNodeHandler.handle(getCurrentRootNode())
-            for (rect in listOfRect) {
-                if (isStartUpPage()) {
+            if (isStartUpPage()) {
+                for (rect in listOfRect) {
                     click(this, rect)
                 }
             }
+//            for (rect in listOfRect) {
+//                if (isStartUpPage()) {
+//                    click(this, rect)
+//                }
+//            }
 
             AnalyticsManager.increaseScanCount()
         } catch (e: Exception) {
@@ -50,7 +55,6 @@ class MyAccessibilityService : AccessibilityService() {
         countCallBack.cleanCount()
         val currentNode = getCurrentRootNode()
         recursionNodes(currentNode, countCallBack)
-        Toast.makeText(this, "当前页节点数: ${countCallBack.getCount()}", Toast.LENGTH_SHORT).show()
         return countCallBack.getCount() < SkipConfigManager.getStartPageNodeCount(currentNode.packageName.toString())
     }
 

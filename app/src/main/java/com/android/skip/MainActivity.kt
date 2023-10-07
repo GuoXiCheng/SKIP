@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -33,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import com.android.skip.dataclass.PackageInfo
 import com.android.skip.manager.RectManager
 import com.android.skip.manager.SkipConfigManager
+import com.android.skip.manager.ToastManager
 import com.android.skip.service.SkipConfigService
 import com.android.skip.ui.theme.OneClickTheme
 import com.android.skip.ui.theme.green
@@ -216,11 +216,11 @@ class MainActivity : ComponentActivity() {
                     response: Response<List<PackageInfo>>
                 ) {
                     response.body()?.let { SkipConfigManager.setConfig(it) }
-                    Toast.makeText(applicationContext, "更新配置成功", Toast.LENGTH_SHORT).show()
+                    ToastManager.showToast(applicationContext, "更新配置成功")
                 }
 
                 override fun onFailure(call: Call<List<PackageInfo>>, t: Throwable) {
-                    Toast.makeText(applicationContext, "更新配置失败", Toast.LENGTH_SHORT).show()
+                    ToastManager.showToast(applicationContext, "更新配置失败")
                 }
 
             })

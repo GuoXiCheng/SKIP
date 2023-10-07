@@ -1,8 +1,9 @@
 [
   {
     "package_name": "com.coolapk.market",
+    "start_page_node": 15,
     "skip_points": [
-      "0.922,0.087", "0.892,0.081"
+      "0.922,0.087", "0.912,0.081"
     ]
   },
   {
@@ -50,5 +51,10 @@
   {
     "package_name": "tv.danmaku.bili",
     "start_page_node": 70
+  },
+  {
+    "package_name": "com.antfortune.wealth",
+    "skip_points": ["0.867,0.089"],
+    "start_page_node": 60
   }
 ]
