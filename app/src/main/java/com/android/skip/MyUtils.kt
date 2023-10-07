@@ -9,8 +9,8 @@ import android.graphics.Path
 import android.graphics.Rect
 import android.provider.Settings
 import android.text.TextUtils
-import android.widget.Toast
 import com.android.skip.manager.AnalyticsManager
+import com.android.skip.manager.ToastManager
 import com.android.skip.service.MyAccessibilityService
 
 object MyUtils {
@@ -77,7 +77,7 @@ object MyUtils {
                     super.onCompleted(gestureDescription)
 
                     if (AnalyticsManager.isShowToast()) {
-                        Toast.makeText(accessibilityService, "已为您跳过广告", Toast.LENGTH_SHORT).show()
+                        ToastManager.showToast(accessibilityService, "已为您跳过广告")
                         AnalyticsManager.setShowToastCount()
                     }
 
