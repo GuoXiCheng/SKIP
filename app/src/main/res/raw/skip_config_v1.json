@@ -1,7 +1,7 @@
 [
   {
     "package_name": "com.coolapk.market",
-    "start_page_node": 15,
+    "start_page_node": 100,
     "skip_points": [
       "0.922,0.087", "0.912,0.081"
     ]
@@ -11,19 +11,8 @@
     "start_page_node": 0
   },
   {
-    "package_name": "com.example.pptv",
-    "start_page_node": 25
-  },
-  {
     "package_name": "com.github.android",
     "start_page_node": 0
-  },
-  {
-    "package_name": "com.miui.systemAdSolution",
-    "start_page_node": 20,
-    "skip_points": [
-      "0.92,0.047"
-    ]
   },
   {
     "package_name": "com.MobileTicket",
@@ -40,6 +29,7 @@
   {
     "package_name": "com.qq.qcloud",
     "skip_id": "com.qq.qcloud:id/gdt_ad_text",
+    "start_page_node": 20,
     "skip_points": [
       "0.91,0.086"
     ]
@@ -49,12 +39,8 @@
     "start_page_node": 0
   },
   {
-    "package_name": "tv.danmaku.bili",
-    "start_page_node": 70
-  },
-  {
     "package_name": "com.antfortune.wealth",
     "skip_points": ["0.867,0.089"],
-    "start_page_node": 60
+    "skip_activity_name": "com.alipay.mobile.quinox.LauncherActivity"
   }
 ]
