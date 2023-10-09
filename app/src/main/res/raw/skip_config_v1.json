@@ -1,18 +1,26 @@
 [
   {
-    "package_name": "com.coolapk.market",
-    "start_page_node": 100,
+    "package_name": "com.antfortune.wealth",
     "skip_points": [
-      "0.922,0.087", "0.912,0.081"
+      "0.867,0.089"
+    ],
+    "skip_activity_name": "com.alipay.mobile.quinox.LauncherActivity"
+  },
+  {
+    "package_name": "com.coolapk.market",
+    "skip_node_count": 100,
+    "skip_points": [
+      "0.922,0.087",
+      "0.912,0.081"
     ]
   },
   {
     "package_name": "com.eg.android.AlipayGphone",
-    "start_page_node": 0
+    "skip_node_count": 0
   },
   {
     "package_name": "com.github.android",
-    "start_page_node": 0
+    "skip_node_count": 0
   },
   {
     "package_name": "com.MobileTicket",
@@ -29,18 +37,13 @@
   {
     "package_name": "com.qq.qcloud",
     "skip_id": "com.qq.qcloud:id/gdt_ad_text",
-    "start_page_node": 20,
+    "skip_node_count": 20,
     "skip_points": [
       "0.91,0.086"
     ]
   },
   {
     "package_name": "com.tencent.mm",
-    "start_page_node": 0
-  },
-  {
-    "package_name": "com.antfortune.wealth",
-    "skip_points": ["0.867,0.089"],
-    "skip_activity_name": "com.alipay.mobile.quinox.LauncherActivity"
+    "skip_node_count": 0
   }
 ]

@@ -50,7 +50,7 @@ object SkipConfigManager {
     }
 
     fun getStartPageNodeCount(packageName: String): Int? {
-        return appInfoMap[packageName]?.start_page_node
+        return appInfoMap[packageName]?.skip_node_count
     }
 
     fun getStartPageActivityName(packageName: String): String? {
