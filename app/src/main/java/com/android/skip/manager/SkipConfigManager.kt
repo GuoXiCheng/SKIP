@@ -49,8 +49,12 @@ object SkipConfigManager {
         return appInfoMap[packageName]?.skip_id ?: "no skip id"
     }
 
-    fun getStartPageNodeCount(packageName: String): Int {
-        return appInfoMap[packageName]?.start_page_node ?: 10
+    fun getStartPageNodeCount(packageName: String): Int? {
+        return appInfoMap[packageName]?.skip_node_count
+    }
+
+    fun getStartPageActivityName(packageName: String): String? {
+        return appInfoMap[packageName]?.skip_activity_name
     }
 
     fun getSkipRectList(packageName: String): MutableList<Rect> {

@@ -15,9 +15,11 @@ import com.android.skip.node.recursionNodes
 
 
 class MyAccessibilityService : AccessibilityService() {
+    private val countCallBack = NodeCount()
 
     override fun onAccessibilityEvent(p0: AccessibilityEvent?) {
         try {
+
             if (!AnalyticsManager.isPerformScan(getCurrentRootNode().packageName.toString())) return
 
             val textNodeHandler = TextNodeHandler()
@@ -27,20 +29,17 @@ class MyAccessibilityService : AccessibilityService() {
             textNodeHandler.setNextHandler(idNodeHandler).setNextHandler(pointHandler)
 
             val listOfRect = textNodeHandler.handle(getCurrentRootNode())
-            if (isStartUpPage()) {
-                for (rect in listOfRect) {
+            for (rect in listOfRect) {
+                if (isStartUpPage(getCurrentRootNode(), p0?.className.toString())) {
                     click(this, rect)
                 }
             }
-//            for (rect in listOfRect) {
-//                if (isStartUpPage()) {
-//                    click(this, rect)
-//                }
-//            }
 
-            AnalyticsManager.increaseScanCount()
+            Log.i("SKIPS", p0?.className.toString())
         } catch (e: Exception) {
             Log.d("SKIPS", e.message.toString())
+        } finally {
+            AnalyticsManager.increaseScanCount()
         }
     }
 
@@ -50,13 +49,28 @@ class MyAccessibilityService : AccessibilityService() {
         else throw IllegalStateException("No valid root node available");
     }
 
-    private fun isStartUpPage(): Boolean {
-        val countCallBack = NodeCount()
-        countCallBack.cleanCount()
-        val currentNode = getCurrentRootNode()
-        recursionNodes(currentNode, countCallBack)
-        return countCallBack.getCount() < SkipConfigManager.getStartPageNodeCount(currentNode.packageName.toString())
+    private fun isStartUpPage(currentNode: AccessibilityNodeInfo, currentActivityName: String): Boolean {
+        val startPageNodeCount = SkipConfigManager.getStartPageNodeCount(currentNode.packageName.toString())
+        if (startPageNodeCount != null) {
+            countCallBack.cleanCount()
+            recursionNodes(currentNode, countCallBack)
+            return countCallBack.getCount() < startPageNodeCount
+        }
+
+        val startPageActivityName = SkipConfigManager.getStartPageActivityName(currentNode.packageName.toString())
+        if (startPageActivityName != null) {
+            return startPageActivityName == currentActivityName
+        }
+        return true
     }
+
+//    private fun isStartUpPage(): Boolean {
+//        val countCallBack = NodeCount()
+//        countCallBack.cleanCount()
+//        val currentNode = getCurrentRootNode()
+//        recursionNodes(currentNode, countCallBack)
+//        return countCallBack.getCount() < SkipConfigManager.getStartPageNodeCount(currentNode.packageName.toString())
+//    }
 
     override fun onInterrupt() {}
 
