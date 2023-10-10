@@ -35,7 +35,6 @@ class MyAccessibilityService : AccessibilityService() {
                 }
             }
 
-            Log.i("SKIPS", p0?.className.toString())
         } catch (e: Exception) {
             Log.d("SKIPS", e.message.toString())
         } finally {
@@ -63,14 +62,6 @@ class MyAccessibilityService : AccessibilityService() {
         }
         return true
     }
-
-//    private fun isStartUpPage(): Boolean {
-//        val countCallBack = NodeCount()
-//        countCallBack.cleanCount()
-//        val currentNode = getCurrentRootNode()
-//        recursionNodes(currentNode, countCallBack)
-//        return countCallBack.getCount() < SkipConfigManager.getStartPageNodeCount(currentNode.packageName.toString())
-//    }
 
     override fun onInterrupt() {}
 
