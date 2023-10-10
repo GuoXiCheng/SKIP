@@ -1,12 +1,14 @@
 [
   {
+    "app_name": "蚂蚁财富",
     "package_name": "com.antfortune.wealth",
+    "skip_activity_name": "com.alipay.mobile.quinox.LauncherActivity",
     "skip_points": [
       "0.867,0.089"
-    ],
-    "skip_activity_name": "com.alipay.mobile.quinox.LauncherActivity"
+    ]
   },
   {
+    "app_name": "酷安",
     "package_name": "com.coolapk.market",
     "skip_node_count": 100,
     "skip_points": [
@@ -15,26 +17,39 @@
     ]
   },
   {
+    "app_name": "支付宝",
     "package_name": "com.eg.android.AlipayGphone",
     "skip_node_count": 0
   },
   {
+    "app_name": "Github",
     "package_name": "com.github.android",
     "skip_node_count": 0
   },
   {
+    "app_name": "京东阅读",
+    "package_name": "com.jd.app.reader",
+    "skip_points": [
+      "0.912,0.076"
+    ]
+  },
+  {
+    "app_name": "铁路12306",
     "package_name": "com.MobileTicket",
     "skip_id": "com.MobileTicket:id/tv_skip"
   },
   {
+    "app_name": "爱奇艺",
     "package_name": "com.qiyi.video",
     "skip_text": "关闭"
   },
   {
+    "app_name": "爱奇艺极速版",
     "package_name": "com.qiyi.video.lite",
     "skip_text": "关闭"
   },
   {
+    "app_name": "腾讯微云",
     "package_name": "com.qq.qcloud",
     "skip_id": "com.qq.qcloud:id/gdt_ad_text",
     "skip_node_count": 20,
@@ -43,6 +58,12 @@
     ]
   },
   {
+    "app_name": "夸克",
+    "package_name": "com.quark.browser",
+    "skip_node_count": 0
+  },
+  {
+    "app_name": "微信",
     "package_name": "com.tencent.mm",
     "skip_node_count": 0
   }
