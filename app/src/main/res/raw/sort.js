@@ -1,26 +1,29 @@
-const fs = require('fs');
-const filename = 'skip_config_v1.json'
+const fs = require("fs").promises;
+const filename = "skip_config_v1.json";
 
-// 读取本地文件
-const rawData = fs.readFileSync(filename, 'utf8');
+async function main() {
+  try {
+    // 读取本地文件
+    const rawData = await fs.readFile(filename, "utf8");
 
-// 解析JSON数据为JavaScript对象
-const data = JSON.parse(rawData);
+    // 解析JSON数据为JavaScript对象
+    const data = JSON.parse(rawData);
 
-// 使用sort方法进行排序
-data.sort(function(a, b) {
-  var packageNameA = a.package_name.toUpperCase();
-  var packageNameB = b.package_name.toUpperCase();
+    // 使用sort方法进行排序
+    data.sort((a, b) => a.package_name.localeCompare(b.package_name, undefined, { sensitivity: 'base' }));
 
-  if (packageNameA < packageNameB) {
-    return -1;
+    // 对象属性按字母顺序排序并输出
+    const sortedData = data.map(item => {
+      return Object.fromEntries(Object.entries(item).sort());
+    });
+
+    // 输出排序后的数据
+    await fs.writeFile(`./${filename}`, JSON.stringify(sortedData, null, 2));
+    
+    console.log("数据已排序并写入文件成功！");
+  } catch (error) {
+    console.error("发生错误:", error);
   }
-  if (packageNameA > packageNameB) {
-    return 1;
-  }
+}
 
-  return 0; // 两个package_name相等
-});
-
-// 输出排序后的数据
-fs.writeFileSync(`./${filename}`, JSON.stringify(data, null, 2))
+main();

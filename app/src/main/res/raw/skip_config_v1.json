@@ -1,10 +1,10 @@
 [
   {
     "package_name": "com.antfortune.wealth",
+    "skip_activity_name": "com.alipay.mobile.quinox.LauncherActivity",
     "skip_points": [
       "0.867,0.089"
-    ],
-    "skip_activity_name": "com.alipay.mobile.quinox.LauncherActivity"
+    ]
   },
   {
     "package_name": "com.coolapk.market",
