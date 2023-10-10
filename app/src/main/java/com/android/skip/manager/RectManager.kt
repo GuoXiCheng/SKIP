@@ -20,4 +20,8 @@ object RectManager {
         rect.set(actualX - 1, actualY - 1, actualX + 1, actualY + 1)
         return rect
     }
+
+    fun getMaxRect(): String {
+        return "${maxRectX}x${maxRectY}"
+    }
 }

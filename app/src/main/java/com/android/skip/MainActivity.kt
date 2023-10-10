@@ -439,14 +439,8 @@ fun PageFooter() {
                     end = 6
                 )
                 append(" | ")
-                append("Document")
-                addStringAnnotation(
-                    tag = "URL",
-                    annotation = "https://guoxicheng.github.io/SKIP-Docs/1-introduction",
-                    start = 9,
-                    end = 18
-                )
-                append(" | Version " + BuildConfig.VERSION_NAME)
+                append(RectManager.getMaxRect())
+                append(" | version " + BuildConfig.VERSION_NAME)
             }
         }
         ClickableText(

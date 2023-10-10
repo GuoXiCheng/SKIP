@@ -76,10 +76,10 @@ object MyUtils {
                 override fun onCompleted(gestureDescription: GestureDescription) {
                     super.onCompleted(gestureDescription)
 
-                    if (AnalyticsManager.isShowToast()) {
-                        ToastManager.showToast(accessibilityService, "已为您跳过广告")
-                        AnalyticsManager.setShowToastCount()
-                    }
+//                    if (AnalyticsManager.isShowToast()) {
+//                        ToastManager.showToast(accessibilityService, "已为您跳过广告")
+//                        AnalyticsManager.setShowToastCount()
+//                    }
 
                 }
             },

@@ -2,7 +2,4 @@
     <string name="app_name">SKIP</string>
     <string name="activity_main">SKIP</string>
     <string name="accessibility_description">若无障碍服务发生故障，可以关闭后再打开。</string>
-    <string name="attention">注意事项</string>
-    <string name="attention_content">由于无障碍服务会在应用进程结束后自动关闭，因此需要开启应用后台运行权限</string>
-    <string name="operation">操作方式</string>
 </resources>
