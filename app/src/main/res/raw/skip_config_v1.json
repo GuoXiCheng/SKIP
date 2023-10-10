@@ -29,6 +29,7 @@
   {
     "app_name": "京东阅读",
     "package_name": "com.jd.app.reader",
+    "skip_node_count": 20,
     "skip_points": [
       "0.912,0.076"
     ]
