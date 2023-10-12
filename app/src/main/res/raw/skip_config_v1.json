@@ -10,7 +10,7 @@
   {
     "app_name": "酷安",
     "package_name": "com.coolapk.market",
-    "skip_node_count": 100,
+    "skip_node_count": 50,
     "skip_points": [
       "0.922,0.087",
       "0.912,0.081"
@@ -29,7 +29,7 @@
   {
     "app_name": "京东阅读",
     "package_name": "com.jd.app.reader",
-    "skip_node_count": 20,
+    "skip_node_count": 10,
     "skip_points": [
       "0.912,0.076"
     ]
