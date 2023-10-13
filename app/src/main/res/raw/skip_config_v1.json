@@ -3,6 +3,7 @@
     "app_name": "蚂蚁财富",
     "package_name": "com.antfortune.wealth",
     "skip_activity_name": "com.alipay.mobile.quinox.LauncherActivity",
+    "skip_node_count": 70,
     "skip_points": [
       "0.867,0.089"
     ]
@@ -29,7 +30,7 @@
   {
     "app_name": "京东阅读",
     "package_name": "com.jd.app.reader",
-    "skip_node_count": 10,
+    "skip_node_count": 15,
     "skip_points": [
       "0.912,0.076"
     ]
