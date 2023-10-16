@@ -20,18 +20,25 @@ object SkipConfigManager {
     }
 
     private fun handleConfig(appInfoList: List<PackageInfo>) {
-        val newAppInfoList = appInfoList.map { it->
-            if (it.skip_points is List && it.skip_points.isNotEmpty()) {
+        val newAppInfoList = appInfoList.map { it ->
+            if (it.skip_bounds is List && it.skip_bounds.isNotEmpty()) {
                 it.skip_rect_list = mutableListOf()
-                for (point in it.skip_points) {
-                    val pointParts = point.split(",").map { it.toFloatOrNull() }
-                    if (pointParts.size == 2 && isBetweenZeroAndOne(pointParts[0]) && isBetweenZeroAndOne(
-                            pointParts[1]
-                        )
-                    ) {
-                        val (x, y) = pointParts
-                        if (x is Float && y is Float) {
-                            it.skip_rect_list.add(RectManager.getPointRect(x, y))
+                for (bounds in it.skip_bounds) {
+                    val boundsParts = bounds.split("#")
+                    if (boundsParts.size == 2) {
+                        val maxXYParts = boundsParts[0].split(",")
+                        val detailBoundsParts = boundsParts[1].split(",")
+                        if (maxXYParts.size == 2 && detailBoundsParts.size == 4) {
+                            val (maxX, maxY) = maxXYParts
+                            val (boundsLeft, boundsTop, boundsRight, boundsBottom) = detailBoundsParts
+                            it.skip_rect_list.add(
+                                Rect(
+                                    (boundsLeft.toInt() * RectManager.maxRectX / maxX.toInt() - 1),
+                                    (boundsTop.toInt() * RectManager.maxRectY / maxY.toInt() - 1),
+                                    (boundsRight.toInt() * RectManager.maxRectX / maxX.toInt() + 1),
+                                    (boundsBottom.toInt() * RectManager.maxRectY / maxY.toInt() + 1)
+                                )
+                            )
                         }
                     }
                 }
@@ -40,6 +47,28 @@ object SkipConfigManager {
         }
         appInfoMap = newAppInfoList.associateBy { it.package_name }
     }
+
+//    private fun handleConfig(appInfoList: List<PackageInfo>) {
+//        val newAppInfoList = appInfoList.map { it->
+//            if (it.skip_points is List && it.skip_points.isNotEmpty()) {
+//                it.skip_rect_list = mutableListOf()
+//                for (point in it.skip_points) {
+//                    val pointParts = point.split(",").map { it.toFloatOrNull() }
+//                    if (pointParts.size == 2 && isBetweenZeroAndOne(pointParts[0]) && isBetweenZeroAndOne(
+//                            pointParts[1]
+//                        )
+//                    ) {
+//                        val (x, y) = pointParts
+//                        if (x is Float && y is Float) {
+//                            it.skip_rect_list.add(RectManager.getPointRect(x, y))
+//                        }
+//                    }
+//                }
+//            }
+//            it
+//        }
+//        appInfoMap = newAppInfoList.associateBy { it.package_name }
+//    }
 
     fun getSkipText(packageName: String): String {
         return appInfoMap[packageName]?.skip_text ?: "跳过"
