@@ -1,42 +1,46 @@
 package com.android.skip.service
 
 import android.accessibilityservice.AccessibilityService
-import android.util.Log
+import android.accessibilityservice.GestureDescription
+import android.graphics.Path
+import android.graphics.Rect
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
-import com.android.skip.MyUtils.click
+import com.android.skip.handler.BoundsHandler
 import com.android.skip.handler.IdNodeHandler
-import com.android.skip.handler.PointHandler
 import com.android.skip.handler.TextNodeHandler
-import com.android.skip.manager.AnalyticsManager
-import com.android.skip.manager.SkipConfigManager
-import com.android.skip.node.NodeCount
-import com.android.skip.node.recursionNodes
+import com.android.skip.manager.*
 
 
 class MyAccessibilityService : AccessibilityService() {
-    private val countCallBack = NodeCount()
-
+    private var clickCount = 0
     override fun onAccessibilityEvent(p0: AccessibilityEvent?) {
         try {
+
+            if (p0 != null) {
+                if (p0.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+                    clickCount = 0
+                }
+            }
 
             if (!AnalyticsManager.isPerformScan(getCurrentRootNode().packageName.toString())) return
 
             val textNodeHandler = TextNodeHandler()
             val idNodeHandler = IdNodeHandler()
-            val pointHandler = PointHandler()
-
-            textNodeHandler.setNextHandler(idNodeHandler).setNextHandler(pointHandler)
-
+            val boundsHandler = BoundsHandler()
+            textNodeHandler.setNextHandler(idNodeHandler).setNextHandler(boundsHandler)
             val listOfRect = textNodeHandler.handle(getCurrentRootNode())
             for (rect in listOfRect) {
-                if (isStartUpPage(getCurrentRootNode(), p0?.className.toString())) {
+                if (clickCount < 1) {
+                    LogManager.i(clickCount.toString())
                     click(this, rect)
+                    clickCount += 1
                 }
             }
 
+
         } catch (e: Exception) {
-            Log.d("SKIPS", e.message.toString())
+
         } finally {
             AnalyticsManager.increaseScanCount()
         }
@@ -48,21 +52,33 @@ class MyAccessibilityService : AccessibilityService() {
         else throw IllegalStateException("No valid root node available");
     }
 
-    private fun isStartUpPage(currentNode: AccessibilityNodeInfo, currentActivityName: String): Boolean {
-        val startPageNodeCount = SkipConfigManager.getStartPageNodeCount(currentNode.packageName.toString())
-        if (startPageNodeCount != null) {
-            countCallBack.cleanCount()
-            recursionNodes(currentNode, countCallBack)
-            return countCallBack.getCount() < startPageNodeCount
-        }
-
-        val startPageActivityName = SkipConfigManager.getStartPageActivityName(currentNode.packageName.toString())
-        if (startPageActivityName != null) {
-            return startPageActivityName == currentActivityName
-        }
-        return true
-    }
-
     override fun onInterrupt() {}
+
+    private fun click(accessibilityService: AccessibilityService, rect: Rect) {
+        val path = Path()
+        path.reset()
+        path.moveTo(rect.exactCenterX(), rect.exactCenterY())
+        path.lineTo(rect.exactCenterX(), rect.exactCenterY())
+
+        val builder = GestureDescription.Builder()
+        builder.addStroke(GestureDescription.StrokeDescription(path, 0, 1))
+        val gesture = builder.build()
+
+        accessibilityService.dispatchGesture(
+            gesture,
+            object : AccessibilityService.GestureResultCallback() {
+                override fun onCompleted(gestureDescription: GestureDescription) {
+                    super.onCompleted(gestureDescription)
+
+                    if (AnalyticsManager.isShowToast()) {
+                        ToastManager.showToast(accessibilityService, "已为您跳过广告")
+                        AnalyticsManager.setShowToastCount()
+                    }
+
+                }
+            },
+            null
+        )
+    }
 
 }

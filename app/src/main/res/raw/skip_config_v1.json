@@ -2,18 +2,16 @@
   {
     "app_name": "蚂蚁财富",
     "package_name": "com.antfortune.wealth",
-    "skip_activity_name": "com.alipay.mobile.quinox.LauncherActivity",
-    "skip_points": [
-      "0.867,0.089"
-    ]
+    "skip_bounds": [
+      "1440,3024#1139,224,1370,315"
+    ],
+    "skip_node_count": 70
   },
   {
     "app_name": "酷安",
     "package_name": "com.coolapk.market",
-    "skip_node_count": 50,
-    "skip_points": [
-      "0.922,0.087",
-      "0.912,0.081"
+    "skip_bounds": [
+      "1440,3024#1116,219,1332,316"
     ]
   },
   {
@@ -29,9 +27,8 @@
   {
     "app_name": "京东阅读",
     "package_name": "com.jd.app.reader",
-    "skip_node_count": 10,
-    "skip_points": [
-      "0.912,0.076"
+    "skip_bounds": [
+      "1440,3024#1209,113,1338,165"
     ]
   },
   {
@@ -52,10 +49,8 @@
   {
     "app_name": "腾讯微云",
     "package_name": "com.qq.qcloud",
-    "skip_id": "com.qq.qcloud:id/gdt_ad_text",
-    "skip_node_count": 20,
-    "skip_points": [
-      "0.91,0.086"
+    "skip_bounds": [
+      "1440,3024#1223,196,1384,308"
     ]
   },
   {

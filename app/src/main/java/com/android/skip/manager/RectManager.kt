@@ -4,8 +4,8 @@ import android.content.Context
 import android.graphics.Rect
 
 object RectManager {
-    private var maxRectX = 0
-    private var maxRectY = 0
+    var maxRectX = 0
+    var maxRectY = 0
 
     fun setMaxRect(context: Context) {
         val metrics = context.resources.displayMetrics
