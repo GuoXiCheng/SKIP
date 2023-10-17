@@ -8,7 +8,7 @@
   {
     "app_name": "酷安",
     "package_name": "com.coolapk.market",
-    "skip_node_count": 50
+    "skip_bounds": ["1440,3024#1116,219,1332,316"]
   },
   {
     "app_name": "支付宝",
@@ -23,7 +23,7 @@
   {
     "app_name": "京东阅读",
     "package_name": "com.jd.app.reader",
-    "skip_node_count": 15
+    "skip_bounds": ["1440,3024#1209,113,1338,165"]
   },
   {
     "app_name": "铁路12306",
@@ -43,8 +43,7 @@
   {
     "app_name": "腾讯微云",
     "package_name": "com.qq.qcloud",
-    "skip_id": "com.qq.qcloud:id/gdt_ad_text",
-    "skip_node_count": 20
+    "skip_bounds": ["1440,3024#1223,196,1384,308"]
   },
   {
     "app_name": "夸克",

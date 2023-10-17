@@ -24,7 +24,6 @@ class BoundsHandler: AbstractHandler() {
 
         for (rectItem in rectList) {
             if (rectItem.contains(rect)) {
-                LogManager.i(node.toString())
                 return rect
             }
         }
@@ -33,6 +32,7 @@ class BoundsHandler: AbstractHandler() {
         for (i in 0 until node.childCount) {
             val result = traverseNode(node.getChild(i), rectList)
             if (result != null) {
+                LogManager.i(result.toShortString())
                 return result // 返回包含的矩形
             }
         }
