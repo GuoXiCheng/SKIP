@@ -207,7 +207,7 @@ class MainActivity : ComponentActivity() {
 
         thread {
             val retrofit = Retrofit.Builder()
-                .baseUrl("https://raw.githubusercontent.com/GuoXiCheng/SKIP/main/app/src/main/res/raw/")
+                .baseUrl("https://ghproxy.com/https://raw.githubusercontent.com/GuoXiCheng/SKIP/main/app/src/main/res/raw/")
                 .addConverterFactory(GsonConverterFactory.create()).build()
             val skipConfigService = retrofit.create(SkipConfigService::class.java)
             skipConfigService.getPackageInfo().enqueue(object : Callback<List<PackageInfo>> {

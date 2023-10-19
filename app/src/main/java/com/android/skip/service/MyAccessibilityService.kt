@@ -30,11 +30,15 @@ class MyAccessibilityService : AccessibilityService() {
             val boundsHandler = BoundsHandler()
             textNodeHandler.setNextHandler(idNodeHandler).setNextHandler(boundsHandler)
             val listOfRect = textNodeHandler.handle(getCurrentRootNode())
+            val maxClickCount = SkipConfigManager.getMaxClickCount(getCurrentRootNode().packageName.toString())
             for (rect in listOfRect) {
-                if (clickCount < 1) {
-                    LogManager.i(clickCount.toString())
+                if (maxClickCount is Int) {
+                    if (clickCount < maxClickCount) {
+                        clickCount += 1
+                        click(this, rect)
+                    }
+                } else {
                     click(this, rect)
-                    clickCount += 1
                 }
             }
 

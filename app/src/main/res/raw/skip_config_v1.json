@@ -4,8 +4,7 @@
     "package_name": "com.antfortune.wealth",
     "skip_bounds": [
       "1440,3024#1139,224,1370,315"
-    ],
-    "skip_node_count": 70
+    ]
   },
   {
     "app_name": "酷安",
@@ -17,12 +16,12 @@
   {
     "app_name": "支付宝",
     "package_name": "com.eg.android.AlipayGphone",
-    "skip_node_count": 0
+    "max_click_count": 0
   },
   {
     "app_name": "Github",
     "package_name": "com.github.android",
-    "skip_node_count": 0
+    "max_click_count": 0
   },
   {
     "app_name": "京东阅读",
@@ -56,11 +55,11 @@
   {
     "app_name": "夸克",
     "package_name": "com.quark.browser",
-    "skip_node_count": 0
+    "max_click_count": 0
   },
   {
     "app_name": "微信",
     "package_name": "com.tencent.mm",
-    "skip_node_count": 0
+    "max_click_count": 0
   }
 ]
