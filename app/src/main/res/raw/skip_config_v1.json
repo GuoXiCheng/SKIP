@@ -4,7 +4,8 @@
     "package_name": "com.antfortune.wealth",
     "skip_bounds": [
       "1440,3024#1139,224,1370,315"
-    ]
+    ],
+    "max_click_count": 1
   },
   {
     "app_name": "酷安",
