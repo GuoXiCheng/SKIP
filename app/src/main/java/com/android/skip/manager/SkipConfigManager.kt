@@ -11,7 +11,6 @@ object SkipConfigManager {
         val gson = Gson()
         val appInfoList: List<PackageInfo> =
             gson.fromJson(config, object : TypeToken<List<PackageInfo>>() {}.type)
-        appInfoMap = appInfoList.associateBy { it.package_name }
         handleConfig(appInfoList)
     }
 
@@ -20,47 +19,61 @@ object SkipConfigManager {
     }
 
     private fun handleConfig(appInfoList: List<PackageInfo>) {
-        val newAppInfoList = appInfoList.map { it ->
-            if (it.skip_bounds is List && it.skip_bounds.isNotEmpty()) {
-                it.skip_rect_list = mutableListOf()
-                for (bounds in it.skip_bounds) {
-                    val boundsParts = bounds.split("#")
-                    if (boundsParts.size == 2) {
-                        val maxXYParts = boundsParts[0].split(",")
-                        val detailBoundsParts = boundsParts[1].split(",")
-                        if (maxXYParts.size == 2 && detailBoundsParts.size == 4) {
-                            val (maxX, maxY) = maxXYParts
-                            val (boundsLeft, boundsTop, boundsRight, boundsBottom) = detailBoundsParts
-                            it.skip_rect_list.add(
-                                Rect(
-                                    (boundsLeft.toInt() * RectManager.maxRectX / maxX.toInt() - 1),
-                                    (boundsTop.toInt() * RectManager.maxRectY / maxY.toInt() - 1),
-                                    (boundsRight.toInt() * RectManager.maxRectX / maxX.toInt() + 1),
-                                    (boundsBottom.toInt() * RectManager.maxRectY / maxY.toInt() + 1)
-                                )
-                            )
-                        }
-                    }
-                }
-            }
-            it
+        val newAppInfoList = appInfoList.map { packageInfo ->
+            packageInfo.skip_rect_list = parseSkipBounds(packageInfo)
+            packageInfo
         }
         appInfoMap = newAppInfoList.associateBy { it.package_name }
     }
 
+    private fun parseSkipBounds(packageInfo: PackageInfo): MutableList<Rect> {
+        val skipBounds = packageInfo.skip_bounds
+        val skipRectList = mutableListOf<Rect>()
+
+        if (skipBounds is List && skipBounds.isNotEmpty()) {
+            for (bounds in skipBounds) {
+                val boundsParts = bounds.split("#")
+                if (boundsParts.size != 2) continue
+
+                val (maxXYParts, detailBoundsParts) = boundsParts.map { it.split(",") }
+                if (maxXYParts.size != 2 || detailBoundsParts.size != 4) continue
+
+                val (maxX, maxY) = maxXYParts
+                val (boundsLeft, boundsTop, boundsRight, boundsBottom) = detailBoundsParts
+
+                skipRectList.add(
+                    Rect(
+                        (boundsLeft.toInt() * RectManager.maxRectX / maxX.toInt() - 1),
+                        (boundsTop.toInt() * RectManager.maxRectY / maxY.toInt() - 1),
+                        (boundsRight.toInt() * RectManager.maxRectX / maxX.toInt() + 1),
+                        (boundsBottom.toInt() * RectManager.maxRectY / maxY.toInt() + 1)
+                    )
+                )
+            }
+        }
+        return skipRectList
+    }
+
 //    private fun handleConfig(appInfoList: List<PackageInfo>) {
-//        val newAppInfoList = appInfoList.map { it->
-//            if (it.skip_points is List && it.skip_points.isNotEmpty()) {
+//        val newAppInfoList = appInfoList.map { it ->
+//            if (it.skip_bounds is List && it.skip_bounds.isNotEmpty()) {
 //                it.skip_rect_list = mutableListOf()
-//                for (point in it.skip_points) {
-//                    val pointParts = point.split(",").map { it.toFloatOrNull() }
-//                    if (pointParts.size == 2 && isBetweenZeroAndOne(pointParts[0]) && isBetweenZeroAndOne(
-//                            pointParts[1]
-//                        )
-//                    ) {
-//                        val (x, y) = pointParts
-//                        if (x is Float && y is Float) {
-//                            it.skip_rect_list.add(RectManager.getPointRect(x, y))
+//                for (bounds in it.skip_bounds) {
+//                    val boundsParts = bounds.split("#")
+//                    if (boundsParts.size == 2) {
+//                        val maxXYParts = boundsParts[0].split(",")
+//                        val detailBoundsParts = boundsParts[1].split(",")
+//                        if (maxXYParts.size == 2 && detailBoundsParts.size == 4) {
+//                            val (maxX, maxY) = maxXYParts
+//                            val (boundsLeft, boundsTop, boundsRight, boundsBottom) = detailBoundsParts
+//                            it.skip_rect_list.add(
+//                                Rect(
+//                                    (boundsLeft.toInt() * RectManager.maxRectX / maxX.toInt() - 1),
+//                                    (boundsTop.toInt() * RectManager.maxRectY / maxY.toInt() - 1),
+//                                    (boundsRight.toInt() * RectManager.maxRectX / maxX.toInt() + 1),
+//                                    (boundsBottom.toInt() * RectManager.maxRectY / maxY.toInt() + 1)
+//                                )
+//                            )
 //                        }
 //                    }
 //                }
@@ -78,19 +91,11 @@ object SkipConfigManager {
         return appInfoMap[packageName]?.skip_id ?: "no skip id"
     }
 
-    fun getStartPageNodeCount(packageName: String): Int? {
-        return appInfoMap[packageName]?.skip_node_count
-    }
-
-    fun getStartPageActivityName(packageName: String): String? {
-        return appInfoMap[packageName]?.skip_activity_name
-    }
-
     fun getSkipRectList(packageName: String): MutableList<Rect> {
         return appInfoMap[packageName]?.skip_rect_list ?: mutableListOf()
     }
 
-    private fun isBetweenZeroAndOne(value: Float?): Boolean {
-        return value != null && value in 0.0f..1.0f
+    fun getMaxClickCount(packageName: String): Int? {
+        return appInfoMap[packageName]?.max_click_count
     }
 }
