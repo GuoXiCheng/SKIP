@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.skip.dataclass.PackageInfo
+import com.android.skip.manager.LogManager
 import com.android.skip.manager.RectManager
 import com.android.skip.manager.SkipConfigManager
 import com.android.skip.manager.ToastManager
@@ -38,6 +39,7 @@ import com.android.skip.ui.theme.OneClickTheme
 import com.android.skip.ui.theme.green
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
+import org.yaml.snakeyaml.Yaml
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -199,6 +201,10 @@ class MainActivity : ComponentActivity() {
         val skipConfig =
             resources.openRawResource(R.raw.skip_config_v1).bufferedReader().use { it.readText() }
         SkipConfigManager.setConfig(skipConfig)
+
+
+        val yaml = Yaml().load<List<PackageInfo>>(assets.open("skip_config.yaml"))
+        LogManager.i(yaml.toString())
     }
 
     override fun onResume() {
