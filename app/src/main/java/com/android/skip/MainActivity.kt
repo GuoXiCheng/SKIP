@@ -34,17 +34,13 @@ import com.android.skip.manager.LogManager
 import com.android.skip.manager.RectManager
 import com.android.skip.manager.SkipConfigManager
 import com.android.skip.manager.ToastManager
-import com.android.skip.service.SkipConfigService
 import com.android.skip.ui.theme.OneClickTheme
 import com.android.skip.ui.theme.green
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 import org.yaml.snakeyaml.Yaml
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import java.net.HttpURLConnection
+import java.net.URL
 import java.util.*
 import kotlin.concurrent.thread
 
@@ -198,38 +194,36 @@ class MainActivity : ComponentActivity() {
         }
 
         RectManager.setMaxRect(this)
-        val skipConfig =
-            resources.openRawResource(R.raw.skip_config_v1).bufferedReader().use { it.readText() }
-        SkipConfigManager.setConfig(skipConfig)
-
 
         val yaml = Yaml().load<List<PackageInfo>>(assets.open("skip_config.yaml"))
-        LogManager.i(yaml.toString())
+        SkipConfigManager.setConfig(yaml)
     }
 
     override fun onResume() {
         super.onResume()
         accessibilityState = MyUtils.isAccessibilitySettingsOn(this)
+        syncSkipConfig()
+    }
 
+    private fun syncSkipConfig() {
         thread {
-            val retrofit = Retrofit.Builder()
-                .baseUrl("https://ghproxy.com/https://raw.githubusercontent.com/GuoXiCheng/SKIP/main/app/src/main/res/raw/")
-                .addConverterFactory(GsonConverterFactory.create()).build()
-            val skipConfigService = retrofit.create(SkipConfigService::class.java)
-            skipConfigService.getPackageInfo().enqueue(object : Callback<List<PackageInfo>> {
-                override fun onResponse(
-                    call: Call<List<PackageInfo>>,
-                    response: Response<List<PackageInfo>>
-                ) {
-                    response.body()?.let { SkipConfigManager.setConfig(it) }
-                    ToastManager.showToast(applicationContext, "更新配置成功")
-                }
-
-                override fun onFailure(call: Call<List<PackageInfo>>, t: Throwable) {
-                    ToastManager.showToast(applicationContext, "更新配置失败")
-                }
-
-            })
+            var connection: HttpURLConnection? = null
+            try {
+                val apiUrl = "https://ghproxy.com/https://raw.githubusercontent.com/GuoXiCheng/SKIP/main/app/src/main/assets/skip_config.yaml"
+                connection = URL(apiUrl).openConnection() as HttpURLConnection
+                connection.requestMethod = "GET"
+                connection.readTimeout = 8000
+                connection.connectTimeout = 8000
+                val input = connection.inputStream
+                val yaml = Yaml().load<Any>(input)
+                SkipConfigManager.setConfig(yaml)
+                ToastManager.showToast(this, "更新配置成功")
+            } catch (e: Exception) {
+                LogManager.i(e.toString())
+                ToastManager.showToast(this, "更新配置失败")
+            } finally {
+                connection?.disconnect()
+            }
         }
     }
 }

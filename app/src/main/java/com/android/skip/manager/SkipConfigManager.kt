@@ -7,18 +7,12 @@ import com.google.gson.reflect.TypeToken
 
 object SkipConfigManager {
     private lateinit var appInfoMap: Map<String, PackageInfo>
-    fun setConfig(config: String) {
+
+    fun setConfig(config: Any) {
         val gson = Gson()
+        val json = gson.toJson(config)
         val appInfoList: List<PackageInfo> =
-            gson.fromJson(config, object : TypeToken<List<PackageInfo>>() {}.type)
-        handleConfig(appInfoList)
-    }
-
-    fun setConfig(appInfoList: List<PackageInfo>) {
-        handleConfig(appInfoList)
-    }
-
-    private fun handleConfig(appInfoList: List<PackageInfo>) {
+            gson.fromJson(json, object : TypeToken<List<PackageInfo>>() {}.type)
         val newAppInfoList = appInfoList.map { packageInfo ->
             packageInfo.skip_rect_list = parseSkipBounds(packageInfo)
             packageInfo
@@ -53,35 +47,6 @@ object SkipConfigManager {
         }
         return skipRectList
     }
-
-//    private fun handleConfig(appInfoList: List<PackageInfo>) {
-//        val newAppInfoList = appInfoList.map { it ->
-//            if (it.skip_bounds is List && it.skip_bounds.isNotEmpty()) {
-//                it.skip_rect_list = mutableListOf()
-//                for (bounds in it.skip_bounds) {
-//                    val boundsParts = bounds.split("#")
-//                    if (boundsParts.size == 2) {
-//                        val maxXYParts = boundsParts[0].split(",")
-//                        val detailBoundsParts = boundsParts[1].split(",")
-//                        if (maxXYParts.size == 2 && detailBoundsParts.size == 4) {
-//                            val (maxX, maxY) = maxXYParts
-//                            val (boundsLeft, boundsTop, boundsRight, boundsBottom) = detailBoundsParts
-//                            it.skip_rect_list.add(
-//                                Rect(
-//                                    (boundsLeft.toInt() * RectManager.maxRectX / maxX.toInt() - 1),
-//                                    (boundsTop.toInt() * RectManager.maxRectY / maxY.toInt() - 1),
-//                                    (boundsRight.toInt() * RectManager.maxRectX / maxX.toInt() + 1),
-//                                    (boundsBottom.toInt() * RectManager.maxRectY / maxY.toInt() + 1)
-//                                )
-//                            )
-//                        }
-//                    }
-//                }
-//            }
-//            it
-//        }
-//        appInfoMap = newAppInfoList.associateBy { it.package_name }
-//    }
 
     fun getSkipText(packageName: String): String {
         return appInfoMap[packageName]?.skip_text ?: "跳过"
