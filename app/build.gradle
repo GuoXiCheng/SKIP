@@ -51,8 +51,6 @@ android {
 
 dependencies {
     implementation 'org.yaml:snakeyaml:1.29'
-    implementation 'com.squareup.retrofit2:retrofit:2.6.1'
-    implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
     implementation 'com.google.code.gson:gson:2.8.9'
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.4.2'
