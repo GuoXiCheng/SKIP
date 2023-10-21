@@ -1,48 +1,48 @@
-- app_name: 蚂蚁财富
-  package_name: com.antfortune.wealth
+# 蚂蚁财富
+- package_name: com.antfortune.wealth
+  max_click_count: 1
   skip_bounds:
     - 1440,3024#1139,224,1370,315
-  max_click_count: 1
 
-- app_name: 酷安
-  package_name: com.coolapk.market
+# 酷安
+- package_name: com.coolapk.market
   skip_bounds:
     - 1440,3024#1116,219,1332,316
 
-- app_name: 支付宝
-  package_name: com.eg.android.AlipayGphone
+# 支付宝
+- package_name: com.eg.android.AlipayGphone
   max_click_count: 0
 
-- app_name: Github
-  package_name: com.github.android
+# Github
+- package_name: com.github.android
   max_click_count: 0
 
-- app_name: 京东阅读
-  package_name: com.jd.app.reader
+# 京东阅读
+- package_name: com.jd.app.reader
   skip_bounds:
     - 1440,3024#1209,113,1338,165
 
-- app_name: 铁路12306
-  package_name: com.MobileTicket
+# 铁路12306
+- package_name: com.MobileTicket
   skip_id: com.MobileTicket:id/tv_skip
 
-- app_name: 爱奇艺
-  package_name: com.qiyi.video
+# 爱奇艺
+- package_name: com.qiyi.video
   skip_text: 关闭
 
-- app_name: 爱奇艺极速版
-  package_name: com.qiyi.video.lite
+# 爱奇艺极速版
+- package_name: com.qiyi.video.lite 
   skip_text: 关闭
 
-- app_name: 腾讯微云
-  package_name: com.qq.qcloud
+# 腾讯微云
+- package_name: com.qq.qcloud
   skip_bounds:
     - 1440,3024#1223,196,1384,308
 
-- app_name: 夸克
-  package_name: com.quark.browser
+# 夸克
+- package_name: com.quark.browser
   max_click_count: 0
 
-- app_name: 微信
-  package_name: com.tencent.mm
-  max_click_count: 0
+# 微信
+- package_name: com.tencent.mm
+  max_click_count: 1
