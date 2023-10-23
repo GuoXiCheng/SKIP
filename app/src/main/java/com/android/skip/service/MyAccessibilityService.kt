@@ -13,60 +13,56 @@ import com.android.skip.manager.*
 
 
 class MyAccessibilityService : AccessibilityService() {
+    private val textNodeHandler = TextNodeHandler()
+    private val idNodeHandler = IdNodeHandler()
+    private val boundsHandler = BoundsHandler()
+
     private var clickCount = 0
-    override fun onAccessibilityEvent(p0: AccessibilityEvent?) {
+
+    init {
+        textNodeHandler.setNextHandler(idNodeHandler).setNextHandler(boundsHandler)
+    }
+
+    override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         try {
+            event ?: return
 
-            if (p0 != null) {
-                if (p0.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-                    clickCount = 0
-                }
+            if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+                clickCount = 0
             }
 
-            if (!AnalyticsManager.isPerformScan(getCurrentRootNode().packageName.toString())) return
+            val rootNode = getCurrentRootNode()
 
-            val textNodeHandler = TextNodeHandler()
-            val idNodeHandler = IdNodeHandler()
-            val boundsHandler = BoundsHandler()
-            textNodeHandler.setNextHandler(idNodeHandler).setNextHandler(boundsHandler)
-            val listOfRect = textNodeHandler.handle(getCurrentRootNode())
-            val maxClickCount = SkipConfigManager.getMaxClickCount(getCurrentRootNode().packageName.toString())
+            if (!AnalyticsManager.isPerformScan(rootNode.packageName.toString())) return
+
+            val listOfRect = textNodeHandler.handle(rootNode)
+            val maxClickCount = SkipConfigManager.getMaxClickCount(rootNode.packageName.toString())
             for (rect in listOfRect) {
-                if (maxClickCount is Int) {
-                    if (clickCount < maxClickCount) {
-                        clickCount += 1
-                        click(this, rect)
-                    }
-                } else {
-                    click(this, rect)
-                }
+                if (maxClickCount is Int && clickCount >= maxClickCount) break
+                click(this, rect)
+                clickCount++
             }
-
-
         } catch (e: Exception) {
-
+            // Log the exception or handle it in some other way
         } finally {
             AnalyticsManager.increaseScanCount()
         }
     }
 
     private fun getCurrentRootNode(): AccessibilityNodeInfo {
-        val rootNode = rootInActiveWindow
-        if (rootNode != null) return rootNode
-        else throw IllegalStateException("No valid root node available");
+        return rootInActiveWindow ?: throw IllegalStateException("No valid root node available")
     }
 
     override fun onInterrupt() {}
 
     private fun click(accessibilityService: AccessibilityService, rect: Rect) {
         val path = Path()
-        path.reset()
-        path.moveTo(rect.exactCenterX(), rect.exactCenterY())
-        path.lineTo(rect.exactCenterX(), rect.exactCenterY())
+        path.moveTo(rect.centerX().toFloat(), rect.centerY().toFloat())
+        path.lineTo(rect.centerX().toFloat(), rect.centerY().toFloat())
 
-        val builder = GestureDescription.Builder()
-        builder.addStroke(GestureDescription.StrokeDescription(path, 0, 1))
-        val gesture = builder.build()
+        val gesture = GestureDescription.Builder()
+            .addStroke(GestureDescription.StrokeDescription(path, 0, 1))
+            .build()
 
         accessibilityService.dispatchGesture(
             gesture,
@@ -84,5 +80,4 @@ class MyAccessibilityService : AccessibilityService() {
             null
         )
     }
-
 }

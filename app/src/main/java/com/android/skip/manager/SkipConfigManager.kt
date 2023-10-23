@@ -52,12 +52,12 @@ object SkipConfigManager {
         return appInfoMap[packageName]?.skip_text ?: "跳过"
     }
 
-    fun getSkipId(packageName: String): String {
-        return appInfoMap[packageName]?.skip_id ?: "no skip id"
+    fun getSkipId(packageName: String): String? {
+        return appInfoMap[packageName]?.skip_id
     }
 
-    fun getSkipRectList(packageName: String): MutableList<Rect> {
-        return appInfoMap[packageName]?.skip_rect_list ?: mutableListOf()
+    fun getSkipRectList(packageName: String): MutableList<Rect>? {
+        return appInfoMap[packageName]?.skip_rect_list
     }
 
     fun getMaxClickCount(packageName: String): Int? {
