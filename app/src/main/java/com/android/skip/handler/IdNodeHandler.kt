@@ -6,9 +6,9 @@ import com.android.skip.manager.SkipConfigManager
 
 class IdNodeHandler: AbstractHandler() {
     override fun handle(node: AccessibilityNodeInfo): List<Rect> {
-        val listOfRect = node.findAccessibilityNodeInfosByViewId(
-            SkipConfigManager.getSkipId(node.packageName.toString())
-        ).map {
+        val skipId = SkipConfigManager.getSkipId(node.packageName.toString()) ?: return super.handle(node)
+
+        val listOfRect = node.findAccessibilityNodeInfosByViewId(skipId).map {
             val rect = Rect()
             it.getBoundsInScreen(rect)
             rect

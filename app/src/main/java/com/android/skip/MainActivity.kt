@@ -212,8 +212,8 @@ class MainActivity : ComponentActivity() {
                 val apiUrl = "https://ghproxy.com/https://raw.githubusercontent.com/GuoXiCheng/SKIP/main/app/src/main/assets/skip_config.yaml"
                 connection = URL(apiUrl).openConnection() as HttpURLConnection
                 connection.requestMethod = "GET"
-                connection.readTimeout = 8000
-                connection.connectTimeout = 8000
+                connection.readTimeout = 30000
+                connection.connectTimeout = 30000
                 val input = connection.inputStream
                 val yaml = Yaml().load<Any>(input)
                 SkipConfigManager.setConfig(yaml)
