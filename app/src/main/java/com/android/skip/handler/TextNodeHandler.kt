@@ -6,13 +6,16 @@ import com.android.skip.manager.SkipConfigManager
 
 class TextNodeHandler : AbstractHandler() {
     override fun handle(node: AccessibilityNodeInfo): List<Rect> {
-        val listOfRect = node.findAccessibilityNodeInfosByText(
+        val nodes = node.findAccessibilityNodeInfosByText(
             SkipConfigManager.getSkipText(node.packageName.toString())
-        ).map {
+        )
+        val listOfRect = nodes.map {
             val rect = Rect()
             it.getBoundsInScreen(rect)
             rect
         }
+        nodes.forEach { it.recycle() }
+
         return listOfRect.ifEmpty {
             super.handle(node)
         }
