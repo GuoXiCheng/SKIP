@@ -25,7 +25,6 @@ class BoundsHandler: AbstractHandler() {
             for (i in 0 until node.childCount) {
                 val result = traverseNode(node.getChild(i), rectList)
                 if (result != null) {
-                    LogManager.i(result.toShortString())
                     return result
                 }
             }
