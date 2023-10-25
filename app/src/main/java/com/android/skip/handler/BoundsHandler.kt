@@ -2,7 +2,6 @@ package com.android.skip.handler
 
 import android.graphics.Rect
 import android.view.accessibility.AccessibilityNodeInfo
-import com.android.skip.manager.LogManager
 import com.android.skip.manager.SkipConfigManager
 
 class BoundsHandler: AbstractHandler() {
