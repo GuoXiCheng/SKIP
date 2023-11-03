@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+env:
+  LATEST_VERSION: "1.4"
 
 jobs:
   build-and-deploy:
@@ -14,7 +16,11 @@ jobs:
 
     - name: Latest Version Number
       run: |
-        echo "1.4" >> dist/latest_version.txt
+        echo $LATEST_VERSION >> dist/latest_version.txt
+    
+    - name: Latest Version APK
+      run: |
+        cp apk/SKIP-v$LATEST_VERSION.apk dist/
     
     - name: SKIP Config
       run: |
