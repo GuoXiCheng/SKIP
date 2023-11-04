@@ -1,0 +1,33 @@
+name: Deploy SKIP static file
+
+on:
+  push:
+    branches:
+      - main
+env:
+  LATEST_VERSION: "1.4"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+
+    - name: Latest Version Number
+      run: |
+        echo $LATEST_VERSION >> dist/latest_version.txt
+    
+    - name: Latest Version APK
+      run: |
+        cp apk/SKIP-v$LATEST_VERSION.apk dist/
+    
+    - name: SKIP Config
+      run: |
+        cp app/src/main/assets/skip_config.yaml dist/
+
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: dist
