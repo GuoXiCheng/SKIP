@@ -30,19 +30,17 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.skip.dataclass.PackageInfo
-import com.android.skip.manager.LogManager
-import com.android.skip.manager.RectManager
-import com.android.skip.manager.SkipConfigManager
-import com.android.skip.manager.ToastManager
+import com.android.skip.manager.*
 import com.android.skip.ui.theme.OneClickTheme
 import com.android.skip.ui.theme.green
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import org.yaml.snakeyaml.Yaml
-import java.net.HttpURLConnection
-import java.net.URL
 import java.util.*
 import kotlin.concurrent.thread
+
 
 var accessibilityState by mutableStateOf(false)
 
@@ -59,6 +57,9 @@ var isAutoStartBtnClicked by mutableStateOf(false)
 
 // 省电策略按钮
 var isPowerSavingBtnClicked by mutableStateOf(false)
+
+// 检查更新按钮
+var isCheckUpdateBtnClicked by mutableStateOf(false)
 
 
 class MainActivity : ComponentActivity() {
@@ -189,6 +190,14 @@ class MainActivity : ComponentActivity() {
                 isBackendTaskBtnClicked -> {
                     ImageDialog()
                 }
+                isCheckUpdateBtnClicked -> {
+                    thread {
+                        ToastManager.showToast(this, "开始更新")
+                        val updateSkipConfigResult = if (HttpManager.updateSkipConfig()) "配置更新成功" else "配置更新失败"
+                        ToastManager.showToast(this, updateSkipConfigResult)
+                        isCheckUpdateBtnClicked = false
+                    }
+                }
             }
 
         }
@@ -202,29 +211,47 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         accessibilityState = MyUtils.isAccessibilitySettingsOn(this)
-        syncSkipConfig()
+//        syncSkipConfig()
     }
 
     private fun syncSkipConfig() {
         thread {
-            var connection: HttpURLConnection? = null
             try {
-                val apiUrl = "https://ghproxy.com/https://raw.githubusercontent.com/GuoXiCheng/SKIP/main/app/src/main/assets/skip_config.yaml"
-                connection = URL(apiUrl).openConnection() as HttpURLConnection
-                connection.requestMethod = "GET"
-                connection.readTimeout = 30000
-                connection.connectTimeout = 30000
-                val input = connection.inputStream
-                val yaml = Yaml().load<Any>(input)
-                SkipConfigManager.setConfig(yaml)
-                ToastManager.showToast(this, "更新配置成功")
+                val client = OkHttpClient()
+                val request = Request.Builder()
+                    .url("https://guoxicheng.github.io/SKIP/skip_config.yaml")
+                    .build()
+                client.newCall(request).execute().use { response ->
+                    val bodyContent = response.body()?.string()
+                    val yaml = Yaml().load<Any>(bodyContent)
+                    SkipConfigManager.setConfig(yaml)
+                    ToastManager.showToast(this, "更新配置成功")
+                }
+
             } catch (e: Exception) {
-                LogManager.i(e.toString())
-                ToastManager.showToast(this, "更新配置失败")
-            } finally {
-                connection?.disconnect()
+                println(e)
             }
         }
+
+
+//            var connection: HttpURLConnection? = null
+//            try {
+//                val apiUrl = "https://guoxicheng.github.io/SKIP/skip_config.yaml"
+//                connection = URL(apiUrl).openConnection() as HttpURLConnection
+//                connection.requestMethod = "GET"
+//                connection.readTimeout = 30000
+//                connection.connectTimeout = 30000
+//                val input = connection.inputStream
+//                val yaml = Yaml().load<Any>(input)
+//                SkipConfigManager.setConfig(yaml)
+//                ToastManager.showToast(this, "更新配置成功")
+//            } catch (e: Exception) {
+//                LogManager.i(e.toString())
+//                ToastManager.showToast(this, "更新配置失败")
+//            } finally {
+//                connection?.disconnect()
+//            }
+//        }
     }
 }
 
@@ -441,17 +468,32 @@ fun PageFooter() {
                 append(" | ")
                 append(RectManager.getMaxRect())
                 append(" | version " + BuildConfig.VERSION_NAME)
+                append(" | ")
+                append("检查更新")
+                addStringAnnotation(
+                    tag = "CHECK_UPDATE",
+                    annotation = "",
+                    start = length - 4,
+                    end = length
+                )
             }
         }
         ClickableText(
             text = annotatedString,
             onClick = { offset ->
-                annotatedString.getStringAnnotations("URL", start = offset, end = offset)
-                    .firstOrNull()?.let { annotation ->
-                        val url = annotation.item
-                        coroutineScope.launch {
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                            context.startActivity(intent)
+                annotatedString.getStringAnnotations(start = offset, end = offset).firstOrNull()
+                    ?.let { annotation ->
+                        when (annotation.tag) {
+                            "URL" -> {
+                                val url = annotation.item
+                                coroutineScope.launch {
+                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                                    context.startActivity(intent)
+                                }
+                            }
+                            "CHECK_UPDATE" -> {
+                                isCheckUpdateBtnClicked = true
+                            }
                         }
                     }
             }
