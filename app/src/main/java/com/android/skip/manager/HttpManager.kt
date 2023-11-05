@@ -1,5 +1,6 @@
 package com.android.skip.manager
 
+import com.android.skip.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.yaml.snakeyaml.Yaml
@@ -19,6 +20,17 @@ object HttpManager {
             true
         } catch (e: Exception) {
             false
+        }
+    }
+
+    fun getLatestVersion(): String {
+        return try {
+            val request = Request.Builder().url("$BASE_URL/latest_version.txt").build()
+            client.newCall(request).execute().use { response ->
+                return response.body()?.string()?.trim().toString()
+            }
+        } catch (e: Exception) {
+            BuildConfig.VERSION_NAME.trim()
         }
     }
 }

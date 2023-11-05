@@ -61,6 +61,12 @@ var isPowerSavingBtnClicked by mutableStateOf(false)
 // 检查更新按钮
 var isCheckUpdateBtnClicked by mutableStateOf(false)
 
+// 是否需要更新
+var isNeedUpdateAPK by mutableStateOf(false)
+
+// 最新版本号
+var latestVersionText by mutableStateOf("")
+
 
 class MainActivity : ComponentActivity() {
 
@@ -159,7 +165,9 @@ class MainActivity : ComponentActivity() {
                         message = "已下载的应用 > SKIP > 打开「使用SKIP」",
                         negativeText = "再想想",
                         positiveText = "去开启"
-                    )
+                    ) {
+                        alertDialogPositiveButtonClickState = true
+                    }
                 } else {
                     AlertDialog(
                         context = this,
@@ -167,11 +175,25 @@ class MainActivity : ComponentActivity() {
                         message = "已下载的应用 > SKIP > 关闭「使用SKIP」",
                         negativeText = "再想想",
                         positiveText = "去停用"
-                    )
+                    ) {
+                        alertDialogPositiveButtonClickState = true
+                    }
                 }
                 isAccessibilityBtnClicked = false
             }
 
+            if (isNeedUpdateAPK) {
+                AlertDialog(
+                    context = this,
+                    title = "发现新版本",
+                    message = "${BuildConfig.VERSION_NAME} -> $latestVersionText",
+                    negativeText = "暂不更新",
+                    positiveText = "立即更新"
+                ) {
+
+                }
+                isNeedUpdateAPK = false
+            }
 
             when {
                 alertDialogPositiveButtonClickState -> {
@@ -192,9 +214,16 @@ class MainActivity : ComponentActivity() {
                 }
                 isCheckUpdateBtnClicked -> {
                     thread {
-                        ToastManager.showToast(this, "开始更新")
+                        ToastManager.showToast(this, "开始检查更新")
                         val updateSkipConfigResult = if (HttpManager.updateSkipConfig()) "配置更新成功" else "配置更新失败"
                         ToastManager.showToast(this, updateSkipConfigResult)
+
+                        val latestVersion = HttpManager.getLatestVersion()
+                        if (latestVersion != BuildConfig.VERSION_NAME.trim()) {
+                            isNeedUpdateAPK = true
+                            latestVersionText = latestVersion
+                        }
+
                         isCheckUpdateBtnClicked = false
                     }
                 }
@@ -211,47 +240,6 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         accessibilityState = MyUtils.isAccessibilitySettingsOn(this)
-//        syncSkipConfig()
-    }
-
-    private fun syncSkipConfig() {
-        thread {
-            try {
-                val client = OkHttpClient()
-                val request = Request.Builder()
-                    .url("https://guoxicheng.github.io/SKIP/skip_config.yaml")
-                    .build()
-                client.newCall(request).execute().use { response ->
-                    val bodyContent = response.body()?.string()
-                    val yaml = Yaml().load<Any>(bodyContent)
-                    SkipConfigManager.setConfig(yaml)
-                    ToastManager.showToast(this, "更新配置成功")
-                }
-
-            } catch (e: Exception) {
-                println(e)
-            }
-        }
-
-
-//            var connection: HttpURLConnection? = null
-//            try {
-//                val apiUrl = "https://guoxicheng.github.io/SKIP/skip_config.yaml"
-//                connection = URL(apiUrl).openConnection() as HttpURLConnection
-//                connection.requestMethod = "GET"
-//                connection.readTimeout = 30000
-//                connection.connectTimeout = 30000
-//                val input = connection.inputStream
-//                val yaml = Yaml().load<Any>(input)
-//                SkipConfigManager.setConfig(yaml)
-//                ToastManager.showToast(this, "更新配置成功")
-//            } catch (e: Exception) {
-//                LogManager.i(e.toString())
-//                ToastManager.showToast(this, "更新配置失败")
-//            } finally {
-//                connection?.disconnect()
-//            }
-//        }
     }
 }
 
@@ -506,14 +494,14 @@ fun PageFooter() {
 fun AlertDialog(
     context: Context, title: CharSequence,
     message: CharSequence?, negativeText: CharSequence,
-    positiveText: CharSequence
+    positiveText: CharSequence, onPositiveButtonClick: ()->Unit
 ) {
     MaterialAlertDialogBuilder(context)
         .setTitle(title)
         .setMessage(message)
         .setNegativeButton(negativeText, null)
         .setPositiveButton(positiveText) { _, _ ->
-            alertDialogPositiveButtonClickState = true
+            onPositiveButtonClick()
         }
         .show()
 }
