@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.FileProvider
 import com.android.skip.dataclass.PackageInfo
 import com.android.skip.manager.*
 import com.android.skip.ui.theme.OneClickTheme
@@ -38,6 +39,7 @@ import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.yaml.snakeyaml.Yaml
+import java.io.File
 import java.util.*
 import kotlin.concurrent.thread
 
@@ -66,6 +68,9 @@ var isNeedUpdateAPK by mutableStateOf(false)
 
 // 最新版本号
 var latestVersionText by mutableStateOf("")
+
+// 立即更新
+var isUpdateAPKClicked by mutableStateOf(false)
 
 
 class MainActivity : ComponentActivity() {
@@ -190,7 +195,7 @@ class MainActivity : ComponentActivity() {
                     negativeText = "暂不更新",
                     positiveText = "立即更新"
                 ) {
-
+                    isUpdateAPKClicked = true
                 }
                 isNeedUpdateAPK = false
             }
@@ -222,9 +227,27 @@ class MainActivity : ComponentActivity() {
                         if (latestVersion != BuildConfig.VERSION_NAME.trim()) {
                             isNeedUpdateAPK = true
                             latestVersionText = latestVersion
+                        } else {
+                            ToastManager.showToast(this, "当前版本已是最新版")
                         }
 
                         isCheckUpdateBtnClicked = false
+                    }
+                }
+                isUpdateAPKClicked -> {
+                    thread {
+                        HttpManager.downLoadNewAPK(latestVersionText, this)
+                        val latestVersionAPK = "SKIP-v$latestVersionText.apk"
+                        val apkFile = File(this.getExternalFilesDir(null), latestVersionAPK)
+                        println(apkFile.name)
+                        val apkUri = FileProvider.getUriForFile(this, this.applicationContext.packageName + ".provider", apkFile)
+
+                        val intent = Intent(Intent.ACTION_VIEW)
+                        intent.setDataAndType(apkUri, "application/vnd.android.package-archive")
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        this.startActivity(intent)
+
+                        isUpdateAPKClicked = false
                     }
                 }
             }
