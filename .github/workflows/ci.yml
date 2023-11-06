@@ -5,7 +5,7 @@ on:
     branches:
       - main
 env:
-  LATEST_VERSION: "1.4.1"
+  LATEST_VERSION: "1.4.2"
 
 jobs:
   build-and-deploy:
