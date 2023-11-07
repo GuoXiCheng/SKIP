@@ -37,14 +37,28 @@ object HttpManager {
         }
     }
 
-    fun downLoadNewAPK(latestVersion: String, context: Context) {
+    fun downloadNewAPK(latestVersion: String, context: Context, onDownloadProcess: (process: Int) -> Unit) {
         try {
             val latestVersionAPK = "SKIP-v$latestVersion.apk"
             val request = Request.Builder().url("$BASE_URL/$latestVersionAPK").build()
+
             client.newCall(request).execute().use { response ->
-                val fos = FileOutputStream(File(context.getExternalFilesDir(null), latestVersionAPK))
-                fos.use {
-                    fos.write(response.body()?.bytes())
+                val body = response.body()
+                val contentLength = body?.contentLength() ?: 0
+                body?.byteStream()?.apply {
+                    val fos = FileOutputStream(File(context.getExternalFilesDir(null), latestVersionAPK))
+                    val buffer = ByteArray(2048)
+                    var len: Int
+                    var downloaded = 0L
+
+                    while (read(buffer).also { len = it } != -1) {
+                        fos.write(buffer, 0, len)
+                        downloaded += len
+                        val progress = (downloaded.toFloat() / contentLength.toFloat()) * 100
+                        onDownloadProcess(kotlin.math.floor(progress.toDouble()).toInt())
+                    }
+                    fos.flush()
+                    fos.close()
                 }
             }
         } catch (e: Exception) {

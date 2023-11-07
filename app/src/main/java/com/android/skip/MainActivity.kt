@@ -36,12 +36,11 @@ import com.android.skip.ui.theme.OneClickTheme
 import com.android.skip.ui.theme.green
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import org.yaml.snakeyaml.Yaml
 import java.io.File
 import java.util.*
 import kotlin.concurrent.thread
+import kotlin.math.roundToInt
 
 
 var accessibilityState by mutableStateOf(false)
@@ -71,6 +70,11 @@ var latestVersionText by mutableStateOf("")
 
 // 立即更新
 var isUpdateAPKClicked by mutableStateOf(false)
+
+// 更新进度对话框
+var isProcessDialogVisible by mutableStateOf(false)
+
+var downloadProgress by mutableStateOf(0f)
 
 
 class MainActivity : ComponentActivity() {
@@ -159,6 +163,7 @@ class MainActivity : ComponentActivity() {
                 )
             ) {
                 MainSurface()
+                ProcessDialog()
             }
 
 
@@ -220,7 +225,8 @@ class MainActivity : ComponentActivity() {
                 isCheckUpdateBtnClicked -> {
                     thread {
                         ToastManager.showToast(this, "开始检查更新")
-                        val updateSkipConfigResult = if (HttpManager.updateSkipConfig()) "配置更新成功" else "配置更新失败"
+                        val updateSkipConfigResult =
+                            if (HttpManager.updateSkipConfig()) "配置更新成功" else "配置更新失败"
                         ToastManager.showToast(this, updateSkipConfigResult)
 
                         val latestVersion = HttpManager.getLatestVersion()
@@ -236,15 +242,24 @@ class MainActivity : ComponentActivity() {
                 }
                 isUpdateAPKClicked -> {
                     thread {
-                        HttpManager.downLoadNewAPK(latestVersionText, this)
+                        isProcessDialogVisible = true
+                        HttpManager.downloadNewAPK(latestVersionText, this) { it ->
+                            downloadProgress = it * 0.01f
+                            if (it == 100) isProcessDialogVisible = false
+                        }
                         val latestVersionAPK = "SKIP-v$latestVersionText.apk"
                         val apkFile = File(this.getExternalFilesDir(null), latestVersionAPK)
-                        println(apkFile.name)
-                        val apkUri = FileProvider.getUriForFile(this, this.applicationContext.packageName + ".provider", apkFile)
+
+                        val apkUri = FileProvider.getUriForFile(
+                            this,
+                            this.applicationContext.packageName + ".provider",
+                            apkFile
+                        )
 
                         val intent = Intent(Intent.ACTION_VIEW)
                         intent.setDataAndType(apkUri, "application/vnd.android.package-archive")
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        intent.flags =
+                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
                         this.startActivity(intent)
 
                         isUpdateAPKClicked = false
@@ -517,7 +532,7 @@ fun PageFooter() {
 fun AlertDialog(
     context: Context, title: CharSequence,
     message: CharSequence?, negativeText: CharSequence,
-    positiveText: CharSequence, onPositiveButtonClick: ()->Unit
+    positiveText: CharSequence, onPositiveButtonClick: () -> Unit
 ) {
     MaterialAlertDialogBuilder(context)
         .setTitle(title)
@@ -560,5 +575,33 @@ fun ImageDialog() {
     )
 }
 
+@Composable
+fun ProcessDialog() {
+    if (isProcessDialogVisible) {
+        AlertDialog(
+            onDismissRequest = {
+                isProcessDialogVisible = false
+            },
+            title = {
+                Text(text = "正在下载")
+            },
+            text = {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    LinearProgressIndicator(progress = downloadProgress)
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(text = "下载进度：${(downloadProgress * 100).roundToInt()}%")
+                }
+            },
+            confirmButton = {
+            },
+            dismissButton = {
+            }
+        )
+    }
+}
 
 
