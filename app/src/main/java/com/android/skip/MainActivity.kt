@@ -254,25 +254,11 @@ class MainActivity : ComponentActivity() {
                             apkFile
                         )
 
-                        // 创建并注册 BroadcastReceiver
-                        val receiver = object : BroadcastReceiver() {
-                            override fun onReceive(context: Context, intent: Intent) {
-                                if (intent.action == Intent.ACTION_PACKAGE_ADDED) {
-                                    // 删除 APK 文件
-                                    apkFile.delete()
-                                }
-                            }
-                        }
-                        registerReceiver(receiver, IntentFilter(Intent.ACTION_PACKAGE_ADDED))
-
                         val intent = Intent(Intent.ACTION_VIEW)
                         intent.setDataAndType(apkUri, "application/vnd.android.package-archive")
                         intent.flags =
                             Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
                         this.startActivity(intent)
-
-                        // 取消注册 BroadcastReceiver
-                        unregisterReceiver(receiver)
 
                         isUpdateAPKClicked = false
                     }
@@ -285,6 +271,14 @@ class MainActivity : ComponentActivity() {
 
         val yaml = Yaml().load<List<PackageInfo>>(assets.open("skip_config.yaml"))
         SkipConfigManager.setConfig(yaml)
+
+        // 清理临时文件
+        val directory = this.getExternalFilesDir(null)
+        directory?.let {
+            it.listFiles()?.forEach { file ->
+                file.delete()
+            }
+        }
     }
 
     override fun onResume() {
