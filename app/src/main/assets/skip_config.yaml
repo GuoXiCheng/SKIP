@@ -49,6 +49,6 @@
 - package_name: com.tencent.mm
   max_click_count: 0
 
-# 华为时钟
-- package_name: com.huawei.deskclock
+# 华为自带时钟
+- package_name: com.android.deskclock
   max_click_count: 0
