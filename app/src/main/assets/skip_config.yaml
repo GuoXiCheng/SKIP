@@ -20,6 +20,7 @@
 
 # 京东阅读
 - package_name: com.jd.app.reader
+  skip_id: com.jd.app.reader:id/mJumpBtn
   skip_bounds:
     - 1440,3024#1209,113,1338,165
 
@@ -52,3 +53,7 @@
 # 华为自带时钟
 - package_name: com.android.deskclock
   max_click_count: 0
+
+# CSDN
+- package_name: net.csdn.csdnplus
+  skip_id: com.byted.pangle.m:id/tt_splash_skip_btn
