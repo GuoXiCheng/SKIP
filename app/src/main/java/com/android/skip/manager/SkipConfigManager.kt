@@ -63,4 +63,8 @@ object SkipConfigManager {
     fun getMaxClickCount(packageName: String): Int? {
         return appInfoMap[packageName]?.max_click_count
     }
+
+    fun getBypass(packageName: String): List<String> {
+        return appInfoMap[packageName]?.bypass?: emptyList()
+    }
 }

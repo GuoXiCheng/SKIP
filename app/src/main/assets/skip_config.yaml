@@ -57,3 +57,17 @@
 # CSDN
 - package_name: net.csdn.csdnplus
   skip_id: com.byted.pangle.m:id/tt_splash_skip_btn
+
+# 小度
+- package_name: com.baidu.duer.superapp
+  skip_id: com.byted.pangle:id/tt_splash_skip_btn
+
+# VIVO 应用商店, 跳过开屏应用推荐
+- package_name: com.bbk.appstore
+  skip_text: 进入首页
+  skip_id: com.bbk.appstore:id/vbutton_title
+
+#针对该应用，绕过该布局
+- package_name: com.tencent.mobileqq
+  bypass:
+      - com.tencent.mobileqq:id/jfb

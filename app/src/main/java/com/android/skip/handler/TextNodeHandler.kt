@@ -9,10 +9,18 @@ class TextNodeHandler : AbstractHandler() {
         val nodes = node.findAccessibilityNodeInfosByText(
             SkipConfigManager.getSkipText(node.packageName.toString())
         )
-        val listOfRect = nodes.map {
-            val rect = Rect()
-            it.getBoundsInScreen(rect)
-            rect
+        val bypass = SkipConfigManager.getBypass(node.packageName.toString())
+
+        val listOfRect = ArrayList<Rect>()
+        for(t in nodes){
+            if(!bypass.contains(t.viewIdResourceName)){
+                t.apply {
+                    Rect().also { rect ->
+                        getBoundsInScreen(rect)
+                        listOfRect.add(rect)
+                    }
+                }
+            }
         }
         nodes.forEach { it.recycle() }
 
