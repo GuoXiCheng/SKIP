@@ -71,3 +71,4 @@
 - package_name: com.tencent.mobileqq
   bypass:
       - com.tencent.mobileqq:id/jfb
+      - com.tencent.mobileqq:id/aua
