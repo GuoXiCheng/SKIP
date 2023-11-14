@@ -52,8 +52,8 @@ object SkipConfigManager {
         return appInfoMap[packageName]?.skip_text ?: "跳过"
     }
 
-    fun getSkipId(packageName: String): String? {
-        return appInfoMap[packageName]?.skip_id
+    fun getSkipIds(packageName: String): List<String> {
+        return appInfoMap[packageName]?.skip_ids?: emptyList()
     }
 
     fun getSkipRectList(packageName: String): MutableList<Rect>? {

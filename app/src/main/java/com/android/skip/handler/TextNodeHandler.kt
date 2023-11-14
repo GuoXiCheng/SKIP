@@ -16,6 +16,7 @@ class TextNodeHandler : AbstractHandler() {
             if(!bypass.contains(t.viewIdResourceName)){
                 t.apply {
                     Rect().also { rect ->
+
                         getBoundsInScreen(rect)
                         listOfRect.add(rect)
                     }
