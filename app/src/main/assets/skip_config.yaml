@@ -33,7 +33,7 @@
   skip_text: 关闭
 
 # 爱奇艺极速版
-- package_name: com.qiyi.video.lite
+- package_name: com.qiyi.video.lite 
   skip_text: 关闭
 
 # 腾讯微云
@@ -70,5 +70,4 @@
 #针对该应用，绕过该布局
 - package_name: com.tencent.mobileqq
   bypass:
-    - com.tencent.mobileqq:id/jfb
-    - com.tencent.mobileqq:id/aua
+      - com.tencent.mobileqq:id/jfb
