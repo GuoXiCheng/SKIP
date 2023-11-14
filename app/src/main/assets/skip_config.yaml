@@ -57,3 +57,7 @@
 # CSDN
 - package_name: net.csdn.csdnplus
   skip_id: com.byted.pangle.m:id/tt_splash_skip_btn
+
+# 小度
+- package_name: com.baidu.duer.superapp
+  skip_id: com.byted.pangle:id/tt_splash_skip_btn
