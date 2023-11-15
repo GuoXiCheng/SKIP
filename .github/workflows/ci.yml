@@ -3,7 +3,7 @@ name: Deploy SKIP static file
 on:
   push:
     branches:
-      - main
+      - release
 env:
   LATEST_VERSION: "1.5"
 
