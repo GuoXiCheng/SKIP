@@ -279,6 +279,10 @@ class MainActivity : ComponentActivity() {
                 file.delete()
             }
         }
+
+        val intent = Intent(this, NewMainActivity::class.java)
+        startActivity(intent)
+
     }
 
     override fun onResume() {
