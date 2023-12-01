@@ -1,5 +1,7 @@
 package com.android.skip.compose
 
+import android.content.Intent
+import android.provider.Settings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.android.skip.viewmodel.StartButtonViewModel
@@ -22,8 +25,8 @@ import com.android.skip.viewmodel.StartButtonViewModel
 
 @Composable
 fun StartButton(viewModel: StartButtonViewModel) {
-    //    val context = LocalContext.current
     val state by viewModel.buttonState.collectAsState()
+    val context = LocalContext.current
 
     ExtendedFloatingActionButton(
         modifier = Modifier
@@ -31,7 +34,7 @@ fun StartButton(viewModel: StartButtonViewModel) {
             .height(80.dp),
         text = { StartButtonContent(iconResource = state.iconResource, buttonText = state.buttonText) },
         onClick = {
-
+            context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
         },
         icon = {},
         containerColor = state.backgroundColor // 使用背景色状态
@@ -48,7 +51,7 @@ private fun StartButtonContent(iconResource: Int, buttonText: String) {
     ) {
         Icon(
             painter = painterResource(id = iconResource),
-            contentDescription = "Block",
+            contentDescription = "StartButtonContent",
             tint = Color.White
         )
         Spacer(Modifier.width(16.dp)) // 图标和文本之间的间距
