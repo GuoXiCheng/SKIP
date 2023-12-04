@@ -28,10 +28,12 @@ fun CustomFloatingButton(
         flatElevation() // 使用扁平化效果，即没有阴影
     }
 
+    val buttonHeight = if (useElevation) 80.dp else 60.dp
+
     ExtendedFloatingActionButton(
         modifier = Modifier
             .fillMaxWidth()
-            .height(80.dp),
+            .height(buttonHeight),
         onClick = onClick,
         content = {
             Row(
