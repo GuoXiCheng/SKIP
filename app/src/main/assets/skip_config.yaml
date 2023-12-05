@@ -68,3 +68,7 @@
 - package_name: com.bbk.appstore
   skip_text: 进入首页
   skip_ids: com.bbk.appstore:id/vbutton_title
+
+# 民生银行
+- package_name: cn.com.cmbc.newmbank
+  skip_id: cn.com.cmbc.newmbank:id/view_count_down
