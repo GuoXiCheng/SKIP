@@ -10,6 +10,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,9 +20,16 @@ import com.android.skip.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScaffoldPage(barTitle: String, onClick: () -> Unit, content: @Composable (PaddingValues) -> Unit) {
+fun ScaffoldPage(
+    barTitle: String,
+    onClick: () -> Unit,
+    content: @Composable (PaddingValues) -> Unit
+) {
     Scaffold(topBar = {
         SmallTopAppBar(
+            colors = TopAppBarDefaults.smallTopAppBarColors(
+                containerColor = Color.White // 设置背景色为白色
+            ),
             modifier = Modifier.padding(15.dp, 15.dp, 0.dp, 0.dp),
             title = { Text(barTitle) }, navigationIcon = {
                 IconButton(onClick = onClick) {
@@ -32,14 +40,15 @@ fun ScaffoldPage(barTitle: String, onClick: () -> Unit, content: @Composable (Pa
                     )
                 }
             })
-    }, content = { contentPadding ->
-        Column(
-            Modifier
-                .padding(contentPadding)
-                .padding(15.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            content(contentPadding)
-        }
-    })
+    }, containerColor = Color.White,
+        content = { contentPadding ->
+            Column(
+                Modifier
+                    .padding(contentPadding)
+                    .padding(15.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                content(contentPadding)
+            }
+        })
 }

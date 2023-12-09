@@ -2,4 +2,10 @@
     <string name="app_name">SKIP</string>
     <string name="activity_main">SKIP</string>
     <string name="accessibility_description">若无障碍服务发生故障，可以关闭后再打开。</string>
+    <string name="main_check_new_version">检查更新</string>
+    <string name="about">关于</string>
+    <string name="about_github_name">Github源码地址</string>
+    <string name="about_github_url">https://github.com/GuoXiCheng/SKIP</string>
+    <string name="about_skip_docs_name">SKIP Docs文档地址</string>
+    <string name="about_skip_docs_url">https://guoxicheng.top/projects/SKIP-Docs</string>
 </resources>
