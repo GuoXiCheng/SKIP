@@ -1,6 +1,8 @@
 package com.android.skip
 
-import android.content.*
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -9,10 +11,31 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,14 +52,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import com.android.skip.dataclass.PackageInfo
-import com.android.skip.manager.*
-import com.android.skip.ui.theme.OneClickTheme
+import com.android.skip.manager.HttpManager
+import com.android.skip.manager.RectManager
+import com.android.skip.manager.SkipConfigManager
+import com.android.skip.manager.ToastManager
+import com.android.skip.ui.theme.AppTheme
 import com.android.skip.ui.theme.green
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 import org.yaml.snakeyaml.Yaml
 import java.io.File
-import java.util.*
+import java.util.Locale
 import kotlin.concurrent.thread
 import kotlin.math.roundToInt
 
@@ -146,7 +172,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        this.window.navigationBarColor = resources.getColor(R.color.white, null)
 
         setContent {
 
@@ -295,7 +320,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 @Preview(showBackground = true)
 fun MainSurface() {
-    OneClickTheme {
+    AppTheme {
 
         val res = LocalContext.current.resources
 

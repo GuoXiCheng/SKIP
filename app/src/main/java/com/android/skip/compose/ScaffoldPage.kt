@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
@@ -28,19 +29,19 @@ fun ScaffoldPage(
     Scaffold(topBar = {
         SmallTopAppBar(
             colors = TopAppBarDefaults.smallTopAppBarColors(
-                containerColor = Color.White // 设置背景色为白色
+                containerColor = MaterialTheme.colorScheme.background
             ),
             modifier = Modifier.padding(15.dp, 15.dp, 0.dp, 0.dp),
             title = { Text(barTitle) }, navigationIcon = {
                 IconButton(onClick = onClick) {
                     Icon(
                         painter = painterResource(id = R.drawable.arrow_back),
-                        contentDescription = "ArrowBackButton",
-                        tint = Color.Black
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onBackground
                     )
                 }
             })
-    }, containerColor = Color.White,
+    }, containerColor = MaterialTheme.colorScheme.background,
         content = { contentPadding ->
             Column(
                 Modifier

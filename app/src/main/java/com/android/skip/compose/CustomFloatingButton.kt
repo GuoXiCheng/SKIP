@@ -25,7 +25,7 @@ fun CustomFloatingButton(
     val elevation = if (useElevation) {
         FloatingActionButtonDefaults.elevation() // 使用默认阴影
     } else {
-        flatElevation() // 使用扁平化效果，即没有阴影
+        flatElevation()
     }
 
     val buttonHeight = if (useElevation) 80.dp else 60.dp

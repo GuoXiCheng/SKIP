@@ -3,6 +3,7 @@ package com.android.skip.compose
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -21,15 +22,15 @@ fun CheckNewVersionButton() {
 
     CustomFloatingButton(
         useElevation = false,
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.background,
         content = {
             Icon(
                 painter = painterResource(id = R.drawable.sync),
                 contentDescription = null,
-                tint = Color.Black
+                tint = MaterialTheme.colorScheme.onBackground
             )
             Spacer(Modifier.width(16.dp))
-            Text(stringResource(id = R.string.main_check_new_version), fontSize = 16.sp)
+            Text(stringResource(id = R.string.main_check_new_version), fontSize = 16.sp, color = MaterialTheme.colorScheme.onBackground)
         }
     ) {
         showDialog.value = true
