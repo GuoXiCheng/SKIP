@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
@@ -19,12 +20,14 @@ import com.android.skip.compose.ConfirmDialog
 import com.android.skip.compose.CustomFloatingButton
 import com.android.skip.compose.ScaffoldPage
 import com.android.skip.ui.theme.AppTheme
+import com.android.skip.viewmodel.ThemeViewModel
 
 class AboutActivity : AppCompatActivity() {
+    private val themeViewModel by viewModels<ThemeViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AppTheme(darkTheme = true) {
+            AppTheme(darkTheme = themeViewModel.isDarkTheme.value) {
                 AboutActivityInterface {
                     finish()
                 }
@@ -34,7 +37,7 @@ class AboutActivity : AppCompatActivity() {
 }
 
 @Composable
-fun AboutActivityInterface(onClick: () -> Unit) {
+fun AboutActivityInterface(onBackClick: () -> Unit) {
     val showDialog = remember { mutableStateOf(false) }
     val openName = remember { mutableStateOf("") }
     val openUrl = remember { mutableStateOf("") }
@@ -44,7 +47,7 @@ fun AboutActivityInterface(onClick: () -> Unit) {
     val skipDocsName = stringResource(id = R.string.about_skip_docs_name)
     val skipDocsAddress = stringResource(id = R.string.about_skip_docs_url)
 
-    ScaffoldPage(stringResource(id = R.string.about), onClick = onClick, content = {
+    ScaffoldPage(stringResource(id = R.string.about), onBackClick = onBackClick, content = {
         CustomFloatingButton(useElevation = false, containerColor = MaterialTheme.colorScheme.background, content = {
             Column {
                 Text(githubName, fontSize = 16.sp)

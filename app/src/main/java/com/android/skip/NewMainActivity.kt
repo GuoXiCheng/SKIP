@@ -25,14 +25,16 @@ import com.android.skip.compose.SettingsButton
 import com.android.skip.compose.StartButton
 import com.android.skip.ui.theme.AppTheme
 import com.android.skip.viewmodel.StartButtonViewModel
+import com.android.skip.viewmodel.ThemeViewModel
 
 class NewMainActivity : AppCompatActivity() {
     private val startButtonViewModel: StartButtonViewModel by viewModels()
+    private val themeViewModel by viewModels<ThemeViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            AppTheme(darkTheme = true) {
+            AppTheme(darkTheme = themeViewModel.isDarkTheme.value) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
