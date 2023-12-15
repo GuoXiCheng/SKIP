@@ -72,3 +72,7 @@
 # 民生银行
 - package_name: cn.com.cmbc.newmbank
   skip_id: cn.com.cmbc.newmbank:id/view_count_down
+
+# 菜鸟
+- package_name: com.cainiao.wireless
+  skip_id: com.cainiao.wireless:id/tt_splash_skip_btn
