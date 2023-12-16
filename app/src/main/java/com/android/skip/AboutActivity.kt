@@ -1,10 +1,10 @@
 package com.android.skip
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
@@ -20,14 +20,13 @@ import com.android.skip.compose.ConfirmDialog
 import com.android.skip.compose.CustomFloatingButton
 import com.android.skip.compose.ScaffoldPage
 import com.android.skip.ui.theme.AppTheme
-import com.android.skip.viewmodel.ThemeViewModel
+import com.android.skip.ui.theme.themeTypeState
 
 class AboutActivity : AppCompatActivity() {
-    private val themeViewModel by viewModels<ThemeViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AppTheme(darkTheme = themeViewModel.isDarkTheme.value) {
+            AppTheme(darkTheme = themeTypeState.value == Configuration.UI_MODE_NIGHT_YES) {
                 AboutActivityInterface {
                     finish()
                 }

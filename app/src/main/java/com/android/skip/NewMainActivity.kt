@@ -1,5 +1,6 @@
 package com.android.skip
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -24,17 +25,19 @@ import com.android.skip.compose.ConfigUpdateButton
 import com.android.skip.compose.SettingsButton
 import com.android.skip.compose.StartButton
 import com.android.skip.ui.theme.AppTheme
+import com.android.skip.ui.theme.themeTypeState
+import com.android.skip.utils.DataStoreUtils
 import com.android.skip.viewmodel.StartButtonViewModel
-import com.android.skip.viewmodel.ThemeViewModel
 
+const val SKIP_APP_THEME = "SKIP_APP_THEME"
 class NewMainActivity : AppCompatActivity() {
     private val startButtonViewModel: StartButtonViewModel by viewModels()
-    private val themeViewModel by viewModels<ThemeViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        DataStoreUtils.init(applicationContext)
         setContent {
-            AppTheme(darkTheme = themeViewModel.isDarkTheme.value) {
+            AppTheme(darkTheme = themeTypeState.value == Configuration.UI_MODE_NIGHT_YES) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()

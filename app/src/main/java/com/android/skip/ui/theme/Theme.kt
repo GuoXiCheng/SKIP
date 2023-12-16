@@ -1,6 +1,7 @@
 package com.android.skip.ui.theme
 
 import android.app.Activity
+import android.content.res.Configuration
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -9,11 +10,15 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
+import com.android.skip.SKIP_APP_THEME
+import com.android.skip.utils.DataStoreUtils
 
 private val darkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -30,6 +35,11 @@ private val lightColorScheme = lightColorScheme(
     background = White,
     onBackground = Black
 )
+
+val themeTypeState: MutableState<Int> by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
+    mutableStateOf(getDefaultThemeId())
+}
+fun getDefaultThemeId(): Int = DataStoreUtils.getSyncData(SKIP_APP_THEME, Configuration.UI_MODE_NIGHT_NO)
 
 @Composable
 fun AppTheme(
