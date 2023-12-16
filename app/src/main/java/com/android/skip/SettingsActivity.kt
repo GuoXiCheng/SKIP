@@ -1,48 +1,97 @@
 package com.android.skip
 
 import android.content.res.Configuration
-import android.os.Bundle
-import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.background
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.android.skip.compose.ScaffoldPage
-import com.android.skip.ui.theme.AppTheme
 import com.android.skip.ui.theme.themeTypeState
 import com.android.skip.utils.DataStoreUtils
 
-class SettingsActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            AppTheme(darkTheme = themeTypeState.value == Configuration.UI_MODE_NIGHT_YES) {
-                SettingsActivityInterface (onBackClick = { finish() })
-            }
-        }
+class SettingsActivity : BaseActivity() {
+    @Composable
+    override fun ProvideContent() {
+        SettingsActivityInterface(onBackClick = { finish() })
     }
 }
 
 @Composable
 fun SettingsActivityInterface(onBackClick: () -> Unit) {
+    val expandedState = remember { mutableStateOf(false) }
+    val options = listOf("浅色模式", "深色模式", "跟随系统")
+    val selectedState = remember { mutableStateOf(0) }
+
     ScaffoldPage(
         barTitle = stringResource(id = R.string.settings),
         onBackClick = onBackClick, content = {
-            Button(onClick = { toggleTheme() }) {
-                Text(text = if (themeTypeState.value == Configuration.UI_MODE_NIGHT_YES) "浅色主题" else "深色主题")
+            Button(onClick = {
+                expandedState.value = !expandedState.value
+            }) {
+                when (themeTypeState.value) {
+                    Configuration.UI_MODE_NIGHT_NO -> Text(options[0])
+                    Configuration.UI_MODE_NIGHT_YES -> Text(options[1])
+                    else -> Text(options[2])
+                }
             }
+            Menu(expandedState, options, selectedState)
         })
 }
 
-private fun toggleTheme() {
-    val newTheme = if (themeTypeState.value == Configuration.UI_MODE_NIGHT_YES) {
-        Configuration.UI_MODE_NIGHT_NO
-    } else {
-        Configuration.UI_MODE_NIGHT_YES
-    }
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun Menu(
+    expandedState: MutableState<Boolean>,
+    options: List<String>,
+    selectedState: MutableState<Int>
+) {
+    val themeMapping = mapOf(
+        0 to Configuration.UI_MODE_NIGHT_NO,
+        1 to Configuration.UI_MODE_NIGHT_YES,
+        2 to Configuration.UI_MODE_NIGHT_UNDEFINED
+    )
 
-    themeTypeState.value = newTheme
-    DataStoreUtils.putSyncData(SKIP_APP_THEME, newTheme)
+    ExposedDropdownMenuBox(
+        expanded = expandedState.value,
+        onExpandedChange = { expandedState.value = !expandedState.value }
+    ) {
+        DropdownMenu(
+            expanded = expandedState.value,
+            onDismissRequest = { expandedState.value = false }
+        ) {
+            options.forEachIndexed { index, option ->
+                val isSelected = themeMapping[index] == themeTypeState.value
+                DropdownMenuItem(
+                    modifier = Modifier.background(if (isSelected) MaterialTheme.colorScheme.background else Color.Transparent),
+                    text = {
+                        Text(text = option)
+                    },
+                    onClick = {
+                        selectedState.value = index
+                        expandedState.value = false
+                        updateTheme(themeMapping[index])
+                    }
+                )
+            }
+        }
+    }
+}
+
+private fun updateTheme(themeMode: Int?) {
+    themeMode?.let {
+        themeTypeState.value = it
+        DataStoreUtils.putSyncData(SKIP_APP_THEME, it)
+    }
 }
 
