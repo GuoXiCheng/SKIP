@@ -35,6 +35,8 @@ fun SettingsActivityInterface(onBackClick: () -> Unit) {
     val expandedState = remember { mutableStateOf(false) }
     val options = listOf("浅色模式", "深色模式", "跟随系统")
     val selectedState = remember { mutableStateOf(0) }
+    val checkUpdateVersion = remember { mutableStateOf(true) }
+    val checkUpdateConfig = remember { mutableStateOf(true) }
 
     ScaffoldPage(
         barTitle = stringResource(id = R.string.settings),
@@ -43,15 +45,53 @@ fun SettingsActivityInterface(onBackClick: () -> Unit) {
                 useElevation = false,
                 containerColor = MaterialTheme.colorScheme.background,
                 content = {
+                    RowContent(
+                        iconResource = R.drawable.sync,
+                        title = "自动检查更新",
+                        subTitle = "打开应用时自动检查新版本",
+                        checked = checkUpdateVersion
+                    )
+                }) {}
+
+            CustomFloatingButton(
+                useElevation = false,
+                containerColor = MaterialTheme.colorScheme.background,
+                content = {
+                    RowContent(
+                        iconResource = R.drawable.sync,
+                        title = "自动更新配置",
+                        subTitle = "打开应用时自动获取并更新配置文件",
+                        checked = checkUpdateConfig
+                    )
+                }) {}
+
+            Menu(expandedState, options, selectedState)
+            CustomFloatingButton(
+                useElevation = false,
+                containerColor = MaterialTheme.colorScheme.background,
+                content = {
                     when (themeTypeState.value) {
-                        Configuration.UI_MODE_NIGHT_NO -> RowContent(R.drawable.brightness, options[0], "保持明亮模式")
-                        Configuration.UI_MODE_NIGHT_YES -> RowContent(R.drawable.brightness, options[1], "保持暗黑模式")
-                        else -> RowContent(R.drawable.brightness, options[2], "跟随系统设置")
+                        Configuration.UI_MODE_NIGHT_NO -> RowContent(
+                            R.drawable.brightness,
+                            options[0],
+                            "保持明亮模式",
+                            null
+                        )
+
+                        Configuration.UI_MODE_NIGHT_YES -> RowContent(
+                            R.drawable.brightness,
+                            options[1],
+                            "保持暗黑模式",
+                            null
+                        )
+
+                        else -> RowContent(R.drawable.brightness, options[2], "跟随系统设置", null)
                     }
-                } ) {
+                }) {
                 expandedState.value = !expandedState.value
             }
-            Menu(expandedState, options, selectedState)
+
+
         })
 }
 
@@ -75,7 +115,7 @@ fun Menu(
         DropdownMenu(
             expanded = expandedState.value,
             onDismissRequest = { expandedState.value = false },
-            offset = DpOffset(x = 150.dp, y = 0.dp)
+            offset = DpOffset(x = 100.dp, y = 0.dp)
         ) {
             options.forEachIndexed { index, option ->
                 val isSelected = themeMapping[index] == themeTypeState.value

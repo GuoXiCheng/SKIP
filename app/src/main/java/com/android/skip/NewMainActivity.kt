@@ -15,8 +15,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.skip.compose.AboutButton
-import com.android.skip.compose.CheckNewVersionButton
-import com.android.skip.compose.ConfigUpdateButton
 import com.android.skip.compose.SettingsButton
 import com.android.skip.compose.StartButton
 import com.android.skip.viewmodel.StartButtonViewModel
@@ -38,9 +36,9 @@ class NewMainActivity : BaseActivity() {
                 Text(text = "SKIP", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
             }
             StartButton(startButtonViewModel)
-            ConfigUpdateButton()
+//            ConfigUpdateButton()
             SettingsButton()
-            CheckNewVersionButton()
+//            CheckNewVersionButton()
             AboutButton()
         }
     }

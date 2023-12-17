@@ -27,7 +27,7 @@ fun SettingsButton() {
             RowContent(
                 iconResource = R.drawable.settings,
                 title = stringResource(id = R.string.settings),
-                subTitle = null
+                subTitle = null, null
             )
         }) {
         val intent = Intent(context, SettingsActivity::class.java)

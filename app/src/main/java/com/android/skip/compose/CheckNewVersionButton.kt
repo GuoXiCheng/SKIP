@@ -24,7 +24,7 @@ fun CheckNewVersionButton() {
         useElevation = false,
         containerColor = MaterialTheme.colorScheme.background,
         content = {
-            RowContent(iconResource = R.drawable.sync, title = stringResource(id = R.string.main_check_new_version), subTitle = null)
+            RowContent(iconResource = R.drawable.sync, title = stringResource(id = R.string.main_check_new_version), subTitle = null, null)
         }
     ) {
         showDialog.value = true

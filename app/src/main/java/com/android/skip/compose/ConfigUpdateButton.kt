@@ -18,7 +18,7 @@ fun ConfigUpdateButton() {
         useElevation = true,
         containerColor = MaterialTheme.colorScheme.background,
         content = {
-            RowContent(iconResource = R.drawable.lists, title = "点此同步配置", subTitle = null)
+            RowContent(iconResource = R.drawable.lists, title = "点此同步配置", subTitle = null, null)
         }) {
 
     }

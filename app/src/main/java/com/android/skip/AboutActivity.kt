@@ -39,7 +39,7 @@ fun AboutActivityInterface(onBackClick: () -> Unit) {
             useElevation = false,
             containerColor = MaterialTheme.colorScheme.background,
             content = {
-                RowContent(iconResource = null, title = githubName, subTitle = githubAddress)
+                RowContent(iconResource = null, title = githubName, subTitle = githubAddress, null)
             }) {
             openName.value = githubName
             openUrl.value = githubAddress
@@ -50,7 +50,7 @@ fun AboutActivityInterface(onBackClick: () -> Unit) {
             useElevation = false,
             containerColor = MaterialTheme.colorScheme.background,
             content = {
-                RowContent(iconResource = null, title = skipDocsName, subTitle = skipDocsAddress)
+                RowContent(iconResource = null, title = skipDocsName, subTitle = skipDocsAddress, null)
             }) {
             openName.value = skipDocsName
             openUrl.value = skipDocsAddress

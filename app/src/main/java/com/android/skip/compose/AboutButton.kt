@@ -24,7 +24,7 @@ fun AboutButton() {
         useElevation = false,
         containerColor = MaterialTheme.colorScheme.background,
         content = {
-            RowContent(R.drawable.info, stringResource(id = R.string.about), null)
+            RowContent(R.drawable.info, stringResource(id = R.string.about), null, null)
     } ) {
         val intent = Intent(context, AboutActivity::class.java)
         context.startActivity(intent)
