@@ -1,36 +1,24 @@
 package com.android.skip
 
 import android.content.Intent
-import android.content.res.Configuration
 import android.net.Uri
-import android.os.Bundle
-import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.sp
 import com.android.skip.compose.ConfirmDialog
 import com.android.skip.compose.CustomFloatingButton
+import com.android.skip.compose.RowContent
 import com.android.skip.compose.ScaffoldPage
-import com.android.skip.ui.theme.AppTheme
-import com.android.skip.ui.theme.themeTypeState
 
-class AboutActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            AppTheme(darkTheme = themeTypeState.value == Configuration.UI_MODE_NIGHT_YES) {
-                AboutActivityInterface {
-                    finish()
-                }
-            }
+class AboutActivity : BaseActivity() {
+    @Composable
+    override fun ProvideContent() {
+        AboutActivityInterface {
+            finish()
         }
     }
 }
@@ -47,23 +35,23 @@ fun AboutActivityInterface(onBackClick: () -> Unit) {
     val skipDocsAddress = stringResource(id = R.string.about_skip_docs_url)
 
     ScaffoldPage(stringResource(id = R.string.about), onBackClick = onBackClick, content = {
-        CustomFloatingButton(useElevation = false, containerColor = MaterialTheme.colorScheme.background, content = {
-            Column {
-                Text(githubName, fontSize = 16.sp)
-                Text(githubAddress, fontSize = 12.sp)
-            }
-        }) {
+        CustomFloatingButton(
+            useElevation = false,
+            containerColor = MaterialTheme.colorScheme.background,
+            content = {
+                RowContent(iconResource = null, title = githubName, subTitle = githubAddress)
+            }) {
             openName.value = githubName
             openUrl.value = githubAddress
             showDialog.value = true
         }
 
-        CustomFloatingButton(useElevation = false, containerColor = MaterialTheme.colorScheme.background, content = {
-            Column {
-                Text(skipDocsName, fontSize = 16.sp)
-                Text(skipDocsAddress, fontSize = 12.sp)
-            }
-        }) {
+        CustomFloatingButton(
+            useElevation = false,
+            containerColor = MaterialTheme.colorScheme.background,
+            content = {
+                RowContent(iconResource = null, title = skipDocsName, subTitle = skipDocsAddress)
+            }) {
             openName.value = skipDocsName
             openUrl.value = skipDocsAddress
             showDialog.value = true

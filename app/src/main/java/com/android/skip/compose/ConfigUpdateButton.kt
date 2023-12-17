@@ -18,13 +18,7 @@ fun ConfigUpdateButton() {
         useElevation = true,
         containerColor = MaterialTheme.colorScheme.background,
         content = {
-            Icon(
-                painter = painterResource(id = R.drawable.lists),
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onBackground
-            )
-            Spacer(Modifier.width(16.dp))
-            Text("点此同步配置", fontSize = 16.sp, color = MaterialTheme.colorScheme.onBackground)
+            RowContent(iconResource = R.drawable.lists, title = "点此同步配置", subTitle = null)
         }) {
 
     }

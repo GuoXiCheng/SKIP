@@ -24,13 +24,7 @@ fun CheckNewVersionButton() {
         useElevation = false,
         containerColor = MaterialTheme.colorScheme.background,
         content = {
-            Icon(
-                painter = painterResource(id = R.drawable.sync),
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onBackground
-            )
-            Spacer(Modifier.width(16.dp))
-            Text(stringResource(id = R.string.main_check_new_version), fontSize = 16.sp, color = MaterialTheme.colorScheme.onBackground)
+            RowContent(iconResource = R.drawable.sync, title = stringResource(id = R.string.main_check_new_version), subTitle = null)
         }
     ) {
         showDialog.value = true

@@ -2,7 +2,6 @@ package com.android.skip
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
-import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,6 +15,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.dp
+import com.android.skip.compose.CustomFloatingButton
+import com.android.skip.compose.RowContent
 import com.android.skip.compose.ScaffoldPage
 import com.android.skip.ui.theme.themeTypeState
 import com.android.skip.utils.DataStoreUtils
@@ -36,14 +39,17 @@ fun SettingsActivityInterface(onBackClick: () -> Unit) {
     ScaffoldPage(
         barTitle = stringResource(id = R.string.settings),
         onBackClick = onBackClick, content = {
-            Button(onClick = {
+            CustomFloatingButton(
+                useElevation = false,
+                containerColor = MaterialTheme.colorScheme.background,
+                content = {
+                    when (themeTypeState.value) {
+                        Configuration.UI_MODE_NIGHT_NO -> RowContent(R.drawable.brightness, options[0], "保持明亮模式")
+                        Configuration.UI_MODE_NIGHT_YES -> RowContent(R.drawable.brightness, options[1], "保持暗黑模式")
+                        else -> RowContent(R.drawable.brightness, options[2], "跟随系统设置")
+                    }
+                } ) {
                 expandedState.value = !expandedState.value
-            }) {
-                when (themeTypeState.value) {
-                    Configuration.UI_MODE_NIGHT_NO -> Text(options[0])
-                    Configuration.UI_MODE_NIGHT_YES -> Text(options[1])
-                    else -> Text(options[2])
-                }
             }
             Menu(expandedState, options, selectedState)
         })
@@ -68,7 +74,8 @@ fun Menu(
     ) {
         DropdownMenu(
             expanded = expandedState.value,
-            onDismissRequest = { expandedState.value = false }
+            onDismissRequest = { expandedState.value = false },
+            offset = DpOffset(x = 150.dp, y = 0.dp)
         ) {
             options.forEachIndexed { index, option ->
                 val isSelected = themeMapping[index] == themeTypeState.value

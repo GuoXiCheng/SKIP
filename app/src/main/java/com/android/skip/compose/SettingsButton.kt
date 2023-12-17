@@ -24,14 +24,12 @@ fun SettingsButton() {
         useElevation = false,
         containerColor = MaterialTheme.colorScheme.background,
         content = {
-            Icon(
-                painter = painterResource(id = R.drawable.settings),
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onBackground
+            RowContent(
+                iconResource = R.drawable.settings,
+                title = stringResource(id = R.string.settings),
+                subTitle = null
             )
-            Spacer(Modifier.width(16.dp))
-            Text(stringResource(id = R.string.settings), fontSize = 16.sp, color = MaterialTheme.colorScheme.onBackground)
-        } ) {
+        }) {
         val intent = Intent(context, SettingsActivity::class.java)
         context.startActivity(intent)
     }

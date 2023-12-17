@@ -14,6 +14,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,7 +35,7 @@ fun ConfirmDialog(
     Dialog(onDismissRequest = { /* 点击外部不关闭对话框 */ }) {
         Card(
             modifier = Modifier.height(200.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF242424))
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background)
         ) {
             Column(
                 modifier = Modifier
@@ -48,12 +49,12 @@ fun ConfirmDialog(
                 ) {
                     Text(
                         text = title,
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onBackground,
                         fontSize = 16.sp
                     )
                     Text(
                         text = content,
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 0.dp)
                     )
                 }
@@ -64,7 +65,7 @@ fun ConfirmDialog(
                     Button(
                         onClick = onDismiss,
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(Color(0xFF363636))
+                        colors = ButtonDefaults.buttonColors(Color(0xFFE0E0E0))
                     ) {
                         Text(
                             text = "拒绝",
