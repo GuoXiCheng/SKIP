@@ -20,9 +20,7 @@ import com.android.skip.R
 fun AboutButton() {
     val context = LocalContext.current
 
-    CustomFloatingButton(
-        useElevation = false,
-        containerColor = MaterialTheme.colorScheme.background,
+    FlatButton(
         content = {
             RowContent(R.drawable.info, stringResource(id = R.string.about), null, null)
     } ) {

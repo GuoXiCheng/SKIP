@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import com.android.skip.compose.CustomFloatingButton
+import com.android.skip.compose.FlatButton
 import com.android.skip.compose.RowContent
 import com.android.skip.compose.ScaffoldPage
 import com.android.skip.ui.theme.themeTypeState
@@ -41,34 +41,28 @@ fun SettingsActivityInterface(onBackClick: () -> Unit) {
     ScaffoldPage(
         barTitle = stringResource(id = R.string.settings),
         onBackClick = onBackClick, content = {
-            CustomFloatingButton(
-                useElevation = false,
-                containerColor = MaterialTheme.colorScheme.background,
+            FlatButton(
                 content = {
                     RowContent(
-                        iconResource = R.drawable.sync,
+                        iconResource = R.drawable.cloud_download,
                         title = "自动检查更新",
                         subTitle = "打开应用时自动检查新版本",
                         checked = checkUpdateVersion
                     )
                 }) {}
 
-            CustomFloatingButton(
-                useElevation = false,
-                containerColor = MaterialTheme.colorScheme.background,
+            FlatButton(
                 content = {
                     RowContent(
                         iconResource = R.drawable.sync,
-                        title = "自动更新配置",
+                        title = "自动同步配置",
                         subTitle = "打开应用时自动获取并更新配置文件",
                         checked = checkUpdateConfig
                     )
                 }) {}
 
             Menu(expandedState, options, selectedState)
-            CustomFloatingButton(
-                useElevation = false,
-                containerColor = MaterialTheme.colorScheme.background,
+            FlatButton(
                 content = {
                     when (themeTypeState.value) {
                         Configuration.UI_MODE_NIGHT_NO -> RowContent(

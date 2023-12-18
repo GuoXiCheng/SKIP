@@ -2,7 +2,6 @@ package com.android.skip
 
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -10,9 +9,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.android.skip.compose.ConfirmDialog
-import com.android.skip.compose.CustomFloatingButton
+import com.android.skip.compose.FlatButton
 import com.android.skip.compose.RowContent
 import com.android.skip.compose.ScaffoldPage
+import com.android.skip.manager.RectManager
 
 class AboutActivity : BaseActivity() {
     @Composable
@@ -35,9 +35,7 @@ fun AboutActivityInterface(onBackClick: () -> Unit) {
     val skipDocsAddress = stringResource(id = R.string.about_skip_docs_url)
 
     ScaffoldPage(stringResource(id = R.string.about), onBackClick = onBackClick, content = {
-        CustomFloatingButton(
-            useElevation = false,
-            containerColor = MaterialTheme.colorScheme.background,
+        FlatButton(
             content = {
                 RowContent(iconResource = null, title = githubName, subTitle = githubAddress, null)
             }) {
@@ -46,9 +44,7 @@ fun AboutActivityInterface(onBackClick: () -> Unit) {
             showDialog.value = true
         }
 
-        CustomFloatingButton(
-            useElevation = false,
-            containerColor = MaterialTheme.colorScheme.background,
+        FlatButton(
             content = {
                 RowContent(iconResource = null, title = skipDocsName, subTitle = skipDocsAddress, null)
             }) {
@@ -56,6 +52,14 @@ fun AboutActivityInterface(onBackClick: () -> Unit) {
             openUrl.value = skipDocsAddress
             showDialog.value = true
         }
+
+        FlatButton(content = {
+            RowContent(iconResource = null, title = "当前版本：${BuildConfig.VERSION_NAME}", subTitle = null, checked = null)
+        }) {}
+
+        FlatButton(content = {
+            RowContent(iconResource = null, title = "当前分辨率：${RectManager.getMaxRect()}", subTitle = null, checked = null)
+        }) {}
 
     })
 
