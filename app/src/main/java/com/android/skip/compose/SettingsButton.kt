@@ -14,9 +14,7 @@ fun SettingsButton() {
     FlatButton(
         content = {
             RowContent(
-                iconResource = R.drawable.settings,
-                title = stringResource(id = R.string.settings),
-                subTitle = null, null
+                stringResource(id = R.string.settings), null, R.drawable.settings
             )
         }) {
         val intent = Intent(context, SettingsActivity::class.java)

@@ -20,14 +20,6 @@ fun FlatButton(content: ButtonContent, onClick: () -> Unit = {}) {
             .height(60.dp),
         onClick = onClick,
         content = content,
-//        content = {
-//            Row(
-//                modifier = Modifier.fillMaxWidth(),
-//                verticalAlignment = Alignment.CenterVertically,
-//                horizontalArrangement = Arrangement.Start,
-//                content = content
-//            )
-//        },
         elevation = FloatingActionButtonDefaults.elevation(
             defaultElevation = 0.dp,
             pressedElevation = 0.dp,

@@ -25,7 +25,12 @@ import androidx.compose.ui.unit.sp
 
 
 @Composable
-fun RowContent(iconResource: Int?, title: String, subTitle: String?, checked: MutableState<Boolean>?) {
+fun RowContent(
+    title: String,
+    subTitle: String? = null,
+    iconResource: Int? = null,
+    checked: MutableState<Boolean>? = null
+) {
 
     Row(
         modifier = Modifier.fillMaxWidth(),

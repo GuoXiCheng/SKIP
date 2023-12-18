@@ -37,7 +37,7 @@ fun AboutActivityInterface(onBackClick: () -> Unit) {
     ScaffoldPage(stringResource(id = R.string.about), onBackClick = onBackClick, content = {
         FlatButton(
             content = {
-                RowContent(iconResource = null, title = githubName, subTitle = githubAddress, null)
+                RowContent(githubName, githubAddress)
             }) {
             openName.value = githubName
             openUrl.value = githubAddress
@@ -46,7 +46,7 @@ fun AboutActivityInterface(onBackClick: () -> Unit) {
 
         FlatButton(
             content = {
-                RowContent(iconResource = null, title = skipDocsName, subTitle = skipDocsAddress, null)
+                RowContent(skipDocsName, skipDocsAddress)
             }) {
             openName.value = skipDocsName
             openUrl.value = skipDocsAddress
@@ -54,12 +54,12 @@ fun AboutActivityInterface(onBackClick: () -> Unit) {
         }
 
         FlatButton(content = {
-            RowContent(iconResource = null, title = "当前版本：${BuildConfig.VERSION_NAME}", subTitle = null, checked = null)
-        }) {}
+            RowContent("当前版本：${BuildConfig.VERSION_NAME}")
+        })
 
         FlatButton(content = {
-            RowContent(iconResource = null, title = "当前分辨率：${RectManager.getMaxRect()}", subTitle = null, checked = null)
-        }) {}
+            RowContent("当前分辨率：${RectManager.getMaxRect()}")
+        })
 
     })
 

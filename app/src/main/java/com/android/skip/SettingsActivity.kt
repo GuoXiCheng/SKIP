@@ -44,42 +44,38 @@ fun SettingsActivityInterface(onBackClick: () -> Unit) {
             FlatButton(
                 content = {
                     RowContent(
-                        iconResource = R.drawable.cloud_download,
-                        title = "自动检查更新",
-                        subTitle = "打开应用时自动检查新版本",
-                        checked = checkUpdateVersion
+                        "自动检查更新",
+                        "打开应用时自动检查新版本",
+                        R.drawable.cloud_download,
+                        checkUpdateVersion
                     )
-                }) {}
+                })
 
             FlatButton(
                 content = {
                     RowContent(
-                        iconResource = R.drawable.sync,
-                        title = "自动同步配置",
-                        subTitle = "打开应用时自动获取并更新配置文件",
-                        checked = checkUpdateConfig
+                        "自动同步配置",
+                        "打开应用时自动获取并更新配置文件",
+                        R.drawable.sync,
+                        checkUpdateConfig
                     )
-                }) {}
+                })
 
             Menu(expandedState, options, selectedState)
             FlatButton(
                 content = {
                     when (themeTypeState.value) {
                         Configuration.UI_MODE_NIGHT_NO -> RowContent(
-                            R.drawable.brightness,
-                            options[0],
-                            "保持明亮模式",
-                            null
+                            options[0], "保持明亮模式", R.drawable.brightness
                         )
 
                         Configuration.UI_MODE_NIGHT_YES -> RowContent(
-                            R.drawable.brightness,
-                            options[1],
-                            "保持暗黑模式",
-                            null
+                            options[1], "保持暗黑模式", R.drawable.brightness
                         )
 
-                        else -> RowContent(R.drawable.brightness, options[2], "跟随系统设置", null)
+                        else -> RowContent(
+                            options[2], "跟随系统设置", R.drawable.brightness
+                        )
                     }
                 }) {
                 expandedState.value = !expandedState.value
