@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
+import com.android.skip.manager.RectManager
 import com.android.skip.ui.theme.AppTheme
 import com.android.skip.ui.theme.themeTypeState
 import com.android.skip.utils.DataStoreUtils
@@ -20,6 +21,7 @@ abstract class BaseActivity : AppCompatActivity() {
                 ProvideContent()
             }
         }
+        RectManager.setMaxRect(this)
     }
 
     @Composable

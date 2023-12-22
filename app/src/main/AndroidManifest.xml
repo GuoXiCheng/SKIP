@@ -28,9 +28,6 @@
         <activity
             android:name=".AboutActivity"
             android:exported="false" />
-        <activity
-            android:name=".NewMainActivity"
-            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -43,7 +40,7 @@
         </provider>
 
         <activity
-            android:name=".MainActivity"
+            android:name=".NewMainActivity"
             android:excludeFromRecents="true"
             android:exported="true"
             android:label="@string/activity_main"
