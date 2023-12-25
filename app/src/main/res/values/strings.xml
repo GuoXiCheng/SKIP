@@ -18,4 +18,5 @@
     <string name="alive_backstage_subtitle">进入最近打开程序页面，长按「SKIP」卡片，锁定</string>
     <string name="alive_warn_title">请注意</string>
     <string name="alive_warn_subtitle">以上操作方法可能仅适用于MIUI手机，其他品牌手机请自行查询相应的应用保活方法</string>
+    <string name="whitelist">应用白名单</string>
 </resources>

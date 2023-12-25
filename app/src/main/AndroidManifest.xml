@@ -17,6 +17,9 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
+            android:name=".WhitelistActivity"
+            android:exported="false" />
+        <activity
             android:name=".KeepAliveActivity"
             android:exported="false" />
         <activity

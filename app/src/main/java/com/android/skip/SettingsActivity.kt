@@ -66,15 +66,15 @@ fun SettingsActivityInterface(onBackClick: () -> Unit) {
                 content = {
                     when (themeTypeState.value) {
                         Configuration.UI_MODE_NIGHT_NO -> RowContent(
-                            options[0], "保持明亮模式", R.drawable.brightness
+                            options[0], "保持明亮模式", R.drawable.brightness_5
                         )
 
                         Configuration.UI_MODE_NIGHT_YES -> RowContent(
-                            options[1], "保持暗黑模式", R.drawable.brightness
+                            options[1], "保持暗黑模式", R.drawable.brightness_4
                         )
 
                         else -> RowContent(
-                            options[2], "跟随系统设置", R.drawable.brightness
+                            options[2], "跟随系统设置", R.drawable.brightness_6
                         )
                     }
                 }) {
