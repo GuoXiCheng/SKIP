@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.android.skip.compose.FlatButton
+import com.android.skip.compose.ResourceIcon
 import com.android.skip.compose.RowContent
 import com.android.skip.compose.ScaffoldPage
 import com.android.skip.ui.theme.themeTypeState
@@ -46,7 +47,7 @@ fun SettingsActivityInterface(onBackClick: () -> Unit) {
                     RowContent(
                         "自动检查更新",
                         "打开应用时自动检查新版本",
-                        R.drawable.cloud_download,
+                        { ResourceIcon(iconResource = R.drawable.cloud_download)},
                         checkUpdateVersion
                     )
                 })
@@ -56,7 +57,7 @@ fun SettingsActivityInterface(onBackClick: () -> Unit) {
                     RowContent(
                         "自动同步配置",
                         "打开应用时自动获取并更新配置文件",
-                        R.drawable.sync,
+                        { ResourceIcon(iconResource = R.drawable.sync)},
                         checkUpdateConfig
                     )
                 })
@@ -66,15 +67,19 @@ fun SettingsActivityInterface(onBackClick: () -> Unit) {
                 content = {
                     when (themeTypeState.value) {
                         Configuration.UI_MODE_NIGHT_NO -> RowContent(
-                            options[0], "保持明亮模式", R.drawable.brightness_5
+                            options[0], "保持明亮模式", { ResourceIcon(iconResource = R.drawable.brightness_5)}
                         )
 
                         Configuration.UI_MODE_NIGHT_YES -> RowContent(
-                            options[1], "保持暗黑模式", R.drawable.brightness_4
+                            options[1],
+                            "保持暗黑模式",
+                            { ResourceIcon(iconResource = R.drawable.brightness_4) }
                         )
 
                         else -> RowContent(
-                            options[2], "跟随系统设置", R.drawable.brightness_6
+                            options[2],
+                            "跟随系统设置",
+                            { ResourceIcon(iconResource = R.drawable.brightness_6) }
                         )
                     }
                 }) {

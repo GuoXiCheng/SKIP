@@ -14,7 +14,9 @@ fun WhitelistButton() {
     FlatButton(
         content = {
             RowContent(
-                stringResource(id = R.string.whitelist), null, R.drawable.app_registration
+                stringResource(id = R.string.whitelist),
+                null,
+                { ResourceIcon(iconResource = R.drawable.app_registration) }
             )
         }) {
         val intent = Intent(context, WhitelistActivity::class.java)

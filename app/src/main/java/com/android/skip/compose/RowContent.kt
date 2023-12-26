@@ -19,7 +19,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -28,7 +27,7 @@ import androidx.compose.ui.unit.sp
 fun RowContent(
     title: String,
     subTitle: String? = null,
-    iconResource: Int? = null,
+    icon: @Composable (() -> Unit)? = null,
     checked: MutableState<Boolean>? = null
 ) {
 
@@ -40,12 +39,8 @@ fun RowContent(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (iconResource != null) {
-                Icon(
-                    painter = painterResource(id = iconResource),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onBackground
-                )
+            if (icon != null) {
+                icon()
                 Spacer(Modifier.width(16.dp))
             }
             Column {

@@ -12,7 +12,11 @@ fun CheckNewVersionButton() {
 
     FlatButton(
         content = {
-            RowContent(stringResource(id = R.string.main_check_new_version), null, R.drawable.sync)
+            RowContent(stringResource(id = R.string.main_check_new_version), null, {
+                ResourceIcon(
+                    iconResource = R.drawable.sync
+                )
+            })
         }
     ) {
         showDialog.value = true

@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.android.skip.compose.FlatButton
 import com.android.skip.compose.PictureDialog
+import com.android.skip.compose.ResourceIcon
 import com.android.skip.compose.RowContent
 import com.android.skip.compose.ScaffoldPage
 
@@ -34,7 +35,7 @@ fun KeepAliveInterface(onBackClick: () -> Unit) {
             RowContent(
                 stringResource(id = R.string.alive_power_saving_title),
                 stringResource(id = R.string.alive_power_saving_subtitle),
-                R.drawable.counter_1
+                { ResourceIcon(iconResource = R.drawable.counter_1)}
             )
         }) {
             val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
@@ -45,7 +46,7 @@ fun KeepAliveInterface(onBackClick: () -> Unit) {
             RowContent(
                 stringResource(id = R.string.alive_self_start_title),
                 stringResource(id = R.string.alive_self_start_subtitle),
-                R.drawable.counter_2
+                { ResourceIcon(iconResource = R.drawable.counter_2)}
             )
         }) {
             val intent = Intent()
@@ -59,7 +60,7 @@ fun KeepAliveInterface(onBackClick: () -> Unit) {
             RowContent(
                 stringResource(id = R.string.alive_backstage_title),
                 stringResource(id = R.string.alive_backstage_subtitle),
-                R.drawable.counter_3
+                { ResourceIcon(iconResource = R.drawable.counter_3)}
             )
         }) {
             showDialog.value = true
@@ -68,7 +69,7 @@ fun KeepAliveInterface(onBackClick: () -> Unit) {
             RowContent(
                 stringResource(id = R.string.alive_warn_title),
                 stringResource(id = R.string.alive_warn_subtitle),
-                R.drawable.warning
+                { ResourceIcon(iconResource = R.drawable.warning)}
             )
         })
     })

@@ -13,7 +13,7 @@ fun KeepAliveButton() {
 
     FlatButton(
         content = {
-            RowContent(stringResource(id = R.string.alive), null, R.drawable.all_inclusive)
+            RowContent(stringResource(id = R.string.alive), null, { ResourceIcon(iconResource = R.drawable.all_inclusive)})
         } ) {
         val intent = Intent(context, KeepAliveActivity::class.java)
         context.startActivity(intent)

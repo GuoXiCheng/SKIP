@@ -7,7 +7,7 @@ import com.android.skip.R
 fun ConfigUpdateButton() {
     FlatButton(
         content = {
-            RowContent("点此同步配置", null, R.drawable.lists)
+            RowContent("点此同步配置", null, { ResourceIcon(iconResource = R.drawable.lists) })
         }) {
 
     }
