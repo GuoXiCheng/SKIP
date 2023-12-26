@@ -37,6 +37,7 @@ fun RowContent(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(
+            modifier = Modifier.fillMaxWidth(if (checked !== null) 0.85f else 1f),
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (icon != null) {

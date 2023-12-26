@@ -43,7 +43,7 @@ fun WhitelistInterface(onBackClick: () -> Unit) {
         )
     }
 
-    val check = remember { mutableStateOf(true) }
+    val check = remember { mutableStateOf(false) }
     ScaffoldPage(
         barTitle = stringResource(id = R.string.whitelist),
         onBackClick = onBackClick,
