@@ -22,8 +22,11 @@ fun AboutButton() {
 
     FlatButton(
         content = {
-            RowContent(stringResource(id = R.string.about), null, R.drawable.info)
-    } ) {
+            RowContent(
+                stringResource(id = R.string.about),
+                null,
+                { ResourceIcon(iconResource = R.drawable.info) })
+        }) {
         val intent = Intent(context, AboutActivity::class.java)
         context.startActivity(intent)
     }

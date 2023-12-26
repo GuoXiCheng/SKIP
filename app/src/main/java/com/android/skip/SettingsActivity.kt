@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.android.skip.compose.FlatButton
+import com.android.skip.compose.ResourceIcon
 import com.android.skip.compose.RowContent
 import com.android.skip.compose.ScaffoldPage
 import com.android.skip.ui.theme.themeTypeState
@@ -33,7 +34,11 @@ class SettingsActivity : BaseActivity() {
 @Composable
 fun SettingsActivityInterface(onBackClick: () -> Unit) {
     val expandedState = remember { mutableStateOf(false) }
-    val options = listOf("浅色模式", "深色模式", "跟随系统")
+    val options = listOf(
+        stringResource(id = R.string.settings_pattern_light_title),
+        stringResource(id = R.string.settings_pattern_dark_title),
+        stringResource(id = R.string.settings_pattern_system_title)
+    )
     val selectedState = remember { mutableStateOf(0) }
     val checkUpdateVersion = remember { mutableStateOf(true) }
     val checkUpdateConfig = remember { mutableStateOf(true) }
@@ -44,9 +49,9 @@ fun SettingsActivityInterface(onBackClick: () -> Unit) {
             FlatButton(
                 content = {
                     RowContent(
-                        "自动检查更新",
-                        "打开应用时自动检查新版本",
-                        R.drawable.cloud_download,
+                        stringResource(id = R.string.settings_check_update_title),
+                        stringResource(id = R.string.settings_check_update_subtitle),
+                        { ResourceIcon(iconResource = R.drawable.cloud_download) },
                         checkUpdateVersion
                     )
                 })
@@ -54,9 +59,9 @@ fun SettingsActivityInterface(onBackClick: () -> Unit) {
             FlatButton(
                 content = {
                     RowContent(
-                        "自动同步配置",
-                        "打开应用时自动获取并更新配置文件",
-                        R.drawable.sync,
+                        stringResource(id = R.string.settings_sync_config_title),
+                        stringResource(id = R.string.settings_sync_config_subtitle),
+                        { ResourceIcon(iconResource = R.drawable.sync) },
                         checkUpdateConfig
                     )
                 })
@@ -66,15 +71,21 @@ fun SettingsActivityInterface(onBackClick: () -> Unit) {
                 content = {
                     when (themeTypeState.value) {
                         Configuration.UI_MODE_NIGHT_NO -> RowContent(
-                            options[0], "保持明亮模式", R.drawable.brightness
+                            options[0],
+                            stringResource(id = R.string.settings_pattern_light_subtitle),
+                            { ResourceIcon(iconResource = R.drawable.brightness_5) }
                         )
 
                         Configuration.UI_MODE_NIGHT_YES -> RowContent(
-                            options[1], "保持暗黑模式", R.drawable.brightness
+                            options[1],
+                            stringResource(id = R.string.settings_pattern_dark_subtitle),
+                            { ResourceIcon(iconResource = R.drawable.brightness_4) }
                         )
 
                         else -> RowContent(
-                            options[2], "跟随系统设置", R.drawable.brightness
+                            options[2],
+                            stringResource(id = R.string.settings_pattern_system_subtitle),
+                            { ResourceIcon(iconResource = R.drawable.brightness_6) }
                         )
                     }
                 }) {

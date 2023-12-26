@@ -1,5 +1,6 @@
 package com.android.skip
 
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
