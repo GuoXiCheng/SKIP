@@ -39,11 +39,15 @@ fun WhitelistInterface(onBackClick: () -> Unit) {
         AppInfo(
             appName = app.loadLabel(packageManager).toString(),
             packageName = app.packageName,
-            appIcon = app.loadIcon(packageManager)
+            appIcon = app.loadIcon(packageManager),
+            checked = if (app.packageName == "com.jd.app.reader") remember {
+                mutableStateOf(true)
+            } else remember {
+                mutableStateOf(false)
+            }
         )
     }
 
-    val check = remember { mutableStateOf(false) }
     ScaffoldPage(
         barTitle = stringResource(id = R.string.whitelist),
         onBackClick = onBackClick,
@@ -61,7 +65,10 @@ fun WhitelistInterface(onBackClick: () -> Unit) {
                                     tint = Color.Unspecified
                                 )
                             },
-                            checked = check
+                            checked = appInfoList[index].checked.value,
+                            {
+                                appInfoList[index].checked.value = it
+                            }
                         )
                     })
                 }

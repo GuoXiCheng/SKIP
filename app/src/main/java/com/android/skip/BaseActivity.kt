@@ -13,6 +13,10 @@ import com.android.skip.utils.DataStoreUtils
 
 const val SKIP_APP_THEME = "SKIP_APP_THEME"
 
+const val SKIP_AUTO_SYNC_CONFIG = "SKIP_AUTO_SYNC_CONFIG"
+
+const val SKIP_AUTO_CHECK_UPDATE = "SKIP_AUTO_CHECK_UPDATE"
+
 abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

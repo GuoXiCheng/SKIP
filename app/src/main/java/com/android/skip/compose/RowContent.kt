@@ -15,7 +15,6 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -28,7 +27,8 @@ fun RowContent(
     title: String,
     subTitle: String? = null,
     icon: @Composable (() -> Unit)? = null,
-    checked: MutableState<Boolean>? = null
+    checked: Boolean? = null,
+    onCheckedChange: (Boolean) -> Unit = {}
 ) {
 
     Row(
@@ -54,9 +54,9 @@ fun RowContent(
 
         if (checked !== null) {
             Switch(
-                checked = checked.value,
-                onCheckedChange = { checked.value = it },
-                thumbContent = if (checked.value) {
+                checked = checked,
+                onCheckedChange = onCheckedChange,
+                thumbContent = if (checked) {
                     {
                         Icon(
                             imageVector = Icons.Filled.Check,
