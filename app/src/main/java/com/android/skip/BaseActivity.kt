@@ -1,10 +1,9 @@
 package com.android.skip
 
-import android.content.pm.PackageManager
 import android.content.res.Configuration
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import com.android.skip.manager.RectManager
 import com.android.skip.ui.theme.AppTheme
@@ -17,7 +16,10 @@ const val SKIP_AUTO_SYNC_CONFIG = "SKIP_AUTO_SYNC_CONFIG"
 
 const val SKIP_AUTO_CHECK_UPDATE = "SKIP_AUTO_CHECK_UPDATE"
 
+const val WHITELIST_DOT = "whitelist."
+
 abstract class BaseActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         DataStoreUtils.init(applicationContext)
