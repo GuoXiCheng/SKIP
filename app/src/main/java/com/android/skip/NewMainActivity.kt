@@ -14,11 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.lifecycleScope
 import com.android.skip.compose.AboutButton
 import com.android.skip.compose.KeepAliveButton
 import com.android.skip.compose.SettingsButton
 import com.android.skip.compose.StartButton
 import com.android.skip.compose.WhitelistButton
+import com.android.skip.manager.WhitelistManager
 import com.android.skip.viewmodel.StartButtonViewModel
 
 
@@ -48,5 +50,6 @@ class NewMainActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         startButtonViewModel.changeButtonState(MyUtils.isAccessibilitySettingsOn(this))
+        WhitelistManager.setWhitelist(lifecycleScope, applicationContext)
     }
 }

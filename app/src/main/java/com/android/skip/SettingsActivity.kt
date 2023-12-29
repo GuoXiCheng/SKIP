@@ -40,8 +40,10 @@ fun SettingsActivityInterface(onBackClick: () -> Unit) {
         stringResource(id = R.string.settings_pattern_system_title)
     )
     val selectedState = remember { mutableStateOf(0) }
-    val checkUpdateVersion = remember { mutableStateOf(true) }
-    val checkUpdateConfig = remember { mutableStateOf(true) }
+    val checkUpdateVersion = remember { mutableStateOf(DataStoreUtils.getSyncData(
+        SKIP_AUTO_CHECK_UPDATE, true)) }
+    val checkUpdateConfig = remember { mutableStateOf(DataStoreUtils.getSyncData(
+        SKIP_AUTO_SYNC_CONFIG, true)) }
 
     ScaffoldPage(
         barTitle = stringResource(id = R.string.settings),
@@ -52,7 +54,11 @@ fun SettingsActivityInterface(onBackClick: () -> Unit) {
                         stringResource(id = R.string.settings_check_update_title),
                         stringResource(id = R.string.settings_check_update_subtitle),
                         { ResourceIcon(iconResource = R.drawable.cloud_download) },
-                        checkUpdateVersion
+                        checkUpdateVersion.value,
+                        {
+                            checkUpdateVersion.value = it
+                            DataStoreUtils.putSyncData(SKIP_AUTO_CHECK_UPDATE, it)
+                        }
                     )
                 })
 
@@ -62,7 +68,11 @@ fun SettingsActivityInterface(onBackClick: () -> Unit) {
                         stringResource(id = R.string.settings_sync_config_title),
                         stringResource(id = R.string.settings_sync_config_subtitle),
                         { ResourceIcon(iconResource = R.drawable.sync) },
-                        checkUpdateConfig
+                        checkUpdateConfig.value,
+                        {
+                            checkUpdateConfig.value = it
+                            DataStoreUtils.putSyncData(SKIP_AUTO_SYNC_CONFIG, it)
+                        }
                     )
                 })
 

@@ -260,4 +260,13 @@ object DataStoreUtils {
         }
     }
 
+    fun removeSync(key: String) {
+        val keyName = stringPreferencesKey(key)
+        runBlocking {
+            dataStore.edit {
+                it.remove(keyName)
+            }
+        }
+    }
+
 }
