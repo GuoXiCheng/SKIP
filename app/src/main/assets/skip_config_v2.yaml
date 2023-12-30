@@ -1,0 +1,66 @@
+# 酷安
+- packageName: com.coolapk.market
+  skipIds:
+    - id: com.byted.pangle.m:id/tt_splash_skip_btn
+  skipBounds:
+    - bound: 1116,219,1332,316
+      resolution: 1440,3024
+
+# 京东阅读
+- packageName: com.jd.app.reader
+  skipIds:
+    - id: com.jd.app.reader:id/mJumpBtn
+  skipBounds:
+    - bound: 1209,113,1338,165
+      resolution: 1440,3024
+
+# 铁路12306
+- packageName: com.MobileTicket
+  skipIds:
+    - id: com.MobileTicket:id/tv_skip
+
+# 爱奇艺
+- packageName: com.qiyi.video
+  skipTexts:
+    - text: 关闭
+
+# 爱奇艺极速版
+- packageName: com.qiyi.video.lite
+  skipTexts:
+    - text: 关闭
+
+# 腾讯微云
+- packageName: com.qq.qcloud
+  skipIds:
+    - id: com.qq.qcloud:id/gdt_ad_text
+  skipBounds:
+    - bound: 1223,196,1384,308
+      resolution: 1440,3024
+
+# CSDN
+- packageName: net.csdn.csdnplus
+  skipIds:
+    - id: com.byted.pangle.m:id/tt_splash_skip_btn
+
+# 小度
+- packageName: com.baidu.duer.superapp
+  skipIds:
+    - id: com.byted.pangle:id/tt_splash_skip_btn
+
+# VIVO 应用商店, 跳过开屏应用推荐
+- packageName: com.bbk.appstore
+  skipTexts:
+    - text: 进入首页
+      length: 5
+  skipIds:
+    - id: com.bbk.appstore:id/vbutton_title
+
+# 民生银行
+- packageName: cn.com.cmbc.newmbank
+  skipIds:
+    - id: cn.com.cmbc.newmbank:id/view_count_down
+
+# 菜鸟
+- packageName: com.cainiao.wireless
+  skipIds:
+    - id: com.cainiao.wireless:id/tt_splash_skip_btn
