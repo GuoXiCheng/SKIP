@@ -33,7 +33,7 @@
   skip_text: 关闭
 
 # 爱奇艺极速版
-- package_name: com.qiyi.video.lite 
+- package_name: com.qiyi.video.lite
   skip_text: 关闭
 
 # 腾讯微云
@@ -57,3 +57,22 @@
 # CSDN
 - package_name: net.csdn.csdnplus
   skip_id: com.byted.pangle.m:id/tt_splash_skip_btn
+
+
+# 小度
+- package_name: com.baidu.duer.superapp
+  skip_id: com.byted.pangle:id/tt_splash_skip_btn
+
+
+# VIVO 应用商店, 跳过开屏应用推荐
+- package_name: com.bbk.appstore
+  skip_text: 进入首页
+  skip_ids: com.bbk.appstore:id/vbutton_title
+
+# 民生银行
+- package_name: cn.com.cmbc.newmbank
+  skip_id: cn.com.cmbc.newmbank:id/view_count_down
+
+# 菜鸟
+- package_name: com.cainiao.wireless
+  skip_id: com.cainiao.wireless:id/tt_splash_skip_btn
