@@ -1,5 +1,6 @@
 package com.android.skip
 
+import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -20,12 +21,26 @@ import com.android.skip.compose.KeepAliveButton
 import com.android.skip.compose.SettingsButton
 import com.android.skip.compose.StartButton
 import com.android.skip.compose.WhitelistButton
+import com.android.skip.dataclass.PackageInfoV2
+import com.android.skip.manager.SkipConfigManagerV2
 import com.android.skip.manager.WhitelistManager
 import com.android.skip.viewmodel.StartButtonViewModel
+import org.yaml.snakeyaml.Yaml
 
 
 class NewMainActivity : BaseActivity() {
     private val startButtonViewModel: StartButtonViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        try {
+            val yaml = Yaml().load<List<PackageInfoV2>>(assets.open("skip_config_v2.yaml"))
+            SkipConfigManagerV2.setConfig(yaml)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 
     @Composable
     override fun ProvideContent() {
@@ -37,7 +52,12 @@ class NewMainActivity : BaseActivity() {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Row {
-                Text(text = "SKIP", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
+                Text(
+                    text = "SKIP",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
             }
             StartButton(startButtonViewModel)
             WhitelistButton()
