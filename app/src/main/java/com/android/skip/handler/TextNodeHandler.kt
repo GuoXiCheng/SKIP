@@ -27,19 +27,5 @@ class TextNodeHandler : AbstractHandler() {
         return listOfRect.ifEmpty {
             super.handle(node)
         }
-
-//        val nodes = node.findAccessibilityNodeInfosByText(
-//            SkipConfigManager.getSkipText(node.packageName.toString())
-//        )
-//        val listOfRect = nodes.map {
-//            val rect = Rect()
-//            it.getBoundsInScreen(rect)
-//            rect
-//        }
-//        nodes.forEach { it.recycle() }
-//
-//        return listOfRect.ifEmpty {
-//            super.handle(node)
-//        }
     }
 }

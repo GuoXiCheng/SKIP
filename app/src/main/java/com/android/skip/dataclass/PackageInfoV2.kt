@@ -1,5 +1,7 @@
 package com.android.skip.dataclass
 
+import android.graphics.Rect
+
 data class PackageInfoV2(
     val packageName: String,
     val skipIds: List<SkipId>? = null,
@@ -18,5 +20,6 @@ data class SkipText(
 
 data class SkipBound(
     val bound: String,
-    val resolution: String
+    val resolution: String,
+    var rect: Rect?
 )

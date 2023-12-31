@@ -11,6 +11,7 @@ import com.android.skip.handler.IdNodeHandler
 import com.android.skip.handler.TextNodeHandler
 import com.android.skip.manager.AnalyticsManager
 import com.android.skip.manager.ToastManager
+import com.android.skip.manager.WhitelistManager
 
 
 class MyAccessibilityService : AccessibilityService() {
@@ -29,6 +30,8 @@ class MyAccessibilityService : AccessibilityService() {
             val rootNode = getCurrentRootNode()
 
             if (!AnalyticsManager.isPerformScan(rootNode.packageName.toString())) return
+
+            if (WhitelistManager.isInWhitelist(rootNode.packageName.toString())) return
 
             val listOfRect = textNodeHandler.handle(rootNode)
             for (rect in listOfRect) {

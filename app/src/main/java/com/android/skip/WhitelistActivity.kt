@@ -5,6 +5,8 @@ import android.content.pm.PackageManager
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -18,6 +20,9 @@ import com.android.skip.dataclass.AppInfo
 import com.android.skip.manager.WhitelistManager
 import com.android.skip.utils.DataStoreUtils
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class WhitelistActivity : BaseActivity() {
 
@@ -33,22 +38,35 @@ class WhitelistActivity : BaseActivity() {
 @Composable
 fun WhitelistInterface(onBackClick: () -> Unit) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
     val packageManager = context.packageManager
-    val installedApps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-    val nonSystemApps = installedApps.filter {
-        (it.flags and ApplicationInfo.FLAG_SYSTEM) == 0
-    }
-    val appInfoList = nonSystemApps.map { app ->
-        AppInfo(
-            appName = app.loadLabel(packageManager).toString(),
-            packageName = app.packageName,
-            appIcon = app.loadIcon(packageManager),
-            checked = remember {
-                mutableStateOf(DataStoreUtils.getSyncData(WHITELIST_DOT+app.packageName, false))
+    val appInfoList = remember { mutableStateListOf<AppInfo>() }
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        scope.launch(Dispatchers.IO) {
+            val installedApps =
+                packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+            val nonSystemApps = installedApps.filter {
+                (it.flags and ApplicationInfo.FLAG_SYSTEM) == 0
             }
-        )
-    }.sortedWith(compareByDescending { it.checked.value })
+            val apps = nonSystemApps.map { app ->
+                AppInfo(
+                    appName = app.loadLabel(packageManager).toString(),
+                    packageName = app.packageName,
+                    appIcon = app.loadIcon(packageManager),
+                    checked = mutableStateOf(
+                        DataStoreUtils.getSyncData(
+                            WHITELIST_DOT + app.packageName,
+                            false
+                        )
+                    )
+                )
+            }.sortedWith(compareByDescending { it.checked.value })
+            withContext(Dispatchers.Main) {
+                appInfoList.addAll(apps)
+            }
+        }
+    }
 
     ScaffoldPage(
         barTitle = stringResource(id = R.string.whitelist),
@@ -71,7 +89,10 @@ fun WhitelistInterface(onBackClick: () -> Unit) {
                             {
                                 appInfoList[index].checked.value = it
                                 val key = WHITELIST_DOT + appInfoList[index].packageName
-                                if (it) DataStoreUtils.putSyncData(key, true) else DataStoreUtils.removeSync(key)
+                                if (it) DataStoreUtils.putSyncData(
+                                    key,
+                                    true
+                                ) else DataStoreUtils.removeSync(key)
                                 WhitelistManager.setWhitelist(scope, context)
                             }
                         )

@@ -18,15 +18,6 @@ class IdNodeHandler : AbstractHandler() {
             targetNode.getBoundsInScreen(rect)
             listOfRect.add(rect)
         }
-//        val skipId = SkipConfigManager.getSkipId(node.packageName.toString()) ?: return super.handle(node)
-//
-//        val nodes = findAccessibilityNodeInfosContainsViewId(node, skipId)
-//        val listOfRect = nodes.map {
-//            val rect = Rect()
-//            it.getBoundsInScreen(rect)
-//            rect
-//        }
-//        nodes.forEach { it.recycle() }
 
         return listOfRect.ifEmpty {
             super.handle(node)
