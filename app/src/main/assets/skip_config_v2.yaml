@@ -64,3 +64,8 @@
 - packageName: com.cainiao.wireless
   skipIds:
     - id: com.cainiao.wireless:id/tt_splash_skip_btn
+
+# 人人视频专业版
+- packageName: com.example.pptv
+  skipIds:
+    - id: com.example.pptv:id/view_count_shake
