@@ -21,6 +21,8 @@
     <string name="settings_check_update_subtitle">打开应用时自动检查新版本</string>
     <string name="settings_sync_config_title">自动同步配置</string>
     <string name="settings_sync_config_subtitle">打开应用时自动获取并更新配置文件</string>
+    <string name="settings_permit_notice_title">允许通知</string>
+    <string name="settings_permit_notice_subtitle">是否允许发送「跳过」通知</string>
 
     <string name="alive">应用保活</string>
     <string name="alive_power_saving_title">省电策略</string>
