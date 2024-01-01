@@ -23,29 +23,4 @@ class IdNodeHandler : AbstractHandler() {
             super.handle(node)
         }
     }
-
-    private fun findAccessibilityNodeInfosContainsViewId(
-        node: AccessibilityNodeInfo,
-        viewId: String
-    ): MutableList<AccessibilityNodeInfo> {
-        val resultList = mutableListOf<AccessibilityNodeInfo>()
-
-        dfs(node, viewId, resultList)
-
-        return resultList
-    }
-
-    private fun dfs(
-        node: AccessibilityNodeInfo,
-        viewId: String,
-        resultList: MutableList<AccessibilityNodeInfo>
-    ) {
-        if (node.viewIdResourceName?.contains(viewId) == true) {
-            resultList.add(AccessibilityNodeInfo.obtain(node))
-        }
-
-        for (i in 0 until node.childCount) {
-            dfs(node.getChild(i), viewId, resultList)
-        }
-    }
 }

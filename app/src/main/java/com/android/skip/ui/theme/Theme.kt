@@ -36,10 +36,7 @@ private val lightColorScheme = lightColorScheme(
     onBackground = Black
 )
 
-val themeTypeState: MutableState<Int> by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
-    mutableStateOf(getDefaultThemeId())
-}
-fun getDefaultThemeId(): Int = DataStoreUtils.getSyncData(SKIP_APP_THEME, Configuration.UI_MODE_NIGHT_NO)
+
 
 @Composable
 fun AppTheme(

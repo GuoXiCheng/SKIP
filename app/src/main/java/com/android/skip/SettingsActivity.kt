@@ -1,6 +1,8 @@
 package com.android.skip
 
+import android.content.Intent
 import android.content.res.Configuration
+import android.provider.Settings
 import androidx.compose.foundation.background
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -14,25 +16,37 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import androidx.core.app.NotificationManagerCompat
 import com.android.skip.compose.FlatButton
 import com.android.skip.compose.ResourceIcon
 import com.android.skip.compose.RowContent
 import com.android.skip.compose.ScaffoldPage
-import com.android.skip.ui.theme.themeTypeState
 import com.android.skip.utils.DataStoreUtils
+
+
 
 class SettingsActivity : BaseActivity() {
     @Composable
     override fun ProvideContent() {
         SettingsActivityInterface(onBackClick = { finish() })
     }
+
+    override fun onResume() {
+        super.onResume()
+        if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) {
+            permitNoticeState.value = false
+            DataStoreUtils.putSyncData(SKIP_PERMIT_NOTICE, false)
+        }
+    }
 }
 
 @Composable
 fun SettingsActivityInterface(onBackClick: () -> Unit) {
+    val context = LocalContext.current
     val expandedState = remember { mutableStateOf(false) }
     val options = listOf(
         stringResource(id = R.string.settings_pattern_light_title),
@@ -40,10 +54,20 @@ fun SettingsActivityInterface(onBackClick: () -> Unit) {
         stringResource(id = R.string.settings_pattern_system_title)
     )
     val selectedState = remember { mutableStateOf(0) }
-    val checkUpdateVersion = remember { mutableStateOf(DataStoreUtils.getSyncData(
-        SKIP_AUTO_CHECK_UPDATE, true)) }
-    val checkUpdateConfig = remember { mutableStateOf(DataStoreUtils.getSyncData(
-        SKIP_AUTO_SYNC_CONFIG, true)) }
+    val checkUpdateVersion = remember {
+        mutableStateOf(
+            DataStoreUtils.getSyncData(
+                SKIP_AUTO_CHECK_UPDATE, true
+            )
+        )
+    }
+    val checkUpdateConfig = remember {
+        mutableStateOf(
+            DataStoreUtils.getSyncData(
+                SKIP_AUTO_SYNC_CONFIG, true
+            )
+        )
+    }
 
     ScaffoldPage(
         barTitle = stringResource(id = R.string.settings),
@@ -75,6 +99,31 @@ fun SettingsActivityInterface(onBackClick: () -> Unit) {
                         }
                     )
                 })
+
+            FlatButton(content = {
+                RowContent(
+                    stringResource(id = R.string.settings_permit_notice_title),
+                    stringResource(
+                        id = R.string.settings_permit_notice_subtitle
+                    ),
+                    {
+                        ResourceIcon(iconResource = R.drawable.notifications)
+                    },
+                    permitNoticeState.value,
+                    {
+                        permitNoticeState.value = it
+                        DataStoreUtils.putSyncData(SKIP_PERMIT_NOTICE, it)
+                        if (it && !NotificationManagerCompat.from(context)
+                                .areNotificationsEnabled()
+                        ) {
+                            val intent = Intent().apply {
+                                action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
+                                putExtra(Settings.EXTRA_APP_PACKAGE, "com.android.skip")
+                            }
+                            context.startActivity(intent)
+                        }
+                    })
+            })
 
             Menu(expandedState, options, selectedState)
             FlatButton(

@@ -6,12 +6,14 @@ import android.graphics.Path
 import android.graphics.Rect
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
+import com.android.skip.SKIP_PERMIT_NOTICE
 import com.android.skip.handler.BoundsHandler
 import com.android.skip.handler.IdNodeHandler
 import com.android.skip.handler.TextNodeHandler
 import com.android.skip.manager.AnalyticsManager
 import com.android.skip.manager.ToastManager
 import com.android.skip.manager.WhitelistManager
+import com.android.skip.utils.DataStoreUtils
 
 
 class MyAccessibilityService : AccessibilityService() {
@@ -61,12 +63,14 @@ class MyAccessibilityService : AccessibilityService() {
 
         accessibilityService.dispatchGesture(
             gesture,
-            object : AccessibilityService.GestureResultCallback() {
+            object : GestureResultCallback() {
                 override fun onCompleted(gestureDescription: GestureDescription) {
                     super.onCompleted(gestureDescription)
 
                     if (AnalyticsManager.isShowToast()) {
-                        ToastManager.showToast(accessibilityService, "已为您跳过广告")
+                        if (DataStoreUtils.getSyncData(SKIP_PERMIT_NOTICE, false)) {
+                            ToastManager.showToast(accessibilityService, "已为您跳过广告")
+                        }
                         AnalyticsManager.setShowToastCount()
                     }
 
