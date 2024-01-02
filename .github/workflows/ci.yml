@@ -26,6 +26,10 @@ jobs:
       run: |
         cp app/src/main/assets/skip_config.yaml dist/
 
+    - name: SKIP Config V2
+      run: |
+        cp app/src/main/assets/skip_config_v2.yaml dist/
+
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       with:
