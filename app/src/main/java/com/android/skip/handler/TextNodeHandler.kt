@@ -2,19 +2,27 @@ package com.android.skip.handler
 
 import android.graphics.Rect
 import android.view.accessibility.AccessibilityNodeInfo
-import com.android.skip.manager.SkipConfigManager
+import com.android.skip.manager.SkipConfigManagerV2
 
 class TextNodeHandler : AbstractHandler() {
     override fun handle(node: AccessibilityNodeInfo): List<Rect> {
-        val nodes = node.findAccessibilityNodeInfosByText(
-            SkipConfigManager.getSkipText(node.packageName.toString())
-        )
-        val listOfRect = nodes.map {
+        val skipTexts = SkipConfigManagerV2.getSkipTexts(node.packageName.toString())
+        if (skipTexts.isEmpty()) return super.handle(node)
+
+        val listOfRect: MutableList<Rect> = mutableListOf()
+
+        for (skipText in skipTexts) {
+            val targetNode =
+                node.findAccessibilityNodeInfosByText(skipText.text).firstOrNull() ?: continue
+
+            if (skipText.length != null && targetNode.text.length > skipText.length) {
+                continue
+            }
+
             val rect = Rect()
-            it.getBoundsInScreen(rect)
-            rect
+            targetNode.getBoundsInScreen(rect)
+            listOfRect.add(rect)
         }
-        nodes.forEach { it.recycle() }
 
         return listOfRect.ifEmpty {
             super.handle(node)

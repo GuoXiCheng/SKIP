@@ -2,4 +2,37 @@
     <string name="app_name">SKIP</string>
     <string name="activity_main">SKIP</string>
     <string name="accessibility_description">若无障碍服务发生故障，可以关闭后再打开。</string>
+    <string name="main_check_new_version">检查更新</string>
+
+    <string name="about">关于</string>
+    <string name="about_github_name">SKIP 源代码地址</string>
+    <string name="about_github_url">https://github.com/GuoXiCheng/SKIP</string>
+    <string name="about_skip_docs_name">SKIP Docs文档地址</string>
+    <string name="about_skip_docs_url">https://guoxicheng.top/projects/SKIP-Docs</string>
+
+    <string name="settings">设置</string>
+    <string name="settings_pattern_light_title">浅色模式</string>
+    <string name="settings_pattern_light_subtitle">保持明亮模式</string>
+    <string name="settings_pattern_dark_title">深色模式</string>
+    <string name="settings_pattern_dark_subtitle">保持暗黑模式</string>
+    <string name="settings_pattern_system_title">跟随系统</string>
+    <string name="settings_pattern_system_subtitle">跟随系统设置</string>
+    <string name="settings_check_update_title">自动检查更新</string>
+    <string name="settings_check_update_subtitle">打开应用时自动检查新版本</string>
+    <string name="settings_sync_config_title">自动同步配置</string>
+    <string name="settings_sync_config_subtitle">打开应用时自动获取并更新配置文件</string>
+    <string name="settings_permit_notice_title">允许通知</string>
+    <string name="settings_permit_notice_subtitle">是否允许发送「跳过」通知</string>
+
+    <string name="alive">应用保活</string>
+    <string name="alive_power_saving_title">省电策略</string>
+    <string name="alive_power_saving_subtitle">点击省电策略，进入后选择「无限制」</string>
+    <string name="alive_self_start_title">自启动管理</string>
+    <string name="alive_self_start_subtitle">在应用列表找到「SKIP」，将开关打开</string>
+    <string name="alive_backstage_title">后台任务管理</string>
+    <string name="alive_backstage_subtitle">进入最近打开程序页面，长按「SKIP」卡片，锁定</string>
+    <string name="alive_warn_title">请注意</string>
+    <string name="alive_warn_subtitle">以上操作方法可能仅适用于MIUI手机，其他品牌手机请自行查询相应的应用保活方法</string>
+
+    <string name="whitelist">应用白名单</string>
 </resources>
