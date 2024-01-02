@@ -22,10 +22,13 @@ import com.android.skip.compose.SettingsButton
 import com.android.skip.compose.StartButton
 import com.android.skip.compose.WhitelistButton
 import com.android.skip.dataclass.PackageInfoV2
+import com.android.skip.manager.HttpManager
 import com.android.skip.manager.SkipConfigManagerV2
 import com.android.skip.manager.WhitelistManager
+import com.android.skip.utils.DataStoreUtils
 import com.android.skip.viewmodel.StartButtonViewModel
 import org.yaml.snakeyaml.Yaml
+import kotlin.concurrent.thread
 
 
 class NewMainActivity : BaseActivity() {
@@ -71,5 +74,11 @@ class NewMainActivity : BaseActivity() {
         super.onResume()
         startButtonViewModel.changeButtonState(MyUtils.isAccessibilitySettingsOn(this))
         WhitelistManager.setWhitelist(lifecycleScope, applicationContext)
+
+        if (DataStoreUtils.getSyncData(SKIP_AUTO_SYNC_CONFIG, false)) {
+            thread {
+                HttpManager.updateSkipConfigV2()
+            }
+        }
     }
 }
