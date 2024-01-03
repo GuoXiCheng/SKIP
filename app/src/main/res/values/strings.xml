@@ -35,4 +35,7 @@
     <string name="alive_warn_subtitle">以上操作方法可能仅适用于MIUI手机，其他品牌手机请自行查询相应的应用保活方法</string>
 
     <string name="whitelist">应用白名单</string>
+
+    <string name="dialog_confirm_allow">允许</string>
+    <string name="dialog_confirm_dismiss">拒绝</string>
 </resources>

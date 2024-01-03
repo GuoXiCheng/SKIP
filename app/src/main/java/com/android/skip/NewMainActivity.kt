@@ -11,12 +11,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.lifecycleScope
 import com.android.skip.compose.AboutButton
+import com.android.skip.compose.ConfirmDialog
+import com.android.skip.compose.DownloadProcessDialog
 import com.android.skip.compose.KeepAliveButton
 import com.android.skip.compose.SettingsButton
 import com.android.skip.compose.StartButton
@@ -30,6 +36,9 @@ import com.android.skip.viewmodel.StartButtonViewModel
 import org.yaml.snakeyaml.Yaml
 import kotlin.concurrent.thread
 
+var showUpdateDialog by mutableStateOf(false)
+
+var showDownloadDialog by mutableStateOf(false)
 
 class NewMainActivity : BaseActivity() {
     private val startButtonViewModel: StartButtonViewModel by viewModels()
@@ -56,7 +65,7 @@ class NewMainActivity : BaseActivity() {
         ) {
             Row {
                 Text(
-                    text = "SKIP",
+                    text = stringResource(id = R.string.app_name),
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground
@@ -67,6 +76,21 @@ class NewMainActivity : BaseActivity() {
             KeepAliveButton()
             SettingsButton()
             AboutButton()
+
+            if (showUpdateDialog) {
+                ConfirmDialog(
+                    title = "发现新版本",
+                    content = "是否立即下载更新？",
+                    onDismiss = { showUpdateDialog = false },
+                    onAllow = {
+                        showUpdateDialog = false
+                        showDownloadDialog = true
+                    })
+            }
+
+            if (showDownloadDialog) {
+                DownloadProcessDialog(0.5f)
+            }
         }
     }
 
@@ -80,5 +104,13 @@ class NewMainActivity : BaseActivity() {
                 HttpManager.updateSkipConfigV2()
             }
         }
+
+        thread {
+            val latestVersion = HttpManager.getLatestVersion()
+            if (latestVersion != BuildConfig.VERSION_NAME.trim()) {
+                showUpdateDialog = true
+            }
+        }
+
     }
 }
