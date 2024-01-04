@@ -1,5 +1,6 @@
 package com.android.skip
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -15,10 +16,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import com.android.skip.compose.AboutButton
 import com.android.skip.compose.ConfirmDialog
@@ -34,11 +37,18 @@ import com.android.skip.manager.WhitelistManager
 import com.android.skip.utils.DataStoreUtils
 import com.android.skip.viewmodel.StartButtonViewModel
 import org.yaml.snakeyaml.Yaml
+import java.io.File
 import kotlin.concurrent.thread
 
 var showUpdateDialog by mutableStateOf(false)
 
 var showDownloadDialog by mutableStateOf(false)
+
+var showApkInstallDialog by mutableStateOf(false)
+
+var apkDownloadProgress by mutableStateOf(0f)
+
+var apkLatestVersionText by mutableStateOf(BuildConfig.VERSION_NAME.trim())
 
 class NewMainActivity : BaseActivity() {
     private val startButtonViewModel: StartButtonViewModel by viewModels()
@@ -52,10 +62,12 @@ class NewMainActivity : BaseActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+
     }
 
     @Composable
     override fun ProvideContent() {
+        val context = LocalContext.current
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -89,7 +101,41 @@ class NewMainActivity : BaseActivity() {
             }
 
             if (showDownloadDialog) {
-                DownloadProcessDialog(0.5f)
+                DownloadProcessDialog()
+
+                thread {
+                    HttpManager.downloadNewAPK(apkLatestVersionText, context) { it ->
+                        apkDownloadProgress = it * 0.01f
+                        if (it == 100) {
+                            showDownloadDialog = false
+                            showApkInstallDialog = true
+                        }
+                    }
+                }
+            }
+
+            if (showApkInstallDialog) {
+                ConfirmDialog(
+                    title = "下载完成",
+                    content = "是否立即安装新版本？",
+                    onDismiss = { showApkInstallDialog = false },
+                    onAllow = {
+                        showApkInstallDialog = false
+
+                        val filename = "SKIP-v$apkLatestVersionText.apk"
+                        val apkFile = File(context.getExternalFilesDir(null), filename)
+                        val apkUri = FileProvider.getUriForFile(
+                            context,
+                            context.applicationContext.packageName + ".provider",
+                            apkFile
+                        )
+
+                        val intent = Intent(Intent.ACTION_VIEW)
+                        intent.setDataAndType(apkUri, "application/vnd.android.package-archive")
+                        intent.flags =
+                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        context.startActivity(intent)
+                    })
             }
         }
     }
@@ -105,12 +151,14 @@ class NewMainActivity : BaseActivity() {
             }
         }
 
-        thread {
-            val latestVersion = HttpManager.getLatestVersion()
-            if (latestVersion != BuildConfig.VERSION_NAME.trim()) {
-                showUpdateDialog = true
+        if (DataStoreUtils.getSyncData(SKIP_AUTO_CHECK_UPDATE, false)) {
+            thread {
+                val latestVersion = HttpManager.getLatestVersion()
+                if (latestVersion != BuildConfig.VERSION_NAME.trim()) {
+                    apkLatestVersionText = latestVersion
+                    showUpdateDialog = true
+                }
             }
         }
-
     }
 }

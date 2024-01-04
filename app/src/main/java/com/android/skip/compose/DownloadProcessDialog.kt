@@ -14,10 +14,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.android.skip.apkDownloadProgress
 import kotlin.math.roundToInt
 
 @Composable
-fun DownloadProcessDialog(downloadProgress: Float) {
+fun DownloadProcessDialog() {
     AlertDialog(
         onDismissRequest = {},
         title = {
@@ -36,9 +37,9 @@ fun DownloadProcessDialog(downloadProgress: Float) {
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.padding(16.dp)
             ) {
-                LinearProgressIndicator(progress = downloadProgress)
+                LinearProgressIndicator(progress = apkDownloadProgress)
                 Spacer(modifier = Modifier.height(16.dp))
-                Text(text = "下载进度：${(downloadProgress * 100).roundToInt()}%")
+                Text(text = "下载进度：${(apkDownloadProgress * 100).roundToInt()}%")
             }
         },
         confirmButton = {},
