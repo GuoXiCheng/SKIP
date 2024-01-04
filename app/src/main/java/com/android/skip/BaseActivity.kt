@@ -39,7 +39,16 @@ abstract class BaseActivity : AppCompatActivity() {
                 ProvideContent()
             }
         }
+
         RectManager.setMaxRect(this)
+
+        // 清理临时文件
+        val directory = this.getExternalFilesDir(null)
+        directory?.let {
+            it.listFiles()?.forEach { file ->
+                file.delete()
+            }
+        }
     }
 
     @Composable
