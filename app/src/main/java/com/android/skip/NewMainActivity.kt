@@ -62,7 +62,6 @@ class NewMainActivity : BaseActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
     }
 
     @Composable
