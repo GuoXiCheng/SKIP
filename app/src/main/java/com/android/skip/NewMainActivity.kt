@@ -1,6 +1,10 @@
 package com.android.skip
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
+import android.text.TextUtils
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -11,22 +15,44 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import com.android.skip.compose.AboutButton
+import com.android.skip.compose.ConfirmDialog
+import com.android.skip.compose.DownloadProcessDialog
 import com.android.skip.compose.KeepAliveButton
 import com.android.skip.compose.SettingsButton
 import com.android.skip.compose.StartButton
 import com.android.skip.compose.WhitelistButton
 import com.android.skip.dataclass.PackageInfoV2
+import com.android.skip.manager.HttpManager
 import com.android.skip.manager.SkipConfigManagerV2
 import com.android.skip.manager.WhitelistManager
+import com.android.skip.service.MyAccessibilityService
+import com.android.skip.utils.DataStoreUtils
 import com.android.skip.viewmodel.StartButtonViewModel
 import org.yaml.snakeyaml.Yaml
+import java.io.File
+import kotlin.concurrent.thread
 
+var showUpdateDialog by mutableStateOf(false)
+
+var showDownloadDialog by mutableStateOf(false)
+
+var showApkInstallDialog by mutableStateOf(false)
+
+var apkDownloadProgress by mutableStateOf(0f)
+
+var apkLatestVersionText by mutableStateOf(BuildConfig.VERSION_NAME.trim())
 
 class NewMainActivity : BaseActivity() {
     private val startButtonViewModel: StartButtonViewModel by viewModels()
@@ -44,6 +70,7 @@ class NewMainActivity : BaseActivity() {
 
     @Composable
     override fun ProvideContent() {
+        val context = LocalContext.current
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -53,7 +80,7 @@ class NewMainActivity : BaseActivity() {
         ) {
             Row {
                 Text(
-                    text = "SKIP",
+                    text = stringResource(id = R.string.app_name),
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground
@@ -64,12 +91,110 @@ class NewMainActivity : BaseActivity() {
             KeepAliveButton()
             SettingsButton()
             AboutButton()
+
+            if (showUpdateDialog) {
+                ConfirmDialog(
+                    title = "发现新版本",
+                    content = "是否立即下载更新？",
+                    onDismiss = { showUpdateDialog = false },
+                    onAllow = {
+                        showUpdateDialog = false
+                        showDownloadDialog = true
+                    })
+            }
+
+            if (showDownloadDialog) {
+                DownloadProcessDialog()
+
+                thread {
+                    HttpManager.downloadNewAPK(apkLatestVersionText, context) { it ->
+                        apkDownloadProgress = it * 0.01f
+                        if (it == 100) {
+                            showDownloadDialog = false
+                            showApkInstallDialog = true
+                        }
+                    }
+                }
+            }
+
+            if (showApkInstallDialog) {
+                ConfirmDialog(
+                    title = "下载完成",
+                    content = "是否立即安装新版本？",
+                    onDismiss = { showApkInstallDialog = false },
+                    onAllow = {
+                        showApkInstallDialog = false
+
+                        val filename = "SKIP-v$apkLatestVersionText.apk"
+                        val apkFile = File(context.getExternalFilesDir(null), filename)
+                        val apkUri = FileProvider.getUriForFile(
+                            context,
+                            context.applicationContext.packageName + ".provider",
+                            apkFile
+                        )
+
+                        val intent = Intent(Intent.ACTION_VIEW)
+                        intent.setDataAndType(apkUri, "application/vnd.android.package-archive")
+                        intent.flags =
+                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        context.startActivity(intent)
+                    })
+            }
         }
     }
 
     override fun onResume() {
         super.onResume()
-        startButtonViewModel.changeButtonState(MyUtils.isAccessibilitySettingsOn(this))
+        startButtonViewModel.changeButtonState(isAccessibilitySettingsOn(this))
         WhitelistManager.setWhitelist(lifecycleScope, applicationContext)
+
+        if (DataStoreUtils.getSyncData(SKIP_AUTO_SYNC_CONFIG, false)) {
+            thread {
+                HttpManager.updateSkipConfigV2()
+            }
+        }
+
+        if (DataStoreUtils.getSyncData(SKIP_AUTO_CHECK_UPDATE, false)) {
+            thread {
+                val latestVersion = HttpManager.getLatestVersion()
+                if (latestVersion != BuildConfig.VERSION_NAME.trim()) {
+                    apkLatestVersionText = latestVersion
+                    showUpdateDialog = true
+                }
+            }
+        }
     }
+}
+
+/**
+ * 判断无障碍服务是否已经启用
+ */
+fun isAccessibilitySettingsOn(mContext: Context): Boolean {
+    var accessibilityEnabled = 0
+    val service = mContext.packageName + "/" + MyAccessibilityService::class.java.canonicalName
+    try {
+        accessibilityEnabled = Settings.Secure.getInt(
+            mContext.applicationContext.contentResolver,
+            android.provider.Settings.Secure.ACCESSIBILITY_ENABLED
+        )
+    } catch (e: Settings.SettingNotFoundException) {
+        e.printStackTrace()
+    }
+    val mStringColonSplitter = TextUtils.SimpleStringSplitter(':')
+    if (accessibilityEnabled == 1) {
+        val settingValue = Settings.Secure.getString(
+            mContext.applicationContext.contentResolver,
+            Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+        )
+        if (settingValue != null) {
+            mStringColonSplitter.setString(settingValue)
+            while (mStringColonSplitter.hasNext()) {
+                val accessibilityService = mStringColonSplitter.next()
+                if (accessibilityService.equals(service, ignoreCase = true)) {
+                    return true
+                }
+            }
+        }
+    }
+    return false
 }

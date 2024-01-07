@@ -26,6 +26,19 @@ object HttpManager {
         }
     }
 
+    fun updateSkipConfigV2() {
+        try {
+            val request = Request.Builder().url("$BASE_URL/skip_config_v2.yaml").build()
+            client.newCall(request).execute().use {response ->
+                val bodyContent = response.body()?.string()
+                val yaml = Yaml().load<Any>(bodyContent)
+                SkipConfigManagerV2.setConfig(yaml)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     fun getLatestVersion(): String {
         return try {
             val request = Request.Builder().url("$BASE_URL/latest_version.txt").build()
@@ -62,7 +75,7 @@ object HttpManager {
                 }
             }
         } catch (e: Exception) {
-            LogManager.i(e.toString())
+            e.printStackTrace()
         }
     }
 }

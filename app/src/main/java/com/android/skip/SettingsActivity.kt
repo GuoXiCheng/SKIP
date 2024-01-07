@@ -57,14 +57,14 @@ fun SettingsActivityInterface(onBackClick: () -> Unit) {
     val checkUpdateVersion = remember {
         mutableStateOf(
             DataStoreUtils.getSyncData(
-                SKIP_AUTO_CHECK_UPDATE, true
+                SKIP_AUTO_CHECK_UPDATE, false
             )
         )
     }
     val checkUpdateConfig = remember {
         mutableStateOf(
             DataStoreUtils.getSyncData(
-                SKIP_AUTO_SYNC_CONFIG, true
+                SKIP_AUTO_SYNC_CONFIG, false
             )
         )
     }
