@@ -1,6 +1,7 @@
 package com.android.skip.compose
 
 import android.content.res.Configuration
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,6 +39,7 @@ fun ConfirmDialog(
     onDismiss: () -> Unit,
     onAllow: () -> Unit
 ) {
+    val darkTheme = isSystemInDarkTheme()
     Dialog(onDismissRequest = { /* 点击外部不关闭对话框 */ }) {
         Card(
             modifier = Modifier.height(200.dp),
@@ -70,9 +73,9 @@ fun ConfirmDialog(
                     Button(
                         onClick = onDismiss,
                         modifier = Modifier.weight(1f),
-                        colors = if (themeTypeState.value == Configuration.UI_MODE_NIGHT_NO) ButtonDefaults.buttonColors(
-                            Color(0xFFF0F0F0)
-                        ) else ButtonDefaults.buttonColors(Color(0xFF454545))
+                        colors = if (darkTheme || themeTypeState.value == Configuration.UI_MODE_NIGHT_YES) ButtonDefaults.buttonColors(
+                            Color(0xFF454545)
+                        ) else ButtonDefaults.buttonColors(Color(0xFFF0F0F0))
                     ) {
                         Text(
                             text = stringResource(id = R.string.dialog_confirm_dismiss),

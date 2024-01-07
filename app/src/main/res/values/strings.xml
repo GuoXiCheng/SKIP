@@ -5,10 +5,12 @@
     <string name="main_check_new_version">检查更新</string>
 
     <string name="about">关于</string>
-    <string name="about_github_name">SKIP 源代码地址</string>
+    <string name="about_github_name">源代码</string>
     <string name="about_github_url">https://github.com/GuoXiCheng/SKIP</string>
-    <string name="about_skip_docs_name">SKIP Docs文档地址</string>
+    <string name="about_skip_docs_name">文档</string>
     <string name="about_skip_docs_url">https://guoxicheng.top/projects/SKIP-Docs</string>
+    <string name="about_current_version">当前版本号：</string>
+    <string name="about_current_resolution">当前分辨率：</string>
 
     <string name="settings">设置</string>
     <string name="settings_pattern_light_title">浅色模式</string>
@@ -32,10 +34,13 @@
     <string name="alive_backstage_title">后台任务管理</string>
     <string name="alive_backstage_subtitle">进入最近打开程序页面，长按「SKIP」卡片，锁定</string>
     <string name="alive_warn_title">请注意</string>
-    <string name="alive_warn_subtitle">以上操作方法可能仅适用于MIUI手机，其他品牌手机请自行查询相应的应用保活方法</string>
+    <string name="alive_warn_subtitle">以上操作方法可能仅适用于MIUI或HyperOS，其他系统手机请自行查询相应的应用保活方法</string>
+    <string name="alive_warn_search_content">如何实现应用后台保活</string>
 
     <string name="whitelist">应用白名单</string>
 
     <string name="dialog_confirm_allow">允许</string>
     <string name="dialog_confirm_dismiss">拒绝</string>
+    <string name="dialog_open_browser_title">启动浏览器</string>
+    <string name="dialog_open_browser_content">是否要通过浏览器访问</string>
 </resources>
