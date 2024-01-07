@@ -75,7 +75,7 @@ object HttpManager {
                 }
             }
         } catch (e: Exception) {
-            LogManager.i(e.toString())
+            e.printStackTrace()
         }
     }
 }

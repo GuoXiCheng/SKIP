@@ -1,7 +1,10 @@
 package com.android.skip
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
+import android.text.TextUtils
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -34,6 +37,7 @@ import com.android.skip.dataclass.PackageInfoV2
 import com.android.skip.manager.HttpManager
 import com.android.skip.manager.SkipConfigManagerV2
 import com.android.skip.manager.WhitelistManager
+import com.android.skip.service.MyAccessibilityService
 import com.android.skip.utils.DataStoreUtils
 import com.android.skip.viewmodel.StartButtonViewModel
 import org.yaml.snakeyaml.Yaml
@@ -141,7 +145,7 @@ class NewMainActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        startButtonViewModel.changeButtonState(MyUtils.isAccessibilitySettingsOn(this))
+        startButtonViewModel.changeButtonState(isAccessibilitySettingsOn(this))
         WhitelistManager.setWhitelist(lifecycleScope, applicationContext)
 
         if (DataStoreUtils.getSyncData(SKIP_AUTO_SYNC_CONFIG, false)) {
@@ -160,4 +164,37 @@ class NewMainActivity : BaseActivity() {
             }
         }
     }
+}
+
+/**
+ * 判断无障碍服务是否已经启用
+ */
+fun isAccessibilitySettingsOn(mContext: Context): Boolean {
+    var accessibilityEnabled = 0
+    val service = mContext.packageName + "/" + MyAccessibilityService::class.java.canonicalName
+    try {
+        accessibilityEnabled = Settings.Secure.getInt(
+            mContext.applicationContext.contentResolver,
+            android.provider.Settings.Secure.ACCESSIBILITY_ENABLED
+        )
+    } catch (e: Settings.SettingNotFoundException) {
+        e.printStackTrace()
+    }
+    val mStringColonSplitter = TextUtils.SimpleStringSplitter(':')
+    if (accessibilityEnabled == 1) {
+        val settingValue = Settings.Secure.getString(
+            mContext.applicationContext.contentResolver,
+            Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+        )
+        if (settingValue != null) {
+            mStringColonSplitter.setString(settingValue)
+            while (mStringColonSplitter.hasNext()) {
+                val accessibilityService = mStringColonSplitter.next()
+                if (accessibilityService.equals(service, ignoreCase = true)) {
+                    return true
+                }
+            }
+        }
+    }
+    return false
 }
