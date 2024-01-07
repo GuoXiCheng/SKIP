@@ -10,15 +10,12 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
-import com.android.skip.SKIP_APP_THEME
-import com.android.skip.utils.DataStoreUtils
+import com.android.skip.themeTypeState
 
 private val darkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -37,7 +34,6 @@ private val lightColorScheme = lightColorScheme(
 )
 
 
-
 @Composable
 fun AppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -50,6 +46,7 @@ fun AppTheme(
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
+
         darkTheme -> darkColorScheme
         else -> lightColorScheme
     }
@@ -58,6 +55,9 @@ fun AppTheme(
         SideEffect {
             (view.context as Activity).window.statusBarColor = colorScheme.background.toArgb()
             ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = darkTheme
+            // 根据主题设置状态栏图标和文字颜色
+            ViewCompat.getWindowInsetsController((view.context as Activity).window.decorView)?.isAppearanceLightStatusBars =
+                !darkTheme || themeTypeState.value != Configuration.UI_MODE_NIGHT_YES
         }
     }
 

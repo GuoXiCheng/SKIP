@@ -6,7 +6,7 @@ SKIP 是一款免费开源的安卓应用，旨在利用 Android 无障碍服务
 
 ## 主界面预览
 
-<img src="https://guoxicheng.top/assets/image/skip-docs/main-interface.jpg" alt="https://guoxicheng.top/assets/image/skip-docs/main-interface.jpg" style="width: 30%;" />
+<img src="https://guoxicheng.top/assets/image/skip-docs/main-interface-light.png" alt="https://guoxicheng.top/assets/image/skip-docs/main-interface-light.png" style="width: 30%;" />
 
 ## 使用说明
 
@@ -18,7 +18,7 @@ SKIP 是一款免费开源的安卓应用，旨在利用 Android 无障碍服务
 ## 如何贡献
 
 - 应用市场APP种类繁多，情况各异，无法保证完全适配
-- 如有问题可以提交issue，或者参考 👉 [贡献指南](https://guoxicheng.top/projects/SKIP-Docs/003-contribute.html)
+- 如有问题可以提交issue，或者参考 👉 [贡献指南](https://guoxicheng.top/projects/SKIP-Docs/contribute.html)
 
 ## 许可证
 
