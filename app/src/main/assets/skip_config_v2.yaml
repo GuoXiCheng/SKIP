@@ -69,3 +69,11 @@
 - packageName: com.example.pptv
   skipIds:
     - id: com.example.pptv:id/view_count_shake
+
+# 虎扑
+- packageName: com.hupu.games
+  skipIds:
+    - id: com.byted.pangle:id/tt_splash_skip_btn
+  skipBounds:
+    - bound: 912,156,1032,276
+    - resolution: 1080,2308
