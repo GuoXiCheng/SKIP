@@ -10,6 +10,7 @@
 - packageName: com.jd.app.reader
   skipIds:
     - id: com.jd.app.reader:id/mJumpBtn
+    - id: com.jd.app.reader:id/count_down_time
   skipBounds:
     - bound: 1209,113,1338,165
       resolution: 1440,3024
@@ -74,6 +75,7 @@
 - packageName: com.hupu.games
   skipIds:
     - id: com.byted.pangle:id/tt_splash_skip_btn
+    - id: com.hupu.games:id/tv_time
   skipBounds:
     - bound: 912,156,1032,276
     - resolution: 1080,2308
