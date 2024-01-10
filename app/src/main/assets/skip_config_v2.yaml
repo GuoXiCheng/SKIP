@@ -77,3 +77,9 @@
   skipBounds:
     - bound: 912,156,1032,276
     - resolution: 1080,2308
+
+# 华为自带时钟跳过法定节假日误触
+- packageName: com.android.deskclock
+  skipTexts:
+    - text: 跳过
+      length: 0
