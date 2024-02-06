@@ -69,9 +69,30 @@ fun SettingsActivityInterface(onBackClick: () -> Unit) {
         )
     }
 
+    val checkIncludeSystemApps = remember {
+        mutableStateOf(
+            DataStoreUtils.getSyncData(
+                SKIP_INCLUDE_SYSTEM_APPS, false
+            )
+        )
+    }
+
     ScaffoldPage(
         barTitle = stringResource(id = R.string.settings),
         onBackClick = onBackClick, content = {
+            FlatButton(content = {
+                RowContent(
+                    stringResource(id = R.string.settings_include_system_apps_title),
+                    stringResource(id = R.string.settings_include_system_apps_subtitle),
+                    { ResourceIcon(iconResource = R.drawable.app_registration) },
+                    checkIncludeSystemApps.value,
+                    {
+                        checkIncludeSystemApps.value = it
+                        DataStoreUtils.putSyncData(SKIP_INCLUDE_SYSTEM_APPS, it)
+                    }
+                )
+            })
+
             FlatButton(
                 content = {
                     RowContent(

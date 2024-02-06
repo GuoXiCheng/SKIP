@@ -21,6 +21,8 @@ const val WHITELIST_DOT = "whitelist."
 
 const val SKIP_PERMIT_NOTICE = "SKIP_PERMIT_NOTICE"
 
+const val SKIP_INCLUDE_SYSTEM_APPS = "SKIP_INCLUDE_SYSTEM_APPS"
+
 val themeTypeState: MutableState<Int> by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
     mutableStateOf(DataStoreUtils.getSyncData(SKIP_APP_THEME, Configuration.UI_MODE_NIGHT_NO))
 }

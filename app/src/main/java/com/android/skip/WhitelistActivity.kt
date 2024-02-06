@@ -44,12 +44,17 @@ fun WhitelistInterface(onBackClick: () -> Unit) {
 
     LaunchedEffect(Unit) {
         scope.launch(Dispatchers.IO) {
-            val installedApps =
+            var installedApps =
                 packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-            val nonSystemApps = installedApps.filter {
-                (it.flags and ApplicationInfo.FLAG_SYSTEM) == 0
+
+            // 是否过滤掉系统应用
+            if (!DataStoreUtils.getSyncData(SKIP_INCLUDE_SYSTEM_APPS, false)) {
+                installedApps = installedApps.filter {
+                    (it.flags and ApplicationInfo.FLAG_SYSTEM) == 0
+                }
             }
-            val apps = nonSystemApps.map { app ->
+
+            val apps = installedApps.map { app ->
                 AppInfo(
                     appName = app.loadLabel(packageManager).toString(),
                     packageName = app.packageName,
