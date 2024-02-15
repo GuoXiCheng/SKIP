@@ -85,3 +85,9 @@
   skipTexts:
     - text: 跳过
       length: 0
+
+# 小米音乐
+- packageName: com.miui.player
+  skipTexts:
+    - text: 跳过
+      length: 4
