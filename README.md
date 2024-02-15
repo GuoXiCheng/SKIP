@@ -20,6 +20,10 @@ SKIP 是一款免费开源的安卓应用，旨在利用 Android 无障碍服务
 - 应用市场APP种类繁多，情况各异，无法保证完全适配
 - 如有问题可以提交issue，或者参考 👉 [贡献指南](https://guoxicheng.top/projects/SKIP-Docs/contribute.html)
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=GuoXiCheng/SKIP&type=Date)](https://star-history.com/#GuoXiCheng/SKIP&Date)
+
 ## 许可证
 
 [MIT License](https://github.com/GuoXiCheng/SKIP/blob/main/LICENSE)
