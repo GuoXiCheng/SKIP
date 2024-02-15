@@ -22,24 +22,7 @@ SKIP 是一款免费开源的安卓应用，旨在利用 Android 无障碍服务
 
 ## Star History
 
-<picture>
-  <source
-    media="(prefers-color-scheme: dark)"
-    srcset="
-      https://api.star-history.com/svg?repos=GuoXiCheng/SKIP&type=Date&theme=dark
-    "
-  />
-  <source
-    media="(prefers-color-scheme: light)"
-    srcset="
-      https://api.star-history.com/svg?repos=GuoXiCheng/SKIP&type=Date
-    "
-  />
-  <img
-    alt="Star History Chart"
-    src="https://api.star-history.com/svg?repos=GuoXiCheng/SKIP&type=Date"
-  />
-</picture>
+[![Star History Chart](https://api.star-history.com/svg?repos=GuoXiCheng/SKIP&type=Date)](https://star-history.com/#GuoXiCheng/SKIP&Date)
 
 ## 许可证
 
