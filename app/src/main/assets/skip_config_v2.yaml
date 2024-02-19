@@ -83,11 +83,20 @@
 # 华为自带时钟跳过法定节假日误触
 - packageName: com.android.deskclock
   skipTexts:
-    - text: 跳过
-      length: 0
+    - length: 0
 
 # 小米音乐
 - packageName: com.miui.player
   skipTexts:
     - text: 跳过
       length: 4
+
+# 华尔街见闻
+- packageName: com.wallstreetcn.news
+  skipIds:
+    - id: com.wallstreetcn.news:id/iv_jump
+
+# 荣耀自带时钟
+- packageName: com.hihonor.deskclock
+  skipTexts:
+    - length: 0
