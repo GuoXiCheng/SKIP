@@ -105,3 +105,9 @@
 - packageName: com.job.android
   skipIds:
     - id: com.job.android:id/skipBtn
+
+# 今日头条
+- packageName: com.ss.android.article.news
+  skipTexts:
+    - text: 跳过
+      length: 4
