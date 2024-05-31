@@ -12,4 +12,6 @@ const LATEST_VERSION = "2.1.1";
     fs.copyFileSync(`apk/SKIP-v${LATEST_VERSION}.apk`, `${targetPath}/SKIP-v${LATEST_VERSION}.apk`);
     fs.copyFileSync('app/src/main/assets/skip_config.yaml', `${targetPath}/skip_config.yaml`);
     fs.copyFileSync('app/src/main/assets/skip_config_v2.yaml', `${targetPath}/skip_config_v2.yaml`);
+
+    fs.copyFileSync('apk/OneClick-v1.0.apk', `${targetPath}/OneClick-v1.0.apk`);
 })();
