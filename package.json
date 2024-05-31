@@ -1,0 +1,17 @@
+{
+  "name": "skip",
+  "version": "1.0.0",
+  "description": "![GitHub](https://img.shields.io/github/license/GuoXiCheng/SKIP) ![GitHub all releases](https://img.shields.io/github/downloads/GuoXiCheng/SKIP/total) ![GitHub Repo stars](https://img.shields.io/github/stars/GuoXiCheng/SKIP)",
+  "main": "index.js",
+  "scripts": {
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
+    "release": "node release.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "vitepress": "^1.2.2"
+  }
+}

@@ -85,3 +85,9 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+
+!package-lock.json
+!package.json
+node_modules/
+docs/.vitepress/cache
+docs/.vitepress/dist
