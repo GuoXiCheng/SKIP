@@ -111,3 +111,9 @@
   skipTexts:
     - text: 跳过
       length: 4
+
+# 嘀嗒出行
+- packageName: com.didapinche.booking
+  skipTexts:
+    - text: 跳过
+      length: 2
