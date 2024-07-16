@@ -117,3 +117,8 @@
   skipTexts:
     - text: 跳过
       length: 2
+
+# 大麦
+- packageName: cn.damai
+  skipIds:
+    - id: cn.damai:id/homepage_advert_pb
