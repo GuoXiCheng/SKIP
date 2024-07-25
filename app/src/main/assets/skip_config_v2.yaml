@@ -131,3 +131,6 @@
 - packageName: cn.sleepycoder.birthday
   skipIds:
     - id: com.byted.pangle.m:id/tt_splash_skip_btn
+  skipBounds:
+    - bound: 926,182,1036,292
+      resolution: 1080,2287
