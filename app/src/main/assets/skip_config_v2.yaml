@@ -2,9 +2,9 @@
 - packageName: com.coolapk.market
   skipIds:
     - id: com.byted.pangle.m:id/tt_splash_skip_btn
-  skipBounds:
-    - bound: 926,113,1036,223
-      resolution: 1080,2287
+  # skipBounds:
+  #   - bound: 926,113,1036,223
+  #     resolution: 1080,2287
 
 # 京东阅读
 - packageName: com.jd.app.reader
