@@ -134,3 +134,9 @@
   skipBounds:
     - bound: 926,182,1036,292
       resolution: 1080,2287
+
+# 工时记
+- packageName: cn.weilaihongtech.gongshi
+  skipBounds:
+    - bound: 945,158,1060,273
+      resolution: 1080,2287
