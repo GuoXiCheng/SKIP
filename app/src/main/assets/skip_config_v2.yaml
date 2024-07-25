@@ -122,3 +122,9 @@
 - packageName: cn.damai
   skipIds:
     - id: cn.damai:id/homepage_advert_pb
+
+# Cellular-Z
+- packageName: make.more.r2d2.cellular_z
+  skipBounds:
+    - bound: 926,113,1036,223
+      resolution: 1080,2287
