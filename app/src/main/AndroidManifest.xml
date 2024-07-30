@@ -33,6 +33,10 @@
             android:name=".AboutActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".LayoutInspectActivity"
+            android:exported="false" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.android.skip.provider"
