@@ -4,8 +4,10 @@ export default defineConfig(
   withMermaid({
     // 站点级选项
     title: "SKIP",
-    description: "Just playing around.",
+    description: "SKIP APP Docs",
     base: "/",
+    lastUpdated: true,
+    head: [["link", { rel: "icon", type: "image/x-icon", href: "/images/favicon.ico" }]],
     themeConfig: {
       outline: {
         level: "deep",
@@ -13,7 +15,6 @@ export default defineConfig(
       nav: [
         { text: "首页", link: "/" },
         { text: "指南", link: "/guide/intro/what-is-skip" },
-        { text: "下载", link: "/download/app-download/index" },
       ],
       sidebar: {
         "/guide/": [
@@ -23,6 +24,10 @@ export default defineConfig(
               {
                 text: "什么是 SKIP",
                 link: "/guide/intro/what-is-skip",
+              },
+              {
+                text: "下载 APP",
+                link: "/guide/intro/download-app",
               },
             ],
           },
