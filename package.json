@@ -21,7 +21,8 @@
     "ts-jest": "^29.2.3",
     "ts-node": "^10.9.2",
     "vitepress": "^1.2.2",
-    "vitepress-plugin-mermaid": "^2.0.16"
+    "vitepress-plugin-mermaid": "^2.0.16",
+    "zod": "^3.23.8"
   },
   "dependencies": {
     "skip": "file:"

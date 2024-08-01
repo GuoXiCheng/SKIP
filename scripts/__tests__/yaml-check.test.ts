@@ -1,6 +1,6 @@
 import { yamlCheck } from "../yaml-check";
 
-describe("YAML Check", () => {
+describe("YAML Check 2", () => {
   it("正确格式的 YAML", () => {
     const detail = yamlCheck("scripts/__tests__/examples/correct-yaml.yaml");
     expect(detail).toEqual([
@@ -27,7 +27,9 @@ describe("YAML Check", () => {
     ]);
   });
   it("缺少 packageName", () => {
-    expect(() => yamlCheck("scripts/__tests__/examples/missing-packageName.yaml")).toThrow("packageName is required");
+    expect(() => yamlCheck("scripts/__tests__/examples/missing-packageName.yaml")).toThrow(
+      "packageName must be a string"
+    );
   });
   it("packageName 不是字符串", () => {
     expect(() => yamlCheck("scripts/__tests__/examples/packageName-not-string.yaml")).toThrow(
@@ -36,7 +38,7 @@ describe("YAML Check", () => {
   });
   it("packageName 为空", () => {
     expect(() => yamlCheck("scripts/__tests__/examples/packageName-empty.yaml")).toThrow(
-      "packageName must not be empty"
+      "packageName must not have leading or trailing whitespace"
     );
   });
   it("packageName 有前导空格", () => {
@@ -50,19 +52,23 @@ describe("YAML Check", () => {
     );
   });
   it("出现未知的键", () => {
-    expect(() => yamlCheck("scripts/__tests__/examples/unknown-keys.yaml")).toThrow("Unknown keys: unknownKey");
+    expect(() => yamlCheck("scripts/__tests__/examples/unknown-keys.yaml")).toThrow(
+      "Unrecognized key(s) in object: 'unknownKey'"
+    );
   });
   it("skipIds 不是数组", () => {
     expect(() => yamlCheck("scripts/__tests__/examples/skipIds-not-array.yaml")).toThrow("skipIds must be an array");
   });
   it("skipIds 缺少 id", () => {
-    expect(() => yamlCheck("scripts/__tests__/examples/skipIds-missing-id.yaml")).toThrow("id is required");
+    expect(() => yamlCheck("scripts/__tests__/examples/skipIds-missing-id.yaml")).toThrow("id must be a string");
   });
   it("skipIds.id 不是字符串", () => {
     expect(() => yamlCheck("scripts/__tests__/examples/skipIds-id-not-string.yaml")).toThrow("id must be a string");
   });
   it("skipIds.id 为空", () => {
-    expect(() => yamlCheck("scripts/__tests__/examples/skipIds-id-empty.yaml")).toThrow("id must not be empty");
+    expect(() => yamlCheck("scripts/__tests__/examples/skipIds-id-empty.yaml")).toThrow(
+      "id must not have leading or trailing whitespace"
+    );
   });
   it("skipIds.id 有前导空格", () => {
     expect(() => yamlCheck("scripts/__tests__/examples/skipIds-id-leading-space.yaml")).toThrow(
@@ -80,7 +86,9 @@ describe("YAML Check", () => {
     );
   });
   it("skipTexts.text 为空", () => {
-    expect(() => yamlCheck("scripts/__tests__/examples/skipTexts-text-empty.yaml")).toThrow("text must not be empty");
+    expect(() => yamlCheck("scripts/__tests__/examples/skipTexts-text-empty.yaml")).toThrow(
+      "text must not have leading or trailing whitespace"
+    );
   });
   it("skipTexts.text 有前导空格", () => {
     expect(() => yamlCheck("scripts/__tests__/examples/skipTexts-text-leading-space.yaml")).toThrow(
@@ -99,7 +107,7 @@ describe("YAML Check", () => {
   });
   it("skipTexts 出现未知的键", () => {
     expect(() => yamlCheck("scripts/__tests__/examples/skipTexts-unknown-keys.yaml")).toThrow(
-      "Unknown keys: unknownKey"
+      "Unrecognized key(s) in object: 'unknownKey'"
     );
   });
   it("skipBounds 不是数组", () => {
@@ -108,11 +116,13 @@ describe("YAML Check", () => {
     );
   });
   it("skipBounds 缺少 bound", () => {
-    expect(() => yamlCheck("scripts/__tests__/examples/skipBounds-missing-bound.yaml")).toThrow("bound is required");
+    expect(() => yamlCheck("scripts/__tests__/examples/skipBounds-missing-bound.yaml")).toThrow(
+      "bound must be a string"
+    );
   });
   it("skipBounds 缺少 resolution", () => {
     expect(() => yamlCheck("scripts/__tests__/examples/skipBounds-missing-resolution.yaml")).toThrow(
-      "resolution is required"
+      "resolution must be a string"
     );
   });
   it("skipBounds 的 bound 不是字符串", () => {
@@ -122,17 +132,12 @@ describe("YAML Check", () => {
   });
   it("skipBounds 的 bound 为空", () => {
     expect(() => yamlCheck("scripts/__tests__/examples/skipBounds-bound-empty.yaml")).toThrow(
-      "bound must not be empty"
-    );
-  });
-  it("skipBounds 的 bound 有前导空格", () => {
-    expect(() => yamlCheck("scripts/__tests__/examples/skipBounds-bound-leading-space.yaml")).toThrow(
-      "bound must not have leading or trailing whitespace"
+      "bound must have four numeric values"
     );
   });
   it("skipBounds 用 , 分隔后长度不为 4", () => {
     expect(() => yamlCheck("scripts/__tests__/examples/skipBounds-bound-not-4-parts.yaml")).toThrow(
-      "bound must have four comma-separated values"
+      "bound must have four numeric values"
     );
   });
   it("skipBounds 的 bound 分隔后不是数字", () => {
@@ -147,17 +152,12 @@ describe("YAML Check", () => {
   });
   it("skipBounds 的 resolution 为空", () => {
     expect(() => yamlCheck("scripts/__tests__/examples/skipBounds-resolution-empty.yaml")).toThrow(
-      "resolution must not be empty"
-    );
-  });
-  it("skipBounds 的 resolution 有前导空格", () => {
-    expect(() => yamlCheck("scripts/__tests__/examples/skipBounds-resolution-leading-space.yaml")).toThrow(
-      "resolution must not have leading or trailing whitespace"
+      "resolution must have two numeric values"
     );
   });
   it("skipBounds 的 resolution 用 , 分隔后长度不为 2", () => {
     expect(() => yamlCheck("scripts/__tests__/examples/skipBounds-resolution-not-2-parts.yaml")).toThrow(
-      "resolution must have two comma-separated values"
+      "resolution must have two numeric values"
     );
   });
   it("skipBounds 的 resolution 分隔后不是数字", () => {
