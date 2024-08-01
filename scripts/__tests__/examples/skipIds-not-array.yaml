@@ -1,0 +1,2 @@
+- packageName: com.test.skip
+  skipIds: com.test.skip:id/skip

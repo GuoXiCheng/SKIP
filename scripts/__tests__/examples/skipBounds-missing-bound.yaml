@@ -1,0 +1,3 @@
+- packageName: com.test.skip
+  skipBounds: 
+    - resolution: 1920,1080
