@@ -1,0 +1,2 @@
+- packageName: com.test.skip
+  skipBounds: "123"
