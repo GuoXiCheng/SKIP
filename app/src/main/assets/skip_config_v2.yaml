@@ -40,6 +40,9 @@
 - packageName: net.csdn.csdnplus
   skipIds:
     - id: com.byted.pangle.m:id/tt_splash_skip_btn
+  skipBounds:
+    - bound: 1244,176,1384,316
+      resolution: 1440,3024
 
 # 小度
 - packageName: com.baidu.duer.superapp
