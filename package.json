@@ -7,12 +7,23 @@
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
-    "release": "node release.js"
+    "release": "node release.js",
+    "yaml-check": "ts-node ./scripts/yaml-check.ts",
+    "test": "jest --coverage"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/js-yaml": "^4.0.9",
+    "jest": "^29.7.0",
+    "js-yaml": "^4.1.0",
+    "ts-jest": "^29.2.3",
+    "ts-node": "^10.9.2",
     "vitepress": "^1.2.2",
     "vitepress-plugin-mermaid": "^2.0.16"
+  },
+  "dependencies": {
+    "skip": "file:"
   }
 }

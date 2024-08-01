@@ -1,0 +1,3 @@
+- packageName: com.test.skip
+  skipTexts: 
+    - length: -1

@@ -1,0 +1,3 @@
+- packageName: com.test.skip
+  skipIds: 
+    - id: 123

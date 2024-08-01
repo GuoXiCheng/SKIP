@@ -1,0 +1,10 @@
+- packageName: com.test.skip
+  skipTexts:
+    - text: 跳过
+      length: 2
+  skipIds:
+    - id: com.test.skip:id/skip
+  skipBounds:
+    - bound: 123,456,789,1011
+      resolution: 1080,1920
+  unknownKey: unknownValue
