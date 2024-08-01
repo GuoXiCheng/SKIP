@@ -2,18 +2,16 @@
 - packageName: com.coolapk.market
   skipIds:
     - id: com.byted.pangle.m:id/tt_splash_skip_btn
-  skipBounds:
-    - bound: 1116,219,1332,316
-      resolution: 1440,3024
+  # skipBounds:
+  #   - bound: 926,113,1036,223
+  #     resolution: 1080,2287
 
 # 京东阅读
 - packageName: com.jd.app.reader
   skipIds:
     - id: com.jd.app.reader:id/mJumpBtn
     - id: com.jd.app.reader:id/count_down_time
-  skipBounds:
-    - bound: 1209,113,1338,165
-      resolution: 1440,3024
+    - id: com.byted.pangle:id/tt_splash_skip_btn
 
 # 铁路12306
 - packageName: com.MobileTicket
@@ -122,3 +120,23 @@
 - packageName: cn.damai
   skipIds:
     - id: cn.damai:id/homepage_advert_pb
+
+# Cellular-Z
+- packageName: make.more.r2d2.cellular_z
+  skipBounds:
+    - bound: 926,113,1036,223
+      resolution: 1080,2287
+
+# 生日助手
+- packageName: cn.sleepycoder.birthday
+  skipIds:
+    - id: com.byted.pangle.m:id/tt_splash_skip_btn
+  skipBounds:
+    - bound: 926,182,1036,292
+      resolution: 1080,2287
+
+# 工时记
+- packageName: cn.weilaihongtech.gongshi
+  skipBounds:
+    - bound: 945,158,1060,273
+      resolution: 1080,2287
