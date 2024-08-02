@@ -30,6 +30,7 @@ import com.android.skip.compose.AboutButton
 import com.android.skip.compose.ConfirmDialog
 import com.android.skip.compose.DownloadProcessDialog
 import com.android.skip.compose.KeepAliveButton
+import com.android.skip.compose.LayoutInspectButton
 import com.android.skip.compose.SettingsButton
 import com.android.skip.compose.StartButton
 import com.android.skip.compose.WhitelistButton
@@ -89,6 +90,7 @@ class NewMainActivity : BaseActivity() {
             StartButton(startButtonViewModel)
             WhitelistButton()
             KeepAliveButton()
+            LayoutInspectButton()
             SettingsButton()
             AboutButton()
 

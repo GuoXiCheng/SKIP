@@ -8,7 +8,7 @@
     <string name="about_github_name">源代码</string>
     <string name="about_github_url">https://github.com/GuoXiCheng/SKIP</string>
     <string name="about_skip_docs_name">文档</string>
-    <string name="about_skip_docs_url">https://guoxicheng.top/projects/SKIP-Docs</string>
+    <string name="about_skip_docs_url">https://skip.guoxicheng.top</string>
     <string name="about_current_version">当前版本号：</string>
     <string name="about_current_resolution">当前分辨率：</string>
 
@@ -45,4 +45,11 @@
     <string name="dialog_confirm_dismiss">拒绝</string>
     <string name="dialog_open_browser_title">启动浏览器</string>
     <string name="dialog_open_browser_content">是否要通过浏览器访问</string>
+
+    <string name="layout_inspect">布局检查</string>
+    <string name="inspect_screen_capture_title">截屏服务</string>
+    <string name="inspect_screen_capture_subtitle">启用截屏服务以便保存屏幕布局图片</string>
+    <string name="inspect_floating_window_title">悬浮窗服务</string>
+    <string name="inspect_floating_window_subtitle">启用悬浮窗以便主动保存布局检查信息</string>
+
 </resources>
