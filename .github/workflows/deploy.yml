@@ -46,7 +46,7 @@ jobs:
       - name: Build with VitePress
         run: npm run docs:build
       - name: Release
-        run: npm run release
+        run: npm run release-file
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
