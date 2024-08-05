@@ -1,6 +1,6 @@
 import { yamlCheck } from "../yaml-check";
 
-describe("YAML Check 2", () => {
+describe("YAML Check", () => {
   it("正确格式的 YAML", () => {
     const detail = yamlCheck("scripts/__tests__/examples/correct-yaml.yaml");
     expect(detail).toEqual([
