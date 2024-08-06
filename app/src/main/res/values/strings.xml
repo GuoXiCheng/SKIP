@@ -47,9 +47,7 @@
     <string name="dialog_open_browser_content">是否要通过浏览器访问</string>
 
     <string name="layout_inspect">布局检查</string>
-    <string name="inspect_screen_capture_title">截屏服务</string>
-    <string name="inspect_screen_capture_subtitle">启用截屏服务以便保存屏幕布局图片</string>
-    <string name="inspect_floating_window_title">悬浮窗服务</string>
-    <string name="inspect_floating_window_subtitle">启用悬浮窗以便主动保存布局检查信息</string>
+    <string name="layout_inspect_title">布局检查服务</string>
+    <string name="layout_inspect_subtitle">启用布局检查以便保存布局图片和节点信息</string>
 
 </resources>
