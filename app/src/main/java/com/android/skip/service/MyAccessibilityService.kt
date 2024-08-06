@@ -2,10 +2,13 @@ package com.android.skip.service
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
+import android.content.Intent
 import android.graphics.Path
 import android.graphics.Rect
+import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
+import com.android.skip.SKIP_LAYOUT_INSPECT
 import com.android.skip.SKIP_PERMIT_NOTICE
 import com.android.skip.handler.BoundsHandler
 import com.android.skip.handler.IdNodeHandler
@@ -78,5 +81,18 @@ class MyAccessibilityService : AccessibilityService() {
             },
             null
         )
+    }
+
+    override fun onKeyEvent(event: KeyEvent?): Boolean {
+        if (event != null
+            && event.action == KeyEvent.ACTION_DOWN
+            && event.keyCode == KeyEvent.KEYCODE_VOLUME_DOWN
+            && DataStoreUtils.getSyncData(SKIP_LAYOUT_INSPECT, false)) {
+            val intent = Intent(this, LayoutInspectService::class.java)
+            intent.putExtra("keyCode", event.keyCode)
+            startService(intent)
+            return true
+        }
+        return super.onKeyEvent(event)
     }
 }

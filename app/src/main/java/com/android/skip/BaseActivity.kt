@@ -23,9 +23,7 @@ const val SKIP_PERMIT_NOTICE = "SKIP_PERMIT_NOTICE"
 
 const val SKIP_INCLUDE_SYSTEM_APPS = "SKIP_INCLUDE_SYSTEM_APPS"
 
-const val SKIP_FLOATING_WINDOW = "SKIP_FLOATING_WINDOW"
-
-const val SKIP_SCREEN_CAPTURE = "SKIP_SCREEN_CAPTURE"
+const val SKIP_LAYOUT_INSPECT = "SKIP_LAYOUT_INSPECT"
 
 val themeTypeState: MutableState<Int> by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
     mutableStateOf(DataStoreUtils.getSyncData(SKIP_APP_THEME, Configuration.UI_MODE_NIGHT_NO))
