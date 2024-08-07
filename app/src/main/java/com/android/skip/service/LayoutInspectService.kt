@@ -21,7 +21,6 @@ import android.os.Environment
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.util.DisplayMetrics
 import android.view.KeyEvent
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
@@ -30,6 +29,7 @@ import com.android.skip.R
 import com.android.skip.SKIP_LAYOUT_INSPECT
 import com.android.skip.manager.ToastManager
 import com.android.skip.utils.DataStoreUtils
+import com.blankj.utilcode.util.ScreenUtils
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -93,13 +93,9 @@ class LayoutInspectService: Service() {
 
     @SuppressLint("WrongConstant")
     private fun setupVirtualDisplay() {
-        val metrics = DisplayMetrics()
-        val windowManager = applicationContext.getSystemService(Activity.WINDOW_SERVICE) as android.view.WindowManager
-        windowManager.defaultDisplay.getMetrics(metrics)
-        val density = metrics.densityDpi
-
-        val displayWidth = metrics.widthPixels
-        val displayHeight = metrics.heightPixels
+        val displayWidth = ScreenUtils.getScreenWidth()
+        val displayHeight = ScreenUtils.getScreenHeight()
+        val density = ScreenUtils.getScreenDensityDpi()
 
         val imageReader = ImageReader.newInstance(displayWidth, displayHeight, PixelFormat.RGBA_8888, 2)
         virtualDisplay = mMediaProjection?.createVirtualDisplay(
@@ -118,15 +114,15 @@ class LayoutInspectService: Service() {
                 val buffer = planes[0].buffer
                 val pixelStride = planes[0].pixelStride
                 val rowStride = planes[0].rowStride
-                val rowPadding = rowStride - pixelStride * displayWidth
 
                 // Create Bitmap
-                val bitmap = Bitmap.createBitmap(
-                    displayWidth + rowPadding / pixelStride,
+                val bitmapWithStride = Bitmap.createBitmap(
+                    rowStride / pixelStride,
                     displayHeight,
                     Bitmap.Config.ARGB_8888
                 )
-                bitmap.copyPixelsFromBuffer(buffer)
+                bitmapWithStride.copyPixelsFromBuffer(buffer)
+                val bitmap = Bitmap.createBitmap(bitmapWithStride, 0, 0, displayWidth, displayHeight)
                 image.close()
 
                 // 保存或处理bitmap

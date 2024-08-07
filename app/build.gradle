@@ -51,6 +51,7 @@ android {
 }
 
 dependencies {
+    implementation "com.blankj:utilcodex:1.31.1"
     implementation "com.google.accompanist:accompanist-drawablepainter:0.28.0"
     implementation "androidx.datastore:datastore-preferences:1.0.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
@@ -73,5 +74,4 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
-
 }

@@ -8,7 +8,7 @@ import com.android.skip.compose.FlatButton
 import com.android.skip.compose.OpenBrowserDialog
 import com.android.skip.compose.RowContent
 import com.android.skip.compose.ScaffoldPage
-import com.android.skip.manager.RectManager
+import com.blankj.utilcode.util.ScreenUtils
 
 class AboutActivity : BaseActivity() {
     @Composable
@@ -54,7 +54,7 @@ fun AboutActivityInterface(onBackClick: () -> Unit) {
         })
 
         FlatButton(content = {
-            RowContent(stringResource(id = R.string.about_current_resolution) + RectManager.getMaxRect())
+            RowContent(stringResource(id = R.string.about_current_resolution) + ScreenUtils.getScreenWidth() + "x" + ScreenUtils.getScreenHeight())
         })
 
     })
