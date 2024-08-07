@@ -17,12 +17,14 @@ import com.android.skip.manager.AnalyticsManager
 import com.android.skip.manager.ToastManager
 import com.android.skip.manager.WhitelistManager
 import com.android.skip.utils.DataStoreUtils
+import com.blankj.utilcode.util.LogUtils
 
 
 class MyAccessibilityService : AccessibilityService() {
     private val textNodeHandler = TextNodeHandler()
     private val idNodeHandler = IdNodeHandler()
     private val boundsHandler = BoundsHandler()
+    private var isLayoutInspect = false
 
     init {
         textNodeHandler.setNextHandler(idNodeHandler).setNextHandler(boundsHandler)
@@ -33,6 +35,11 @@ class MyAccessibilityService : AccessibilityService() {
             event ?: return
 
             val rootNode = getCurrentRootNode()
+
+            if (isLayoutInspect) {
+                isLayoutInspect = false
+                bfsTraverse(rootNode)
+            }
 
             if (!AnalyticsManager.isPerformScan(rootNode.packageName.toString())) return
 
@@ -91,8 +98,32 @@ class MyAccessibilityService : AccessibilityService() {
             val intent = Intent(this, LayoutInspectService::class.java)
             intent.putExtra("keyCode", event.keyCode)
             startService(intent)
+
+            isLayoutInspect = true
             return true
         }
         return super.onKeyEvent(event)
+    }
+
+    private fun bfsTraverse(root: AccessibilityNodeInfo) {
+        val queue: MutableList<AccessibilityNodeInfo> = mutableListOf(root)
+        val temp: MutableList<String> = mutableListOf()
+        while (queue.isNotEmpty()) {
+            val node = queue.removeAt(0)
+            processNode(node, temp)
+
+            for (i in 0 until node.childCount) {
+                node.getChild(i)?.let { queue.add(it) }
+            }
+        }
+        LogUtils.d(temp.toString())
+    }
+
+    private fun processNode(node: AccessibilityNodeInfo, temp: MutableList<String>) {
+        // 处理节点信息，可以进行读取文本属性、点击、长按等操作
+        node.text?.let {
+            temp.add(it.toString())
+        }
+        // 根据需要处理其它节点属性
     }
 }
