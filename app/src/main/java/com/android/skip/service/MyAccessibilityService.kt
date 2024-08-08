@@ -19,12 +19,14 @@ import com.android.skip.manager.WhitelistManager
 import com.android.skip.utils.DataStoreUtils
 import com.blankj.utilcode.util.LogUtils
 
+data class MyNode(val node: AccessibilityNodeInfo, val depth: Int)
 
 class MyAccessibilityService : AccessibilityService() {
     private val textNodeHandler = TextNodeHandler()
     private val idNodeHandler = IdNodeHandler()
     private val boundsHandler = BoundsHandler()
     private var isLayoutInspect = false
+    private var layoutInspectClassName: String? = null
 
     init {
         textNodeHandler.setNextHandler(idNodeHandler).setNextHandler(boundsHandler)
@@ -36,9 +38,16 @@ class MyAccessibilityService : AccessibilityService() {
 
             val rootNode = getCurrentRootNode()
 
-            if (isLayoutInspect) {
-                isLayoutInspect = false
-                bfsTraverse(rootNode)
+            val className = event.className
+            if (className != null) {
+                if (!isSystemClass(className.toString())) {
+                    layoutInspectClassName = className.toString()
+                }
+                if (isLayoutInspect) {
+                    isLayoutInspect = false
+                    LogUtils.d("layout inspect className: $layoutInspectClassName")
+                    bfsTraverse(rootNode)
+                }
             }
 
             if (!AnalyticsManager.isPerformScan(rootNode.packageName.toString())) return
@@ -50,7 +59,7 @@ class MyAccessibilityService : AccessibilityService() {
                 click(this, rect)
             }
         } catch (e: Exception) {
-            // Log the exception or handle it in some other way
+            LogUtils.e(e)
         } finally {
             AnalyticsManager.increaseScanCount()
         }
@@ -94,7 +103,8 @@ class MyAccessibilityService : AccessibilityService() {
         if (event != null
             && event.action == KeyEvent.ACTION_DOWN
             && event.keyCode == KeyEvent.KEYCODE_VOLUME_DOWN
-            && DataStoreUtils.getSyncData(SKIP_LAYOUT_INSPECT, false)) {
+            && DataStoreUtils.getSyncData(SKIP_LAYOUT_INSPECT, false)
+        ) {
             val intent = Intent(this, LayoutInspectService::class.java)
             intent.putExtra("keyCode", event.keyCode)
             startService(intent)
@@ -106,24 +116,43 @@ class MyAccessibilityService : AccessibilityService() {
     }
 
     private fun bfsTraverse(root: AccessibilityNodeInfo) {
-        val queue: MutableList<AccessibilityNodeInfo> = mutableListOf(root)
+        val queue: MutableList<MyNode> = mutableListOf(MyNode(root, 0))
         val temp: MutableList<String> = mutableListOf()
+
         while (queue.isNotEmpty()) {
-            val node = queue.removeAt(0)
-            processNode(node, temp)
+            val (node, depth) = queue.removeAt(0)
+            processNode(node, temp, depth)
 
             for (i in 0 until node.childCount) {
-                node.getChild(i)?.let { queue.add(it) }
+                node.getChild(i)?.let { queue.add(MyNode(it, depth + 1)) }
             }
         }
-        LogUtils.d(temp.toString())
+        LogUtils.d(temp.joinToString(separator = "\n", prefix = "\n"))
     }
 
-    private fun processNode(node: AccessibilityNodeInfo, temp: MutableList<String>) {
-        // 处理节点信息，可以进行读取文本属性、点击、长按等操作
+    private fun processNode(node: AccessibilityNodeInfo, temp: MutableList<String>, depth: Int) {
+        temp.add(" ".repeat(depth) + "childCount: ${node.childCount}")
+        temp.add(" ".repeat(depth) + "depth: $depth")
+
         node.text?.let {
-            temp.add(it.toString())
+            temp.add(" ".repeat(depth) + "text: $it")
         }
-        // 根据需要处理其它节点属性
+
+        node.className?.let {
+            temp.add(" ".repeat(depth) + "className: $it")
+        }
+
+        node.viewIdResourceName?.let {
+            temp.add(" ".repeat(depth) + "viewIdResourceName: $it")
+        }
+    }
+
+    private fun isSystemClass(className: String): Boolean {
+        return try {
+            val clazz = Class.forName(className)
+            clazz.getPackage()?.name?.startsWith("android") == true
+        } catch(e: ClassNotFoundException) {
+            false
+        }
     }
 }
