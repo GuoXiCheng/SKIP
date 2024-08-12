@@ -38,6 +38,8 @@
     <string name="alive_warn_title">请注意</string>
     <string name="alive_warn_subtitle">以上操作方法可能仅适用于MIUI或HyperOS，其他系统手机请自行查询相应的应用保活方法</string>
     <string name="alive_warn_search_content">如何实现应用后台保活</string>
+    <string name="alive_foreground_service_title">前台服务</string>
+    <string name="alive_foreground_service_subtitle">是否允许以前台服务方式运行无障碍服务</string>
 
     <string name="whitelist">应用白名单</string>
 
