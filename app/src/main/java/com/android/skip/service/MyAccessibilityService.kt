@@ -2,12 +2,17 @@ package com.android.skip.service
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Path
 import android.graphics.Rect
+import android.os.Build
 import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
+import androidx.annotation.RequiresApi
 import com.android.skip.SKIP_LAYOUT_INSPECT
 import com.android.skip.SKIP_PERMIT_NOTICE
 import com.android.skip.handler.BoundsHandler
@@ -16,8 +21,10 @@ import com.android.skip.handler.TextNodeHandler
 import com.android.skip.manager.AnalyticsManager
 import com.android.skip.manager.ToastManager
 import com.android.skip.manager.WhitelistManager
+import com.android.skip.utils.Constants
 import com.android.skip.utils.DataStoreUtils
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.ServiceUtils
 
 data class MyNode(val node: AccessibilityNodeInfo, val depth: Int)
 
@@ -27,6 +34,7 @@ class MyAccessibilityService : AccessibilityService() {
     private val boundsHandler = BoundsHandler()
     private var isLayoutInspect = false
     private var layoutInspectClassName: String? = null
+    private lateinit var foregroundAccessibilityReceiver: ForegroundAccessibilityChangeReceiver
 
     init {
         textNodeHandler.setNextHandler(idNodeHandler).setNextHandler(boundsHandler)
@@ -59,7 +67,7 @@ class MyAccessibilityService : AccessibilityService() {
                 click(this, rect)
             }
         } catch (e: Exception) {
-            LogUtils.e(e)
+//            LogUtils.e(e)
         } finally {
             AnalyticsManager.increaseScanCount()
         }
@@ -153,6 +161,47 @@ class MyAccessibilityService : AccessibilityService() {
             clazz.getPackage()?.name?.startsWith("android") == true
         } catch(e: ClassNotFoundException) {
             false
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    override fun onServiceConnected() {
+        super.onServiceConnected()
+
+        val intentFilter = IntentFilter(Constants.FOREGROUND_ACCESSIBILITY_RECEIVER_ACTION)
+        foregroundAccessibilityReceiver = ForegroundAccessibilityChangeReceiver()
+        registerReceiver(foregroundAccessibilityReceiver, intentFilter, RECEIVER_NOT_EXPORTED)
+
+        if (DataStoreUtils.getSyncData(Constants.SKIP_FOREGROUND_ACCESSIBILITY, false)) {
+            val intent = Intent(this, MyForegroundService::class.java)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(intent);
+            } else {
+                startService(intent);
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(foregroundAccessibilityReceiver)
+    }
+
+    inner class ForegroundAccessibilityChangeReceiver: BroadcastReceiver() {
+        override fun onReceive(p0: Context?, p1: Intent?) {
+            if (p1 != null && p1.action.equals(Constants.FOREGROUND_ACCESSIBILITY_RECEIVER_ACTION)) {
+                val enabled = p1.getBooleanExtra(Constants.FOREGROUND_ACCESSIBILITY_RECEIVER_ENABLED, false)
+                val intent = Intent(this@MyAccessibilityService, MyForegroundService::class.java)
+                if (enabled) { // start foreground service
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        startForegroundService(intent);
+                    } else {
+                        startService(intent);
+                    }
+                } else { // stop foreground service
+                    stopService(intent)
+                }
+            }
         }
     }
 }

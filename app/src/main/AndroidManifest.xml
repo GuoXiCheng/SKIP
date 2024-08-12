@@ -80,6 +80,11 @@
             android:enabled="true"
             android:foregroundServiceType="mediaProjection"
             />
+
+        <service
+            android:name=".service.MyForegroundService"
+            android:enabled="true"
+            />
     </application>
 
 </manifest>
