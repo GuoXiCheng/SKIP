@@ -26,7 +26,7 @@ import com.android.skip.compose.ResourceIcon
 import com.android.skip.compose.RowContent
 import com.android.skip.compose.ScaffoldPage
 import com.android.skip.utils.DataStoreUtils
-
+import com.android.skip.utils.NotificationUtils
 
 
 class SettingsActivity : BaseActivity() {
@@ -37,7 +37,7 @@ class SettingsActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) {
+        if (!NotificationUtils.hasNotificationPermission()) {
             permitNoticeState.value = false
             DataStoreUtils.putSyncData(SKIP_PERMIT_NOTICE, false)
         }
@@ -134,16 +134,12 @@ fun SettingsActivityInterface(onBackClick: () -> Unit) {
                     {
                         permitNoticeState.value = it
                         DataStoreUtils.putSyncData(SKIP_PERMIT_NOTICE, it)
-                        if (it && !NotificationManagerCompat.from(context)
-                                .areNotificationsEnabled()
-                        ) {
-                            val intent = Intent().apply {
-                                action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
-                                putExtra(Settings.EXTRA_APP_PACKAGE, "com.android.skip")
-                            }
-                            context.startActivity(intent)
+                        if (it && !NotificationUtils.hasNotificationPermission()) {
+                            NotificationUtils.startNotificationSettings(context)
                         }
                     })
+            }, {
+                NotificationUtils.startNotificationSettings(context)
             })
 
             Menu(expandedState, options, selectedState)

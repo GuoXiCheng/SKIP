@@ -144,7 +144,7 @@ class NewMainActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        startButtonViewModel.changeButtonState(AccessibilityUtils.getAccessibilityState(this))
+        startButtonViewModel.changeButtonState(AccessibilityUtils.getAccessibilityState())
 
         WhitelistManager.setWhitelist(lifecycleScope, applicationContext)
 
