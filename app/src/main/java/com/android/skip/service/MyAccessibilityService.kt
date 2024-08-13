@@ -124,9 +124,9 @@ class MyAccessibilityService : AccessibilityService() {
             && event.keyCode == KeyEvent.KEYCODE_VOLUME_DOWN
             && DataStoreUtils.getSyncData(SKIP_LAYOUT_INSPECT, false)
         ) {
-            val intent = Intent(this, LayoutInspectService::class.java)
-            intent.putExtra("keyCode", event.keyCode)
-            startService(intent)
+            val intent = Intent(Constants.SKIP_KEY_EVENT_VOLUME_DOWN)
+            intent.setPackage(packageName)
+            sendBroadcast(intent)
 
             isLayoutInspect = true
             return true
