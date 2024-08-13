@@ -34,7 +34,18 @@ class MyAccessibilityService : AccessibilityService() {
     private val boundsHandler = BoundsHandler()
     private var isLayoutInspect = false
     private var layoutInspectClassName: String? = null
-    private lateinit var foregroundAccessibilityReceiver: ForegroundAccessibilityChangeReceiver
+    private val foregroundAccessibilityReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == Constants.FOREGROUND_ACCESSIBILITY_RECEIVER_ACTION) {
+                val enabled = intent.getBooleanExtra(Constants.FOREGROUND_ACCESSIBILITY_RECEIVER_ENABLED, false)
+                if (enabled) {
+                    ServiceUtils.startService(MyForegroundService::class.java)
+                } else {
+                    ServiceUtils.stopService(MyForegroundService::class.java)
+                }
+            }
+        }
+    }
 
     init {
         textNodeHandler.setNextHandler(idNodeHandler).setNextHandler(boundsHandler)
@@ -169,39 +180,15 @@ class MyAccessibilityService : AccessibilityService() {
         super.onServiceConnected()
 
         val intentFilter = IntentFilter(Constants.FOREGROUND_ACCESSIBILITY_RECEIVER_ACTION)
-        foregroundAccessibilityReceiver = ForegroundAccessibilityChangeReceiver()
         registerReceiver(foregroundAccessibilityReceiver, intentFilter, RECEIVER_NOT_EXPORTED)
 
         if (DataStoreUtils.getSyncData(Constants.SKIP_FOREGROUND_ACCESSIBILITY, false)) {
-            val intent = Intent(this, MyForegroundService::class.java)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                startForegroundService(intent);
-            } else {
-                startService(intent);
-            }
+            ServiceUtils.startService(MyForegroundService::class.java)
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(foregroundAccessibilityReceiver)
-    }
-
-    inner class ForegroundAccessibilityChangeReceiver: BroadcastReceiver() {
-        override fun onReceive(p0: Context?, p1: Intent?) {
-            if (p1 != null && p1.action.equals(Constants.FOREGROUND_ACCESSIBILITY_RECEIVER_ACTION)) {
-                val enabled = p1.getBooleanExtra(Constants.FOREGROUND_ACCESSIBILITY_RECEIVER_ENABLED, false)
-                val intent = Intent(this@MyAccessibilityService, MyForegroundService::class.java)
-                if (enabled) { // start foreground service
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        startForegroundService(intent);
-                    } else {
-                        startService(intent);
-                    }
-                } else { // stop foreground service
-                    stopService(intent)
-                }
-            }
-        }
     }
 }

@@ -1,10 +1,19 @@
 package com.android.skip
 
+import android.annotation.SuppressLint
 import android.app.Application
+import android.content.Context
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.Utils
 
 class SKIPApp : Application() {
+
+    companion object {
+        @SuppressLint("StaticFieldLeak")
+        lateinit var context: Context
+        lateinit var myPackageName: String
+    }
+
     override fun onCreate() {
         super.onCreate()
         Utils.init(this)
@@ -20,5 +29,8 @@ class SKIPApp : Application() {
             .setConsoleFilter(LogUtils.V) // 控制台过滤器
             .setFileFilter(LogUtils.V)    // 文件过滤器
             .setStackDeep(1)          // 栈深度
+
+        context = applicationContext
+        myPackageName = this.packageName
     }
 }
