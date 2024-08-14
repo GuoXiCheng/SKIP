@@ -16,9 +16,12 @@ import com.android.skip.compose.PictureDialog
 import com.android.skip.compose.ResourceIcon
 import com.android.skip.compose.RowContent
 import com.android.skip.compose.ScaffoldPage
+import com.android.skip.enums.AccessibilityState
 import com.android.skip.service.MyAccessibilityService
+import com.android.skip.utils.AccessibilityUtils
 import com.android.skip.utils.Constants
 import com.android.skip.utils.DataStoreUtils
+import com.android.skip.utils.NotificationUtils
 import com.blankj.utilcode.util.ServiceUtils.startService
 import java.net.URLEncoder
 
@@ -95,6 +98,10 @@ class KeepAliveActivity : BaseActivity() {
                     {
                         checkForegroundAccessibility.value = it
                         DataStoreUtils.putSyncData(Constants.SKIP_FOREGROUND_ACCESSIBILITY, it)
+
+                        if (it && !NotificationUtils.hasNotificationPermission()) {
+                            NotificationUtils.startNotificationSettings(context)
+                        }
 
                         val intent = Intent(Constants.FOREGROUND_ACCESSIBILITY_RECEIVER_ACTION)
                         intent.putExtra(Constants.FOREGROUND_ACCESSIBILITY_RECEIVER_ENABLED, it)

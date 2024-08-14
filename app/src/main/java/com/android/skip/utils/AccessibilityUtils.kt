@@ -5,6 +5,7 @@ import android.app.ActivityManager
 import android.content.Context
 import android.provider.Settings
 import android.text.TextUtils
+import com.android.skip.SKIPApp
 import com.android.skip.enums.AccessibilityState
 import com.android.skip.service.MyAccessibilityService
 
@@ -13,9 +14,10 @@ object AccessibilityUtils {
     /**
      * 取得无障碍服务的状态
      */
-    fun getAccessibilityState(mContext: Context): AccessibilityState {
-        val isSettingsOn = isAccessibilitySettingsOn(mContext)
-        val isRunning = isAccessibilityServiceRunning(mContext, MyAccessibilityService::class.java)
+    fun getAccessibilityState(): AccessibilityState {
+        val isSettingsOn = isAccessibilitySettingsOn(SKIPApp.context)
+        val isRunning =
+            isAccessibilityServiceRunning(SKIPApp.context, MyAccessibilityService::class.java)
 
         return when {
             isSettingsOn && isRunning -> AccessibilityState.STARTED
@@ -73,5 +75,17 @@ object AccessibilityUtils {
             }
         }
         return false
+    }
+
+    /**
+     * 判断className是不是Android自带
+     */
+    fun isSystemClass(className: String): Boolean {
+        return try {
+            val clazz = Class.forName(className)
+            clazz.getPackage()?.name?.startsWith("android") == true
+        } catch (e: ClassNotFoundException) {
+            false
+        }
     }
 }

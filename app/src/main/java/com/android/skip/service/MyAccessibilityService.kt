@@ -13,6 +13,7 @@ import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import androidx.annotation.RequiresApi
+import com.android.skip.SKIPApp
 import com.android.skip.SKIP_LAYOUT_INSPECT
 import com.android.skip.SKIP_PERMIT_NOTICE
 import com.android.skip.handler.BoundsHandler
@@ -21,12 +22,18 @@ import com.android.skip.handler.TextNodeHandler
 import com.android.skip.manager.AnalyticsManager
 import com.android.skip.manager.ToastManager
 import com.android.skip.manager.WhitelistManager
+import com.android.skip.utils.AccessibilityUtils
 import com.android.skip.utils.Constants
 import com.android.skip.utils.DataStoreUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ServiceUtils
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import java.io.File
 
 data class MyNode(val node: AccessibilityNodeInfo, val depth: Int)
+
+data class MyNodeChild(val depth: Int, val childCount: Int, var className: String? = null, var text: String?=null, var viewIdResourceName: String?=null)
 
 class MyAccessibilityService : AccessibilityService() {
     private val textNodeHandler = TextNodeHandler()
@@ -34,7 +41,18 @@ class MyAccessibilityService : AccessibilityService() {
     private val boundsHandler = BoundsHandler()
     private var isLayoutInspect = false
     private var layoutInspectClassName: String? = null
-    private lateinit var foregroundAccessibilityReceiver: ForegroundAccessibilityChangeReceiver
+    private val foregroundAccessibilityReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == Constants.FOREGROUND_ACCESSIBILITY_RECEIVER_ACTION) {
+                val enabled = intent.getBooleanExtra(Constants.FOREGROUND_ACCESSIBILITY_RECEIVER_ENABLED, false)
+                if (enabled) {
+                    ServiceUtils.startService(MyForegroundService::class.java)
+                } else {
+                    ServiceUtils.stopService(MyForegroundService::class.java)
+                }
+            }
+        }
+    }
 
     init {
         textNodeHandler.setNextHandler(idNodeHandler).setNextHandler(boundsHandler)
@@ -48,7 +66,7 @@ class MyAccessibilityService : AccessibilityService() {
 
             val className = event.className
             if (className != null) {
-                if (!isSystemClass(className.toString())) {
+                if (!AccessibilityUtils.isSystemClass(className.toString())) {
                     layoutInspectClassName = className.toString()
                 }
                 if (isLayoutInspect) {
@@ -113,9 +131,9 @@ class MyAccessibilityService : AccessibilityService() {
             && event.keyCode == KeyEvent.KEYCODE_VOLUME_DOWN
             && DataStoreUtils.getSyncData(SKIP_LAYOUT_INSPECT, false)
         ) {
-            val intent = Intent(this, LayoutInspectService::class.java)
-            intent.putExtra("keyCode", event.keyCode)
-            startService(intent)
+            val intent = Intent(Constants.SKIP_KEY_EVENT_VOLUME_DOWN)
+            intent.setPackage(packageName)
+            sendBroadcast(intent)
 
             isLayoutInspect = true
             return true
@@ -125,7 +143,7 @@ class MyAccessibilityService : AccessibilityService() {
 
     private fun bfsTraverse(root: AccessibilityNodeInfo) {
         val queue: MutableList<MyNode> = mutableListOf(MyNode(root, 0))
-        val temp: MutableList<String> = mutableListOf()
+        val temp: MutableList<MyNodeChild> = mutableListOf()
 
         while (queue.isNotEmpty()) {
             val (node, depth) = queue.removeAt(0)
@@ -135,73 +153,47 @@ class MyAccessibilityService : AccessibilityService() {
                 node.getChild(i)?.let { queue.add(MyNode(it, depth + 1)) }
             }
         }
-        LogUtils.d(temp.joinToString(separator = "\n", prefix = "\n"))
+
+        val gson = Gson()
+        val jsonStr = gson.toJson(temp)
+        val file = File(SKIPApp.context.filesDir, "temp.json")
+        file.writeText(jsonStr)
     }
 
-    private fun processNode(node: AccessibilityNodeInfo, temp: MutableList<String>, depth: Int) {
-        temp.add(" ".repeat(depth) + "childCount: ${node.childCount}")
-        temp.add(" ".repeat(depth) + "depth: $depth")
-
-        node.text?.let {
-            temp.add(" ".repeat(depth) + "text: $it")
-        }
+    private fun processNode(node: AccessibilityNodeInfo, temp: MutableList<MyNodeChild>, depth: Int) {
+        val myNodeChild = MyNodeChild(depth, node.childCount)
 
         node.className?.let {
-            temp.add(" ".repeat(depth) + "className: $it")
+            myNodeChild.className = it.toString()
+        }
+
+        node.text?.let {
+            myNodeChild.text = it.toString()
         }
 
         node.viewIdResourceName?.let {
-            temp.add(" ".repeat(depth) + "viewIdResourceName: $it")
+            myNodeChild.viewIdResourceName = it
         }
+
+        temp.add(myNodeChild)
     }
 
-    private fun isSystemClass(className: String): Boolean {
-        return try {
-            val clazz = Class.forName(className)
-            clazz.getPackage()?.name?.startsWith("android") == true
-        } catch(e: ClassNotFoundException) {
-            false
-        }
-    }
+
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onServiceConnected() {
         super.onServiceConnected()
 
         val intentFilter = IntentFilter(Constants.FOREGROUND_ACCESSIBILITY_RECEIVER_ACTION)
-        foregroundAccessibilityReceiver = ForegroundAccessibilityChangeReceiver()
         registerReceiver(foregroundAccessibilityReceiver, intentFilter, RECEIVER_NOT_EXPORTED)
 
         if (DataStoreUtils.getSyncData(Constants.SKIP_FOREGROUND_ACCESSIBILITY, false)) {
-            val intent = Intent(this, MyForegroundService::class.java)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                startForegroundService(intent);
-            } else {
-                startService(intent);
-            }
+            ServiceUtils.startService(MyForegroundService::class.java)
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(foregroundAccessibilityReceiver)
-    }
-
-    inner class ForegroundAccessibilityChangeReceiver: BroadcastReceiver() {
-        override fun onReceive(p0: Context?, p1: Intent?) {
-            if (p1 != null && p1.action.equals(Constants.FOREGROUND_ACCESSIBILITY_RECEIVER_ACTION)) {
-                val enabled = p1.getBooleanExtra(Constants.FOREGROUND_ACCESSIBILITY_RECEIVER_ENABLED, false)
-                val intent = Intent(this@MyAccessibilityService, MyForegroundService::class.java)
-                if (enabled) { // start foreground service
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        startForegroundService(intent);
-                    } else {
-                        startService(intent);
-                    }
-                } else { // stop foreground service
-                    stopService(intent)
-                }
-            }
-        }
     }
 }

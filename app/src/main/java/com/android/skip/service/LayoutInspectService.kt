@@ -6,8 +6,10 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.PixelFormat
@@ -21,14 +23,15 @@ import android.os.Environment
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.view.KeyEvent
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.android.skip.NewMainActivity
 import com.android.skip.R
 import com.android.skip.SKIP_LAYOUT_INSPECT
 import com.android.skip.manager.ToastManager
+import com.android.skip.utils.Constants
 import com.android.skip.utils.DataStoreUtils
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ScreenUtils
 import java.io.File
 import java.io.FileOutputStream
@@ -40,11 +43,19 @@ class LayoutInspectService: Service() {
     private var mProjectionManager:MediaProjectionManager? = null
     private var virtualDisplay: VirtualDisplay? = null
     private var isProcessingImage = false
+    private val keyEventVolumeDownReceiver = object: BroadcastReceiver() {
+        override fun onReceive(p0: Context?, p1: Intent?) {
+            if (p1?.action == Constants.SKIP_KEY_EVENT_VOLUME_DOWN) {
+                isProcessingImage = true
+            }
+        }
+    }
 
     override fun onBind(p0: Intent?): IBinder? {
         TODO("Not yet implemented")
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate() {
         super.onCreate()
 
@@ -64,22 +75,21 @@ class LayoutInspectService: Service() {
             .setContentIntent(pi)
             .build()
         startForeground(1, notification)
+
+        val intentFilter = IntentFilter(Constants.SKIP_KEY_EVENT_VOLUME_DOWN)
+        registerReceiver(keyEventVolumeDownReceiver, intentFilter, RECEIVER_NOT_EXPORTED)
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val keyCode = intent?.getIntExtra("keyCode", -1)
-
         if (mMediaProjection == null) {
             val resultCode = intent?.getIntExtra("resultCode", Activity.RESULT_CANCELED)
             val data = intent?.getParcelableExtra("data", Intent::class.java)
             if (resultCode == Activity.RESULT_OK && data != null) {
                 mProjectionManager = getSystemService(MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
                 mMediaProjection = mProjectionManager?.getMediaProjection(resultCode, data)
+                setupVirtualDisplay()
             }
-        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-            isProcessingImage = true
-            setupVirtualDisplay()
         }
 
         return START_NOT_STICKY
@@ -106,7 +116,11 @@ class LayoutInspectService: Service() {
         )
 
         imageReader.setOnImageAvailableListener({reader ->
-            if (!isProcessingImage) return@setOnImageAvailableListener
+            if (!isProcessingImage) {
+                // 清理缓冲区
+                reader.acquireLatestImage()?.close()
+                return@setOnImageAvailableListener
+            }
 
             val image = reader.acquireLatestImage()
             if (image != null) {
@@ -135,7 +149,6 @@ class LayoutInspectService: Service() {
                 }
 
                 isProcessingImage = false
-                stopSelf()
             }
         }, Handler(Looper.getMainLooper()))
     }
