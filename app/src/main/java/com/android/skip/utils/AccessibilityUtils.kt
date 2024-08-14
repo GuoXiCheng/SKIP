@@ -16,7 +16,8 @@ object AccessibilityUtils {
      */
     fun getAccessibilityState(): AccessibilityState {
         val isSettingsOn = isAccessibilitySettingsOn(SKIPApp.context)
-        val isRunning = isAccessibilityServiceRunning(SKIPApp.context, MyAccessibilityService::class.java)
+        val isRunning =
+            isAccessibilityServiceRunning(SKIPApp.context, MyAccessibilityService::class.java)
 
         return when {
             isSettingsOn && isRunning -> AccessibilityState.STARTED
@@ -74,5 +75,17 @@ object AccessibilityUtils {
             }
         }
         return false
+    }
+
+    /**
+     * 判断className是不是Android自带
+     */
+    fun isSystemClass(className: String): Boolean {
+        return try {
+            val clazz = Class.forName(className)
+            clazz.getPackage()?.name?.startsWith("android") == true
+        } catch (e: ClassNotFoundException) {
+            false
+        }
     }
 }
