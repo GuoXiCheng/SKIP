@@ -31,9 +31,9 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import java.io.File
 
-data class MyNode(val node: AccessibilityNodeInfo, val depth: Int)
+data class MyNode(val node: AccessibilityNodeInfo, val depth: Int, val parentId: Int, val nodeId: Int)
 
-data class MyNodeChild(val depth: Int, val childCount: Int, var className: String? = null, var text: String?=null, var viewIdResourceName: String?=null)
+data class MyNodeChild(val depth: Int, val childCount: Int, val parentId: Int, val nodeId: Int, var className: String? = null, var text: String?=null, var viewIdResourceName: String?=null)
 
 class MyAccessibilityService : AccessibilityService() {
     private val textNodeHandler = TextNodeHandler()
@@ -142,15 +142,17 @@ class MyAccessibilityService : AccessibilityService() {
     }
 
     private fun bfsTraverse(root: AccessibilityNodeInfo) {
-        val queue: MutableList<MyNode> = mutableListOf(MyNode(root, 0))
+        var uniqueId = 0
+        val queue: MutableList<MyNode> = mutableListOf(MyNode(root, 0, -1, uniqueId))
         val temp: MutableList<MyNodeChild> = mutableListOf()
 
         while (queue.isNotEmpty()) {
-            val (node, depth) = queue.removeAt(0)
-            processNode(node, temp, depth)
+            val (node, depth, parentId, nodeId) = queue.removeAt(0)
+            processNode(node, temp, depth, parentId, nodeId)
 
             for (i in 0 until node.childCount) {
-                node.getChild(i)?.let { queue.add(MyNode(it, depth + 1)) }
+                uniqueId += 1
+                node.getChild(i)?.let { queue.add(MyNode(it, depth + 1, nodeId, uniqueId)) }
             }
         }
 
@@ -160,8 +162,8 @@ class MyAccessibilityService : AccessibilityService() {
         file.writeText(jsonStr)
     }
 
-    private fun processNode(node: AccessibilityNodeInfo, temp: MutableList<MyNodeChild>, depth: Int) {
-        val myNodeChild = MyNodeChild(depth, node.childCount)
+    private fun processNode(node: AccessibilityNodeInfo, temp: MutableList<MyNodeChild>, depth: Int, parentId: Int, nodeId: Int) {
+        val myNodeChild = MyNodeChild(depth, node.childCount, parentId, nodeId)
 
         node.className?.let {
             myNodeChild.className = it.toString()
