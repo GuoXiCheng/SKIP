@@ -1,5 +1,6 @@
 import { withMermaid } from "vitepress-plugin-mermaid";
 import { defineConfig } from "vitepress";
+
 export default defineConfig(
   withMermaid({
     // 站点级选项
@@ -15,6 +16,7 @@ export default defineConfig(
       nav: [
         { text: "首页", link: "/" },
         { text: "指南", link: "/guide/intro/what-is-skip" },
+        // { text: "布局检查", link: "/inspect/index", target: "_blank" },
       ],
       sidebar: {
         "/guide/": [
