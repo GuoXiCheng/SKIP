@@ -26,14 +26,17 @@ import com.android.skip.utils.AccessibilityUtils
 import com.android.skip.utils.Constants
 import com.android.skip.utils.DataStoreUtils
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.ServiceUtils
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import java.io.File
 
+data class MyWindow(val packageName: String, val className: String, val screenHeight: Int, val screenWidth: Int, val nodes: MutableList<MyNodeChild>)
+
 data class MyNode(val node: AccessibilityNodeInfo, val depth: Int, val parentId: Int, val nodeId: Int)
 
-data class MyNodeChild(val depth: Int, val childCount: Int, val parentId: Int, val nodeId: Int, var className: String? = null, var text: String?=null, var viewIdResourceName: String?=null)
+data class MyNodeChild(val depth: Int, val childCount: Int, val parentId: Int, val nodeId: Int, val left: Int, val top: Int, val right: Int, val bottom: Int, var className: String? = null, var text: String?=null, var viewIdResourceName: String?=null)
 
 class MyAccessibilityService : AccessibilityService() {
     private val textNodeHandler = TextNodeHandler()
@@ -156,14 +159,17 @@ class MyAccessibilityService : AccessibilityService() {
             }
         }
 
+        val window = MyWindow(root.packageName.toString(), layoutInspectClassName.toString(), ScreenUtils.getScreenHeight(), ScreenUtils.getScreenWidth(),temp)
         val gson = Gson()
-        val jsonStr = gson.toJson(temp)
+        val jsonStr = gson.toJson(window)
         val file = File(SKIPApp.context.filesDir, "temp.json")
         file.writeText(jsonStr)
     }
 
     private fun processNode(node: AccessibilityNodeInfo, temp: MutableList<MyNodeChild>, depth: Int, parentId: Int, nodeId: Int) {
-        val myNodeChild = MyNodeChild(depth, node.childCount, parentId, nodeId)
+        val rect = Rect()
+        node.getBoundsInScreen(rect)
+        val myNodeChild = MyNodeChild(depth, node.childCount, parentId, nodeId, rect.left, rect.top, rect.right, rect.bottom)
 
         node.className?.let {
             myNodeChild.className = it.toString()
