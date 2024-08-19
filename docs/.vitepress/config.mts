@@ -10,6 +10,7 @@ export default defineConfig(
     lastUpdated: true,
     head: [["link", { rel: "icon", type: "image/x-icon", href: "/images/favicon.ico" }]],
     themeConfig: {
+      logo: "/images/favicon.ico",
       outline: {
         level: "deep",
       },

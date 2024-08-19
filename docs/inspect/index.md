@@ -3,7 +3,7 @@ layout: false
 ---
 
 <script setup>
-    import Inspect from '../components/Inspect.vue';
+    import InspectContainer from './InspectContainer.vue';
 </script>
 
-<Inspect />
+<InspectContainer />
