@@ -1,7 +1,7 @@
 <template>
-    <el-row>
+    <el-row class="h-screen">
         <el-col :span="8">
-            <NodePic />
+            <NodePic v-if="rawData" :raw-data="rawData" :img-src="'/temp.png'" />
         </el-col>
         <el-col :span="8">
             <NodeTree :tree-data="treeData" @handleNodeClick="handleNodeClick" />
@@ -21,11 +21,13 @@ import { AccessibilityNode, AccessibilityNodeTree, AccessibilityWindow } from '.
 
 const treeData = ref<AccessibilityNodeTree[]>([]);
 const nodeData = ref<AccessibilityNode | null>(null);
+const rawData = ref<AccessibilityWindow | null>(null);
 
 onMounted(async () => {
     const temp = await fetch('/temp.json');
     const text = await temp.text();
     const data = JSON.parse(text) as AccessibilityWindow;
+    rawData.value = data;
     treeData.value = buildTree(data.nodes, -1);
 });
 
