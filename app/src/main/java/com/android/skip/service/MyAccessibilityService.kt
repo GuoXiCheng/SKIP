@@ -27,13 +27,26 @@ import com.android.skip.utils.Constants
 import com.android.skip.utils.DataStoreUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ServiceUtils
+import com.blankj.utilcode.util.ZipUtils
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import java.io.File
 
-data class MyNode(val node: AccessibilityNodeInfo, val depth: Int, val parentId: Int, val nodeId: Int)
+data class MyNode(
+    val node: AccessibilityNodeInfo,
+    val depth: Int,
+    val parentId: Int,
+    val nodeId: Int
+)
 
-data class MyNodeChild(val depth: Int, val childCount: Int, val parentId: Int, val nodeId: Int, var className: String? = null, var text: String?=null, var viewIdResourceName: String?=null)
+data class MyNodeChild(
+    val depth: Int,
+    val childCount: Int,
+    val parentId: Int,
+    val nodeId: Int,
+    var className: String? = null,
+    var text: String? = null,
+    var viewIdResourceName: String? = null
+)
 
 class MyAccessibilityService : AccessibilityService() {
     private val textNodeHandler = TextNodeHandler()
@@ -41,10 +54,14 @@ class MyAccessibilityService : AccessibilityService() {
     private val boundsHandler = BoundsHandler()
     private var isLayoutInspect = false
     private var layoutInspectClassName: String? = null
+    private var filename: String? = null
     private val foregroundAccessibilityReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == Constants.FOREGROUND_ACCESSIBILITY_RECEIVER_ACTION) {
-                val enabled = intent.getBooleanExtra(Constants.FOREGROUND_ACCESSIBILITY_RECEIVER_ENABLED, false)
+                val enabled = intent.getBooleanExtra(
+                    Constants.FOREGROUND_ACCESSIBILITY_RECEIVER_ENABLED,
+                    false
+                )
                 if (enabled) {
                     ServiceUtils.startService(MyForegroundService::class.java)
                 } else {
@@ -131,7 +148,10 @@ class MyAccessibilityService : AccessibilityService() {
             && event.keyCode == KeyEvent.KEYCODE_VOLUME_DOWN
             && DataStoreUtils.getSyncData(SKIP_LAYOUT_INSPECT, false)
         ) {
+            filename = System.currentTimeMillis().toString()
+
             val intent = Intent(Constants.SKIP_KEY_EVENT_VOLUME_DOWN)
+            intent.putExtra("filename", filename)
             intent.setPackage(packageName)
             sendBroadcast(intent)
 
@@ -158,11 +178,25 @@ class MyAccessibilityService : AccessibilityService() {
 
         val gson = Gson()
         val jsonStr = gson.toJson(temp)
-        val file = File(SKIPApp.context.filesDir, "temp.json")
+        val file = File(SKIPApp.context.filesDir, "$filename.json")
         file.writeText(jsonStr)
+
+        ZipUtils.zipFiles(
+            listOf(
+                File(SKIPApp.context.filesDir, "$filename.json"),
+                File(SKIPApp.context.filesDir, "$filename.png")
+            ),
+            File(SKIPApp.context.filesDir, "$filename.zip")
+        )
     }
 
-    private fun processNode(node: AccessibilityNodeInfo, temp: MutableList<MyNodeChild>, depth: Int, parentId: Int, nodeId: Int) {
+    private fun processNode(
+        node: AccessibilityNodeInfo,
+        temp: MutableList<MyNodeChild>,
+        depth: Int,
+        parentId: Int,
+        nodeId: Int
+    ) {
         val myNodeChild = MyNodeChild(depth, node.childCount, parentId, nodeId)
 
         node.className?.let {
@@ -179,7 +213,6 @@ class MyAccessibilityService : AccessibilityService() {
 
         temp.add(myNodeChild)
     }
-
 
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)

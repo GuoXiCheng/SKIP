@@ -19,7 +19,6 @@ import android.media.ImageReader
 import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
 import android.os.Build
-import android.os.Environment
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
@@ -27,11 +26,11 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.android.skip.NewMainActivity
 import com.android.skip.R
+import com.android.skip.SKIPApp
 import com.android.skip.SKIP_LAYOUT_INSPECT
 import com.android.skip.manager.ToastManager
 import com.android.skip.utils.Constants
 import com.android.skip.utils.DataStoreUtils
-import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ScreenUtils
 import java.io.File
 import java.io.FileOutputStream
@@ -43,10 +42,12 @@ class LayoutInspectService: Service() {
     private var mProjectionManager:MediaProjectionManager? = null
     private var virtualDisplay: VirtualDisplay? = null
     private var isProcessingImage = false
+    private var filename: String? = null
     private val keyEventVolumeDownReceiver = object: BroadcastReceiver() {
         override fun onReceive(p0: Context?, p1: Intent?) {
             if (p1?.action == Constants.SKIP_KEY_EVENT_VOLUME_DOWN) {
                 isProcessingImage = true
+                filename = p1.getStringExtra("filename")
             }
         }
     }
@@ -154,8 +155,7 @@ class LayoutInspectService: Service() {
     }
 
     private fun getOutputFile(): File {
-        val picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-        return File(picturesDir, "screenshot_${System.currentTimeMillis()}.png")
+        return File(SKIPApp.context.filesDir, "$filename.png")
     }
 
     private fun saveBitmapToFile(bitmap: Bitmap, file: File): Boolean {
