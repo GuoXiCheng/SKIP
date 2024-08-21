@@ -6,6 +6,8 @@
 import { onMounted } from 'vue'
 import { AccessibilityNode, AccessibilityWindow } from './types';
 
+const emit = defineEmits(['handleImgNodeClick']);
+
 const props = defineProps<{
     rawData: AccessibilityWindow | null;
     imgSrc: string;
@@ -72,10 +74,10 @@ onMounted(async () => {
                 minDistance = distance;
                 closestNode = {
                     ...node,
-                    left: rateLeft,
-                    right: rateRight,
-                    top: rateTop,
-                    bottom: rateBottom,
+                    rateLeft,
+                    rateRight,
+                    rateTop,
+                    rateBottom,
                 };
             }
         });
@@ -89,7 +91,9 @@ onMounted(async () => {
             // 绘制标记矩形
             ctx.strokeStyle = 'red';
             ctx.lineWidth = 2;
-            ctx.strokeRect(closestNode.left, closestNode.top, closestNode.right - closestNode.left, closestNode.bottom - closestNode.top);
+            ctx.strokeRect(closestNode.rateLeft, closestNode.rateTop, closestNode.rateRight - closestNode.rateLeft, closestNode.rateBottom - closestNode.rateTop);
+
+            emit('handleImgNodeClick', closestNode);
         }
 
     });
