@@ -1,12 +1,14 @@
 <template>
     <el-row class="h-screen">
-        <el-col :span="8">
-            <NodePic v-if="rawData" :raw-data="rawData" :img-src="'/temp.png'" />
+        <el-col :span="6">
+            <NodePic v-if="rawData" :raw-data="rawData" :img-src="'/temp.png'" :current-node-key="currentNodeKey"
+                @handle-img-node-click="handleImgNodeClick" />
         </el-col>
-        <el-col :span="8">
-            <NodeTree :tree-data="treeData" @handleNodeClick="handleNodeClick" />
+        <el-col :span="9" class="h-full overflow-y-auto">
+            <NodeTree v-if="treeData" :tree-data="treeData" :current-node-key="currentNodeKey"
+                @handle-tree-node-click="handleTreeNodeClick" />
         </el-col>
-        <el-col :span="8">
+        <el-col :span="9">
             <NodeTable :node-data="nodeData" />
         </el-col>
     </el-row>
@@ -22,6 +24,7 @@ import { AccessibilityNode, AccessibilityNodeTree, AccessibilityWindow } from '.
 const treeData = ref<AccessibilityNodeTree[]>([]);
 const nodeData = ref<AccessibilityNode | null>(null);
 const rawData = ref<AccessibilityWindow | null>(null);
+const currentNodeKey = ref<number>(-1);
 
 onMounted(async () => {
     const temp = await fetch('/temp.json');
@@ -46,11 +49,18 @@ function buildTree(data: AccessibilityNode[], parentId: number): AccessibilityNo
             top,
             right,
             bottom,
+            nodeId
         }
     })
 }
 
-const handleNodeClick = (data: AccessibilityNode) => {
+const handleTreeNodeClick = (data: AccessibilityNode) => {
     nodeData.value = data;
+    currentNodeKey.value = data.nodeId;
+}
+
+const handleImgNodeClick = (data: AccessibilityNode) => {
+    nodeData.value = data;
+    currentNodeKey.value = data.nodeId;
 }
 </script>
