@@ -9,19 +9,23 @@
 import { defineProps, computed } from 'vue'
 import { AccessibilityNode } from './types'
 
-const excludeKeys = ['label', 'children', 'childCount'];
-
 const props = defineProps<{
     nodeData: AccessibilityNode | null
 }>();
 
 const tableData = computed(() => {
     if (!props.nodeData) return [];
-    const temp: { key: string; value: string }[] = [];
-    for (const key in props.nodeData) {
-        if (excludeKeys.includes(key)) continue;
-        temp.push({ key, value: props.nodeData[key] });
-    }
+    const selectedKey: (keyof AccessibilityNode)[] = [
+        'viewIdResourceName', 'className', 'text', 'left', 'top', 'right', 'bottom', 'childCount'
+    ];
+
+    const temp = selectedKey.map((item: keyof AccessibilityNode) => {
+        return {
+            key: item,
+            value: props!.nodeData![item]
+        }
+    })
+
     return temp;
 })
 </script>

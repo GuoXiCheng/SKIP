@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted } from 'vue'
+import { onMounted, watch } from 'vue'
 import { AccessibilityNode, AccessibilityWindow } from './types';
 
 const emit = defineEmits(['handleImgNodeClick']);
@@ -11,7 +11,55 @@ const emit = defineEmits(['handleImgNodeClick']);
 const props = defineProps<{
     rawData: AccessibilityWindow | null;
     imgSrc: string;
+    currentNodeKey: number;
 }>();
+
+watch(() => props.currentNodeKey, (newVal) => {
+    const targetNode = props.rawData?.nodes.find(node => node.nodeId === newVal);
+
+    const canvas = document.getElementById('myCanvas') as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+    let renderableWidth: number, renderableHeight: number;
+    const img = new Image();
+    img.src = props.imgSrc;
+    img.onload = function () {
+        const parentWidth = canvas.parentElement!.clientWidth;
+        const parentHeight = canvas.parentElement!.clientHeight;
+
+        const parentAspect = parentWidth / parentHeight;
+        const imgAspect = img.width / img.height;
+        if (imgAspect < parentAspect) {
+            // 纵向填充
+            renderableHeight = parentHeight;
+            renderableWidth = img.width * (renderableHeight / img.height);
+        } else if (imgAspect > parentAspect) {
+            // 横向填充
+            renderableWidth = parentWidth;
+            renderableHeight = img.height * (renderableWidth / img.width);
+        } else {
+            // 完全匹配
+            renderableWidth = parentWidth;
+            renderableHeight = parentHeight;
+        }
+
+        const rateW = canvas.width / props.rawData!.screenWidth;
+        const rateH = canvas.height / props.rawData!.screenHeight;
+
+        const rateLeft = targetNode!.left * rateW;
+        const rateRight = targetNode!.right * rateW;
+        const rateTop = targetNode!.top * rateH;
+        const rateBottom = targetNode!.bottom * rateH;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, renderableWidth, renderableHeight);
+
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(rateLeft, rateTop, rateRight - rateLeft, rateBottom - rateTop);
+    }
+
+
+});
 
 onMounted(async () => {
     const data = props.rawData as AccessibilityWindow;

@@ -1,10 +1,10 @@
 <template>
     <el-row class="h-screen">
         <el-col :span="8">
-            <NodePic v-if="rawData" :raw-data="rawData" :img-src="'/temp.png'"
+            <NodePic v-if="rawData" :raw-data="rawData" :img-src="'/temp.png'" :current-node-key="currentNodeKey"
                 @handle-img-node-click="handleImgNodeClick" />
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" class="h-full overflow-y-auto">
             <NodeTree v-if="treeData" :tree-data="treeData" :current-node-key="currentNodeKey"
                 @handle-tree-node-click="handleTreeNodeClick" />
         </el-col>
@@ -49,14 +49,14 @@ function buildTree(data: AccessibilityNode[], parentId: number): AccessibilityNo
             top,
             right,
             bottom,
-            nodeId,
-            class: 'customNodeClass'
+            nodeId
         }
     })
 }
 
 const handleTreeNodeClick = (data: AccessibilityNode) => {
     nodeData.value = data;
+    currentNodeKey.value = data.nodeId;
 }
 
 const handleImgNodeClick = (data: AccessibilityNode) => {
