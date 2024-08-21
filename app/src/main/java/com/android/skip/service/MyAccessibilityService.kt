@@ -32,30 +32,11 @@ import com.blankj.utilcode.util.ZipUtils
 import com.google.gson.Gson
 import java.io.File
 
-<<<<<<< HEAD
-data class MyNode(
-    val node: AccessibilityNodeInfo,
-    val depth: Int,
-    val parentId: Int,
-    val nodeId: Int
-)
-
-data class MyNodeChild(
-    val depth: Int,
-    val childCount: Int,
-    val parentId: Int,
-    val nodeId: Int,
-    var className: String? = null,
-    var text: String? = null,
-    var viewIdResourceName: String? = null
-)
-=======
 data class MyWindow(val packageName: String, val className: String, val screenHeight: Int, val screenWidth: Int, val nodes: MutableList<MyNodeChild>)
 
 data class MyNode(val node: AccessibilityNodeInfo, val depth: Int, val parentId: Int, val nodeId: Int)
 
 data class MyNodeChild(val depth: Int, val childCount: Int, val parentId: Int, val nodeId: Int, val left: Int, val top: Int, val right: Int, val bottom: Int, var className: String? = null, var text: String?=null, var viewIdResourceName: String?=null)
->>>>>>> main
 
 class MyAccessibilityService : AccessibilityService() {
     private val textNodeHandler = TextNodeHandler()
@@ -187,13 +168,8 @@ class MyAccessibilityService : AccessibilityService() {
 
         val window = MyWindow(root.packageName.toString(), layoutInspectClassName.toString(), ScreenUtils.getScreenHeight(), ScreenUtils.getScreenWidth(),temp)
         val gson = Gson()
-<<<<<<< HEAD
-        val jsonStr = gson.toJson(temp)
-        val file = File(SKIPApp.context.filesDir, "$filename.json")
-=======
         val jsonStr = gson.toJson(window)
-        val file = File(SKIPApp.context.filesDir, "temp.json")
->>>>>>> main
+        val file = File(SKIPApp.context.filesDir, "$filename.json")
         file.writeText(jsonStr)
 
         ZipUtils.zipFiles(
@@ -205,21 +181,10 @@ class MyAccessibilityService : AccessibilityService() {
         )
     }
 
-<<<<<<< HEAD
-    private fun processNode(
-        node: AccessibilityNodeInfo,
-        temp: MutableList<MyNodeChild>,
-        depth: Int,
-        parentId: Int,
-        nodeId: Int
-    ) {
-        val myNodeChild = MyNodeChild(depth, node.childCount, parentId, nodeId)
-=======
     private fun processNode(node: AccessibilityNodeInfo, temp: MutableList<MyNodeChild>, depth: Int, parentId: Int, nodeId: Int) {
         val rect = Rect()
         node.getBoundsInScreen(rect)
         val myNodeChild = MyNodeChild(depth, node.childCount, parentId, nodeId, rect.left, rect.top, rect.right, rect.bottom)
->>>>>>> main
 
         node.className?.let {
             myNodeChild.className = it.toString()
