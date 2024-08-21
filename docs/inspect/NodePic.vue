@@ -1,12 +1,17 @@
 <template>
-    <canvas id="myCanvas" class="cursor-crosshair"></canvas>
+    <div class="h-full border border-black border-solid relative flex justify-center">
+        <canvas id="topCanvas" class="cursor-crosshair absolute z-20"></canvas>"
+        <canvas id="bottomCanvas" class="cursor-crosshair absolute z-10"></canvas>
+    </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, watch } from 'vue'
-import { AccessibilityNode, AccessibilityWindow } from './types';
+import { onMounted, watch, ref } from 'vue'
+import { AccessibilityWindow } from './types';
 
 const emit = defineEmits(['handleImgNodeClick']);
+const renderUI = ref({ renderWidth: 0, renderHeight: 0 });
+const renderRectangle = ref({ node: {}, left: 0, top: 0, right: 0, bottom: 0 });
 
 const props = defineProps<{
     rawData: AccessibilityWindow | null;
@@ -14,136 +19,109 @@ const props = defineProps<{
     currentNodeKey: number;
 }>();
 
-watch(() => props.currentNodeKey, (newVal) => {
-    const targetNode = props.rawData?.nodes.find(node => node.nodeId === newVal);
+watch(() => renderRectangle.value, (newVal) => {
+    const topCanvas = document.getElementById('topCanvas') as HTMLCanvasElement;
+    const topCtx = topCanvas.getContext('2d') as CanvasRenderingContext2D;
 
-    const canvas = document.getElementById('myCanvas') as HTMLCanvasElement;
-    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-    let renderableWidth: number, renderableHeight: number;
+    topCtx.clearRect(0, 0, topCanvas.width, topCanvas.height);
+    topCtx.strokeStyle = 'red';
+    topCtx.lineWidth = 2;
+    topCtx.strokeRect(newVal.left, newVal.top, newVal.right - newVal.left, newVal.bottom - newVal.top);
+});
+
+watch(() => props.currentNodeKey, (newVal) => {
+    if (props.rawData === null) return;
+
+    const raw = props.rawData as AccessibilityWindow;
+    const node = raw.nodes.find(node => node.nodeId === newVal);
+    if (node == null) return;
+
+    const bottomCanvas = document.getElementById('bottomCanvas') as HTMLCanvasElement;
+    const rateW = bottomCanvas.width / raw.screenWidth;
+    const rateH = bottomCanvas.height / raw.screenHeight;
+
+    const renderLeft = node.left * rateW;
+    const renderRight = node.right * rateW;
+    const renderTop = node.top * rateH;
+    const renderBottom = node.bottom * rateH;
+
+    renderRectangle.value = {
+        node,
+        left: renderLeft,
+        right: renderRight,
+        top: renderTop,
+        bottom: renderBottom
+    };
+})
+
+
+onMounted(() => {
+    const raw = props.rawData as AccessibilityWindow;
+    if (!raw) return;
+
+    const bottomCanvas = document.getElementById('bottomCanvas') as HTMLCanvasElement;
+    const topCanvas = document.getElementById('topCanvas') as HTMLCanvasElement;
+    const bottomCtx = bottomCanvas.getContext('2d') as CanvasRenderingContext2D;
+
     const img = new Image();
     img.src = props.imgSrc;
     img.onload = function () {
-        const parentWidth = canvas.parentElement!.clientWidth;
-        const parentHeight = canvas.parentElement!.clientHeight;
+        const parentWidth = bottomCanvas.parentElement!.clientWidth;
+        const parentHeight = bottomCanvas.parentElement!.clientHeight;
 
         const parentAspect = parentWidth / parentHeight;
         const imgAspect = img.width / img.height;
+
         if (imgAspect < parentAspect) {
             // 纵向填充
-            renderableHeight = parentHeight;
-            renderableWidth = img.width * (renderableHeight / img.height);
+            renderUI.value.renderHeight = parentHeight;
+            renderUI.value.renderWidth = img.width * (parentHeight / img.height);
         } else if (imgAspect > parentAspect) {
             // 横向填充
-            renderableWidth = parentWidth;
-            renderableHeight = img.height * (renderableWidth / img.width);
+            renderUI.value.renderWidth = parentWidth;
+            renderUI.value.renderHeight = img.height * (parentWidth / img.width);
         } else {
             // 完全匹配
-            renderableWidth = parentWidth;
-            renderableHeight = parentHeight;
+            renderUI.value.renderWidth = parentWidth;
+            renderUI.value.renderHeight = parentHeight;
         }
 
-        const rateW = canvas.width / props.rawData!.screenWidth;
-        const rateH = canvas.height / props.rawData!.screenHeight;
+        bottomCanvas.width = renderUI.value.renderWidth;
+        bottomCanvas.height = renderUI.value.renderHeight;
+        topCanvas.width = renderUI.value.renderWidth;
+        topCanvas.height = renderUI.value.renderHeight;
 
-        const rateLeft = targetNode!.left * rateW;
-        const rateRight = targetNode!.right * rateW;
-        const rateTop = targetNode!.top * rateH;
-        const rateBottom = targetNode!.bottom * rateH;
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, 0, 0, renderableWidth, renderableHeight);
-
-        ctx.strokeStyle = 'red';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(rateLeft, rateTop, rateRight - rateLeft, rateBottom - rateTop);
+        bottomCtx.drawImage(img, 0, 0, renderUI.value.renderWidth, renderUI.value.renderHeight);
     }
 
-
-});
-
-onMounted(async () => {
-    const data = props.rawData as AccessibilityWindow;
-    if (!data) return;
-
-    const canvas = document.getElementById('myCanvas') as HTMLCanvasElement;
-    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-
-    let renderableWidth: number, renderableHeight: number;
-    // 加载背景图
-    const img = new Image();
-    img.src = props.imgSrc; // 在此替换为实际的图片URL
-    img.onload = function () {
-        const parentWidth = canvas.parentElement!.clientWidth;
-        const parentHeight = canvas.parentElement!.clientHeight;
-
-        const parentAspect = parentWidth / parentHeight;
-        const imgAspect = img.width / img.height;
-
-        if (imgAspect < parentAspect) {
-            // 纵向填充
-            renderableHeight = parentHeight;
-            renderableWidth = img.width * (renderableHeight / img.height);
-        } else if (imgAspect > parentAspect) {
-            // 横向填充
-            renderableWidth = parentWidth;
-            renderableHeight = img.height * (renderableWidth / img.width);
-        } else {
-            // 完全匹配
-            renderableWidth = parentWidth;
-            renderableHeight = parentHeight;
-        }
-
-        canvas.width = renderableWidth;
-        canvas.height = renderableHeight;
-
-        ctx.drawImage(img, 0, 0, renderableWidth, renderableHeight);
-    };
-
-    canvas.addEventListener('click', (event) => {
+    topCanvas.addEventListener('click', (event) => {
         const { offsetX, offsetY } = event;
-
-        let closestNode = null;
         let minDistance = Infinity;
 
-        data.nodes.forEach(node => {
-            const rateW = canvas.width / data.screenWidth;
-            const rateH = canvas.height / data.screenHeight;
+        raw.nodes.forEach(node => {
+            const rateW = bottomCanvas.width / raw.screenWidth;
+            const rateH = bottomCanvas.height / raw.screenHeight;
 
-            const rateLeft = node.left * rateW;
-            const rateRight = node.right * rateW;
-            const rateTop = node.top * rateH;
-            const rateBottom = node.bottom * rateH;
+            const renderLeft = node.left * rateW;
+            const renderRight = node.right * rateW;
+            const renderTop = node.top * rateH;
+            const renderBottom = node.bottom * rateH;
 
-            const centerX = (rateLeft + rateRight) / 2;
-            const centerY = (rateTop + rateBottom) / 2;
+            const centerX = (renderLeft + renderRight) / 2;
+            const centerY = (renderTop + renderBottom) / 2;
             const distance = Math.sqrt(Math.pow(offsetX - centerX, 2) + Math.pow(offsetY - centerY, 2));
-
-            if (distance < minDistance && offsetX >= rateLeft && offsetX <= rateRight && offsetY >= rateTop && offsetY <= rateBottom) {
+            if (distance < minDistance && offsetX >= renderLeft && offsetX <= renderRight && offsetY >= renderTop && offsetY <= renderBottom) {
                 minDistance = distance;
-                closestNode = {
-                    ...node,
-                    rateLeft,
-                    rateRight,
-                    rateTop,
-                    rateBottom,
+                renderRectangle.value = {
+                    node,
+                    left: renderLeft,
+                    right: renderRight,
+                    top: renderTop,
+                    bottom: renderBottom
                 };
+                emit('handleImgNodeClick', node);
             }
-        });
-
-        if (closestNode !== null) {
-            closestNode = closestNode as AccessibilityNode;
-            // 重新绘制背景图
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(img, 0, 0, renderableWidth, renderableHeight);
-
-            // 绘制标记矩形
-            ctx.strokeStyle = 'red';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(closestNode.rateLeft, closestNode.rateTop, closestNode.rateRight - closestNode.rateLeft, closestNode.rateBottom - closestNode.rateTop);
-
-            emit('handleImgNodeClick', closestNode);
-        }
-
-    });
-})
+        })
+    })
+});
 </script>

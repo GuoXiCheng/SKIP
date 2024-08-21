@@ -1,6 +1,6 @@
 <template>
-    <el-tree default-expand-all :data="treeData" :props="{ class: customNodeClass }" @node-click="handleNodeClick"
-        node-key="nodeId" :current-node-key="currentNodeKey" :expand-on-click-node="false" />
+    <el-tree :data="treeData" :props="{ class: customNodeClass }" @node-click="handleNodeClick"
+        :current-node-key="currentNodeKey" :expand-on-click-node="false" node-key="nodeId" />
 </template>
 
 <script lang="ts" setup>
