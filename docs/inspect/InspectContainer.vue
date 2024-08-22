@@ -29,7 +29,7 @@ const currentNodeKey = ref<number>(-1);
 const imgSrc = ref<string>('');
 
 onMounted(async () => {
-    const response = await fetch('/1724288358662.zip');
+    const response = await fetch('/1724297451246.zip');
     const arrayBuffer = await response.arrayBuffer();
     const zip = await JSZip.loadAsync(arrayBuffer);
 

@@ -23,14 +23,13 @@ class MyForegroundService: Service() {
 
         val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel("skip_foreground_service", "SKIP 前台服务", NotificationManager.IMPORTANCE_DEFAULT)
+            val channel = NotificationChannel("skip_foreground_service", "无障碍服务", NotificationManager.IMPORTANCE_DEFAULT)
             manager.createNotificationChannel(channel)
         }
         val it = Intent(this, NewMainActivity::class.java)
         val pi = PendingIntent.getActivity(this, 0, it, PendingIntent.FLAG_IMMUTABLE)
         val notification = NotificationCompat.Builder(this, "skip_foreground_service")
-            .setContentTitle("SKIP 前台服务")
-            .setContentText("SKIP 前台服务运行中")
+            .setContentTitle("SKIP 无障碍服务运行中")
             .setSmallIcon(R.drawable.warning)
             .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.warning))
             .setContentIntent(pi)

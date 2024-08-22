@@ -16,6 +16,9 @@ import androidx.annotation.RequiresApi
 import com.android.skip.SKIPApp
 import com.android.skip.SKIP_LAYOUT_INSPECT
 import com.android.skip.SKIP_PERMIT_NOTICE
+import com.android.skip.dataclass.AccessibilityNodeInfoCarrier
+import com.android.skip.dataclass.NodeChildSchema
+import com.android.skip.dataclass.NodeRootSchema
 import com.android.skip.handler.BoundsHandler
 import com.android.skip.handler.IdNodeHandler
 import com.android.skip.handler.TextNodeHandler
@@ -31,12 +34,6 @@ import com.blankj.utilcode.util.ServiceUtils
 import com.blankj.utilcode.util.ZipUtils
 import com.google.gson.Gson
 import java.io.File
-
-data class MyWindow(val packageName: String, val className: String, val screenHeight: Int, val screenWidth: Int, val nodes: MutableList<MyNodeChild>)
-
-data class MyNode(val node: AccessibilityNodeInfo, val depth: Int, val parentId: Int, val nodeId: Int)
-
-data class MyNodeChild(val depth: Int, val childCount: Int, val parentId: Int, val nodeId: Int, val left: Int, val top: Int, val right: Int, val bottom: Int, var className: String? = null, var text: String?=null, var viewIdResourceName: String?=null)
 
 class MyAccessibilityService : AccessibilityService() {
     private val textNodeHandler = TextNodeHandler()
@@ -153,8 +150,8 @@ class MyAccessibilityService : AccessibilityService() {
 
     private fun bfsTraverse(root: AccessibilityNodeInfo) {
         var uniqueId = 0
-        val queue: MutableList<MyNode> = mutableListOf(MyNode(root, 0, -1, uniqueId))
-        val temp: MutableList<MyNodeChild> = mutableListOf()
+        val queue: MutableList<AccessibilityNodeInfoCarrier> = mutableListOf(AccessibilityNodeInfoCarrier(root, 0, -1, uniqueId))
+        val temp: MutableList<NodeChildSchema> = mutableListOf()
 
         while (queue.isNotEmpty()) {
             val (node, depth, parentId, nodeId) = queue.removeAt(0)
@@ -162,11 +159,17 @@ class MyAccessibilityService : AccessibilityService() {
 
             for (i in 0 until node.childCount) {
                 uniqueId += 1
-                node.getChild(i)?.let { queue.add(MyNode(it, depth + 1, nodeId, uniqueId)) }
+                node.getChild(i)?.let { queue.add(AccessibilityNodeInfoCarrier(it, depth + 1, nodeId, uniqueId)) }
             }
         }
 
-        val window = MyWindow(root.packageName.toString(), layoutInspectClassName.toString(), ScreenUtils.getScreenHeight(), ScreenUtils.getScreenWidth(),temp)
+        val window = NodeRootSchema(
+            root.packageName.toString(),
+            layoutInspectClassName.toString(),
+            ScreenUtils.getScreenHeight(),
+            ScreenUtils.getScreenWidth(),
+            temp
+        )
         val gson = Gson()
         val jsonStr = gson.toJson(window)
         val file = File(SKIPApp.context.filesDir, "$filename.json")
@@ -181,10 +184,25 @@ class MyAccessibilityService : AccessibilityService() {
         )
     }
 
-    private fun processNode(node: AccessibilityNodeInfo, temp: MutableList<MyNodeChild>, depth: Int, parentId: Int, nodeId: Int) {
+    private fun processNode(
+        node: AccessibilityNodeInfo,
+        temp: MutableList<NodeChildSchema>,
+        depth: Int,
+        parentId: Int,
+        nodeId: Int
+    ) {
         val rect = Rect()
         node.getBoundsInScreen(rect)
-        val myNodeChild = MyNodeChild(depth, node.childCount, parentId, nodeId, rect.left, rect.top, rect.right, rect.bottom)
+        val myNodeChild = NodeChildSchema(
+            depth,
+            node.childCount,
+            parentId,
+            nodeId,
+            rect.left,
+            rect.top,
+            rect.right,
+            rect.bottom
+        )
 
         node.className?.let {
             myNodeChild.className = it.toString()

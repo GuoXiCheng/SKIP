@@ -63,14 +63,13 @@ class LayoutInspectService: Service() {
         // 开启前台服务
         val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel("layout_inspect_service", "前台布局检查服务通知", NotificationManager.IMPORTANCE_DEFAULT)
+            val channel = NotificationChannel("layout_inspect_service", "布局检查服务", NotificationManager.IMPORTANCE_DEFAULT)
             manager.createNotificationChannel(channel)
         }
         val it = Intent(this, NewMainActivity::class.java)
         val pi = PendingIntent.getActivity(this, 0, it, PendingIntent.FLAG_IMMUTABLE)
         val notification = NotificationCompat.Builder(this, "layout_inspect_service")
-            .setContentTitle("布局检查服务已准备就绪")
-            .setContentText("布局检查服务将在运行一次后退出")
+            .setContentTitle("SKIP 布局检查服务运行中")
             .setSmallIcon(R.drawable.warning)
             .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.warning))
             .setContentIntent(pi)
