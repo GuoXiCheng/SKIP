@@ -3,7 +3,7 @@ layout: home
 
 hero:
   name: SKIP
-  text: 基于 Android 无障碍服务的自动跳过开屏广告 App
+  text: 基于安卓无障碍服务的自动跳过开屏广告 App
   image:
     src: /images/logo.png
   actions:
