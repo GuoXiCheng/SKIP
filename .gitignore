@@ -95,3 +95,4 @@ docs/.vitepress/dist
 coverage
 scripts/__tests__/examples/dist
 !scripts/__tests__/examples/dist/.gitkeep
+*.zip

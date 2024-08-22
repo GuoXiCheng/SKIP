@@ -1,5 +1,5 @@
 <template>
-    <div class="h-full border border-black border-solid relative flex justify-center">
+    <div class="h-full relative flex justify-center">
         <canvas id="topCanvas" class="cursor-crosshair absolute z-20"></canvas>"
         <canvas id="bottomCanvas" class="cursor-crosshair absolute z-10"></canvas>
     </div>
