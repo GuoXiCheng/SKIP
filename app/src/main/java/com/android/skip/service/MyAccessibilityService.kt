@@ -13,7 +13,6 @@ import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import androidx.annotation.RequiresApi
-import com.android.skip.SKIPApp
 import com.android.skip.SKIP_LAYOUT_INSPECT
 import com.android.skip.SKIP_PERMIT_NOTICE
 import com.android.skip.handler.BoundsHandler
@@ -22,29 +21,16 @@ import com.android.skip.handler.TextNodeHandler
 import com.android.skip.manager.AnalyticsManager
 import com.android.skip.manager.ToastManager
 import com.android.skip.manager.WhitelistManager
-import com.android.skip.utils.AccessibilityUtils
 import com.android.skip.utils.Constants
 import com.android.skip.utils.DataStoreUtils
-import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.ScreenUtils
+import com.android.skip.utils.LayoutInspectUtils
 import com.blankj.utilcode.util.ServiceUtils
-import com.blankj.utilcode.util.ZipUtils
-import com.google.gson.Gson
-import java.io.File
-
-data class MyWindow(val packageName: String, val className: String, val screenHeight: Int, val screenWidth: Int, val nodes: MutableList<MyNodeChild>)
-
-data class MyNode(val node: AccessibilityNodeInfo, val depth: Int, val parentId: Int, val nodeId: Int)
-
-data class MyNodeChild(val depth: Int, val childCount: Int, val parentId: Int, val nodeId: Int, val left: Int, val top: Int, val right: Int, val bottom: Int, var className: String? = null, var text: String?=null, var viewIdResourceName: String?=null)
 
 class MyAccessibilityService : AccessibilityService() {
     private val textNodeHandler = TextNodeHandler()
     private val idNodeHandler = IdNodeHandler()
     private val boundsHandler = BoundsHandler()
-    private var isLayoutInspect = false
-    private var layoutInspectClassName: String? = null
-    private var filename: String? = null
+
     private val foregroundAccessibilityReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == Constants.FOREGROUND_ACCESSIBILITY_RECEIVER_ACTION) {
@@ -71,17 +57,7 @@ class MyAccessibilityService : AccessibilityService() {
 
             val rootNode = getCurrentRootNode()
 
-            val className = event.className
-            if (className != null) {
-                if (!AccessibilityUtils.isSystemClass(className.toString())) {
-                    layoutInspectClassName = className.toString()
-                }
-                if (isLayoutInspect) {
-                    isLayoutInspect = false
-                    LogUtils.d("layout inspect className: $layoutInspectClassName")
-                    bfsTraverse(rootNode)
-                }
-            }
+            LayoutInspectUtils.startRecordNodeInfo(rootNode, event.className)
 
             if (!AnalyticsManager.isPerformScan(rootNode.packageName.toString())) return
 
@@ -138,67 +114,10 @@ class MyAccessibilityService : AccessibilityService() {
             && event.keyCode == KeyEvent.KEYCODE_VOLUME_DOWN
             && DataStoreUtils.getSyncData(SKIP_LAYOUT_INSPECT, false)
         ) {
-            filename = System.currentTimeMillis().toString()
-
-            val intent = Intent(Constants.SKIP_KEY_EVENT_VOLUME_DOWN)
-            intent.putExtra("filename", filename)
-            intent.setPackage(packageName)
-            sendBroadcast(intent)
-
-            isLayoutInspect = true
+            LayoutInspectUtils.startLayoutInspect()
             return true
         }
         return super.onKeyEvent(event)
-    }
-
-    private fun bfsTraverse(root: AccessibilityNodeInfo) {
-        var uniqueId = 0
-        val queue: MutableList<MyNode> = mutableListOf(MyNode(root, 0, -1, uniqueId))
-        val temp: MutableList<MyNodeChild> = mutableListOf()
-
-        while (queue.isNotEmpty()) {
-            val (node, depth, parentId, nodeId) = queue.removeAt(0)
-            processNode(node, temp, depth, parentId, nodeId)
-
-            for (i in 0 until node.childCount) {
-                uniqueId += 1
-                node.getChild(i)?.let { queue.add(MyNode(it, depth + 1, nodeId, uniqueId)) }
-            }
-        }
-
-        val window = MyWindow(root.packageName.toString(), layoutInspectClassName.toString(), ScreenUtils.getScreenHeight(), ScreenUtils.getScreenWidth(),temp)
-        val gson = Gson()
-        val jsonStr = gson.toJson(window)
-        val file = File(SKIPApp.context.filesDir, "$filename.json")
-        file.writeText(jsonStr)
-
-        ZipUtils.zipFiles(
-            listOf(
-                File(SKIPApp.context.filesDir, "$filename.json"),
-                File(SKIPApp.context.filesDir, "$filename.png")
-            ),
-            File(SKIPApp.context.filesDir, "$filename.zip")
-        )
-    }
-
-    private fun processNode(node: AccessibilityNodeInfo, temp: MutableList<MyNodeChild>, depth: Int, parentId: Int, nodeId: Int) {
-        val rect = Rect()
-        node.getBoundsInScreen(rect)
-        val myNodeChild = MyNodeChild(depth, node.childCount, parentId, nodeId, rect.left, rect.top, rect.right, rect.bottom)
-
-        node.className?.let {
-            myNodeChild.className = it.toString()
-        }
-
-        node.text?.let {
-            myNodeChild.text = it.toString()
-        }
-
-        node.viewIdResourceName?.let {
-            myNodeChild.viewIdResourceName = it
-        }
-
-        temp.add(myNodeChild)
     }
 
 

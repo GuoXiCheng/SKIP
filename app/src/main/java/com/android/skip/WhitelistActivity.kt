@@ -1,7 +1,5 @@
 package com.android.skip
 
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -19,6 +17,7 @@ import com.android.skip.compose.ScaffoldPage
 import com.android.skip.dataclass.AppInfo
 import com.android.skip.manager.WhitelistManager
 import com.android.skip.utils.DataStoreUtils
+import com.android.skip.utils.InstalledAppUtils
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -38,27 +37,23 @@ class WhitelistActivity : BaseActivity() {
 @Composable
 fun WhitelistInterface(onBackClick: () -> Unit) {
     val context = LocalContext.current
-    val packageManager = context.packageManager
     val appInfoList = remember { mutableStateListOf<AppInfo>() }
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         scope.launch(Dispatchers.IO) {
-            var installedApps =
-                packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-
-            // 是否过滤掉系统应用
-            if (!DataStoreUtils.getSyncData(SKIP_INCLUDE_SYSTEM_APPS, false)) {
-                installedApps = installedApps.filter {
-                    (it.flags and ApplicationInfo.FLAG_SYSTEM) == 0
-                }
-            }
+            val installedApps = InstalledAppUtils.getCachedApps(
+                DataStoreUtils.getSyncData(
+                    SKIP_INCLUDE_SYSTEM_APPS,
+                    false
+                )
+            )
 
             val apps = installedApps.map { app ->
                 AppInfo(
-                    appName = app.loadLabel(packageManager).toString(),
+                    appName = app.name,
                     packageName = app.packageName,
-                    appIcon = app.loadIcon(packageManager),
+                    appIcon = app.icon,
                     checked = mutableStateOf(
                         DataStoreUtils.getSyncData(
                             WHITELIST_DOT + app.packageName,
