@@ -42,12 +42,12 @@ fun WhitelistInterface(onBackClick: () -> Unit) {
 
     LaunchedEffect(Unit) {
         scope.launch(Dispatchers.IO) {
-            var installedApps = InstalledAppUtils.cachedApps
-
-            // 是否过滤掉系统应用
-            if (!DataStoreUtils.getSyncData(SKIP_INCLUDE_SYSTEM_APPS, false)) {
-                installedApps = installedApps.filter { !it.isSystem }.toMutableList()
-            }
+            val installedApps = InstalledAppUtils.getCachedApps(
+                DataStoreUtils.getSyncData(
+                    SKIP_INCLUDE_SYSTEM_APPS,
+                    false
+                )
+            )
 
             val apps = installedApps.map { app ->
                 AppInfo(
