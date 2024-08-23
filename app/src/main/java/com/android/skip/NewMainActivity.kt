@@ -37,7 +37,11 @@ import com.android.skip.manager.SkipConfigManagerV2
 import com.android.skip.manager.WhitelistManager
 import com.android.skip.utils.AccessibilityUtils
 import com.android.skip.utils.DataStoreUtils
+import com.android.skip.utils.InstalledAppUtils
 import com.android.skip.viewmodel.StartButtonViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.yaml.snakeyaml.Yaml
 import java.io.File
 import kotlin.concurrent.thread
@@ -162,6 +166,10 @@ class NewMainActivity : BaseActivity() {
                     showUpdateDialog = true
                 }
             }
+        }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            InstalledAppUtils.updateInstalledAppsCache()
         }
     }
 }
