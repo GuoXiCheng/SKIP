@@ -6,11 +6,8 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.PixelFormat
 import android.hardware.display.DisplayManager
@@ -19,38 +16,21 @@ import android.media.ImageReader
 import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
 import android.os.Build
-import android.os.Handler
 import android.os.IBinder
-import android.os.Looper
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.android.skip.NewMainActivity
 import com.android.skip.R
-import com.android.skip.SKIPApp
 import com.android.skip.SKIP_LAYOUT_INSPECT
-import com.android.skip.manager.ToastManager
-import com.android.skip.utils.Constants
 import com.android.skip.utils.DataStoreUtils
+import com.android.skip.utils.LayoutInspectUtils
 import com.blankj.utilcode.util.ScreenUtils
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
 
 
 class LayoutInspectService: Service() {
     private var mMediaProjection: MediaProjection? = null
     private var mProjectionManager:MediaProjectionManager? = null
     private var virtualDisplay: VirtualDisplay? = null
-    private var isProcessingImage = false
-    private var filename: String? = null
-    private val keyEventVolumeDownReceiver = object: BroadcastReceiver() {
-        override fun onReceive(p0: Context?, p1: Intent?) {
-            if (p1?.action == Constants.SKIP_KEY_EVENT_VOLUME_DOWN) {
-                isProcessingImage = true
-                filename = p1.getStringExtra("filename")
-            }
-        }
-    }
 
     override fun onBind(p0: Intent?): IBinder? {
         TODO("Not yet implemented")
@@ -75,9 +55,6 @@ class LayoutInspectService: Service() {
             .setContentIntent(pi)
             .build()
         startForeground(1, notification)
-
-        val intentFilter = IntentFilter(Constants.SKIP_KEY_EVENT_VOLUME_DOWN)
-        registerReceiver(keyEventVolumeDownReceiver, intentFilter, RECEIVER_NOT_EXPORTED)
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -98,6 +75,7 @@ class LayoutInspectService: Service() {
     override fun onDestroy() {
         super.onDestroy()
         mMediaProjection?.stop()
+        virtualDisplay?.release()
         DataStoreUtils.putSyncData(SKIP_LAYOUT_INSPECT, false)
     }
 
@@ -115,58 +93,6 @@ class LayoutInspectService: Service() {
             imageReader.surface, null, null
         )
 
-        imageReader.setOnImageAvailableListener({reader ->
-            if (!isProcessingImage) {
-                // 清理缓冲区
-                reader.acquireLatestImage()?.close()
-                return@setOnImageAvailableListener
-            }
-
-            val image = reader.acquireLatestImage()
-            if (image != null) {
-                val planes = image.planes
-                val buffer = planes[0].buffer
-                val pixelStride = planes[0].pixelStride
-                val rowStride = planes[0].rowStride
-
-                // Create Bitmap
-                val bitmapWithStride = Bitmap.createBitmap(
-                    rowStride / pixelStride,
-                    displayHeight,
-                    Bitmap.Config.ARGB_8888
-                )
-                bitmapWithStride.copyPixelsFromBuffer(buffer)
-                val bitmap = Bitmap.createBitmap(bitmapWithStride, 0, 0, displayWidth, displayHeight)
-                image.close()
-
-                // 保存或处理bitmap
-                val file = getOutputFile()
-                val success = saveBitmapToFile(bitmap, file)
-                if (success) {
-                    ToastManager.showToast(this, "保存成功")
-                } else {
-                    ToastManager.showToast(this, "保存失败")
-                }
-
-                isProcessingImage = false
-            }
-        }, Handler(Looper.getMainLooper()))
-    }
-
-    private fun getOutputFile(): File {
-        return File(SKIPApp.context.filesDir, "$filename.png")
-    }
-
-    private fun saveBitmapToFile(bitmap: Bitmap, file: File): Boolean {
-        return try {
-            val outputStream = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-            outputStream.flush()
-            outputStream.close()
-            true
-        } catch (e: IOException) {
-            e.printStackTrace()
-            false
-        }
+        LayoutInspectUtils.startScreenCapture(imageReader, displayWidth, displayHeight)
     }
 }
