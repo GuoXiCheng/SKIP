@@ -29,7 +29,7 @@ const currentNodeKey = ref<number>(-1);
 const imgSrc = ref<string>('');
 
 onMounted(async () => {
-    const response = await fetch('/1724297451246.zip');
+    const response = await fetch('/94e04ea4-2502-4c24-a7f1-7574270fa921.zip');
     const arrayBuffer = await response.arrayBuffer();
     const zip = await JSZip.loadAsync(arrayBuffer);
 
@@ -48,7 +48,7 @@ onMounted(async () => {
 function buildTree(data: AccessibilityNode[], parentId: number): AccessibilityNodeTree[] {
     const children = data.filter(node => node.parentId === parentId);
     return children.map(node => {
-        const { childCount, className, nodeId, text, viewIdResourceName, left, top, right, bottom } = node;
+        const { childCount, className, nodeId, text, viewIdResourceName, left, top, right, bottom, isClickable } = node;
         return {
             label: childCount === 0 ? className : `${className} [${childCount}]`,
             children: buildTree(data, nodeId),
@@ -60,7 +60,8 @@ function buildTree(data: AccessibilityNode[], parentId: number): AccessibilityNo
             top,
             right,
             bottom,
-            nodeId
+            nodeId,
+            isClickable
         }
     })
 }

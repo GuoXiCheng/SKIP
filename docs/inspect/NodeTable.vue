@@ -6,26 +6,34 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
-import { AccessibilityNode } from './types'
+import { computed } from "vue";
+import { AccessibilityNode } from "./types";
 
 const props = defineProps<{
-    nodeData: AccessibilityNode | null
+    nodeData: AccessibilityNode | null;
 }>();
 
 const tableData = computed(() => {
     if (!props.nodeData) return [];
     const selectedKey: (keyof AccessibilityNode)[] = [
-        'viewIdResourceName', 'className', 'text', 'left', 'top', 'right', 'bottom', 'childCount'
+        "viewIdResourceName",
+        "className",
+        "text",
+        "left",
+        "top",
+        "right",
+        "bottom",
+        "childCount",
+        "isClickable",
     ];
 
     const temp = selectedKey.map((item: keyof AccessibilityNode) => {
         return {
             key: item,
-            value: props!.nodeData![item]
-        }
-    })
+            value: props!.nodeData![item],
+        };
+    });
 
     return temp;
-})
+});
 </script>
