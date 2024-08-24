@@ -4,10 +4,13 @@ export interface Tree {
 }
 
 export interface AccessibilityWindow {
-  className: string;
+  uuid: string;
+  appName: string;
+  activityName: string;
   packageName: string;
   screenHeight: number;
   screenWidth: number;
+  createTime: number;
   nodes: AccessibilityNode[];
 }
 
@@ -21,6 +24,7 @@ export interface AccessibilityNode {
   top: number;
   right: number;
   bottom: number;
+  isClickable: boolean;
   text?: string;
   viewIdResourceName?: string;
   [key: string]: any;

@@ -38,7 +38,7 @@ object LayoutInspectUtils {
 
         CoroutineScope(Dispatchers.IO).launch {
             repeat(3) { index ->
-                delay( 3000)
+                delay(3000)
                 val zipFile = File(SKIPApp.context.filesDir, "$filename.zip")
                 if (FileUtils.isFileExists(zipFile)) return@repeat
 
@@ -143,10 +143,13 @@ object LayoutInspectUtils {
         }
 
         val nodeRootSchema = NodeRootSchema(
+            filename.toString(),
+            InstalledAppUtils.getAppInfoByPackageName(root.packageName.toString()).name,
             root.packageName.toString(),
             activityName.toString(),
             ScreenUtils.getScreenHeight(),
             ScreenUtils.getScreenWidth(),
+            System.currentTimeMillis(),
             nodeChildSchemaList
         )
 
@@ -166,7 +169,15 @@ object LayoutInspectUtils {
         val rect = Rect()
         node.getBoundsInScreen(rect)
         val myNodeChild = NodeChildSchema(
-            depth, node.childCount, parentId, nodeId, rect.left, rect.top, rect.right, rect.bottom
+            depth,
+            node.childCount,
+            parentId,
+            nodeId,
+            rect.left,
+            rect.top,
+            rect.right,
+            rect.bottom,
+            node.isClickable
         )
 
         node.className?.let {

@@ -9,6 +9,7 @@ data class NodeChildSchema(
     val top: Int,
     val right: Int,
     val bottom: Int,
+    val isClickable: Boolean,
     var className: String? = null,
     var text: String? = null,
     var viewIdResourceName: String? = null
