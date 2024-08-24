@@ -1,39 +1,83 @@
 <template>
-    <el-table :data="tableData" style="width: 100%">
-        <el-table-column prop="key" label="属性" width="auto" />
-        <el-table-column prop="value" label="值" width="auto" />
-    </el-table>
+  <el-segmented v-model="segmentedValue" :options="options" block />
+  <el-table :data="tableData" style="width: 100%">
+    <el-table-column prop="key" label="属性" width="auto" />
+    <el-table-column prop="value" label="值" width="auto" />
+  </el-table>
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-import { AccessibilityNode } from "./types";
+import { ref, watch } from "vue";
+import { AccessibilityNode, AccessibilityWindow } from "./types";
+
+const options = ["Window", "Node"];
+const segmentedValue = ref("Node");
+const tableData = ref<{ key: string; value: any }[]>([]);
 
 const props = defineProps<{
-    nodeData: AccessibilityNode | null;
+  rawData: AccessibilityWindow | null;
+  nodeData: AccessibilityNode | null;
 }>();
 
-const tableData = computed(() => {
-    if (!props.nodeData) return [];
-    const selectedKey: (keyof AccessibilityNode)[] = [
-        "viewIdResourceName",
-        "className",
-        "text",
-        "left",
-        "top",
-        "right",
-        "bottom",
-        "childCount",
-        "isClickable",
-    ];
+function buildWindowTableData(data: AccessibilityWindow) {
+  return [
+    {
+      key: "应用名称",
+      value: data.appName,
+    },
+    {
+      key: "包名",
+      value: data.packageName,
+    },
+    {
+      key: "Activity 名称",
+      value: data.activityName,
+    },
+    {
+      key: "屏幕分辨率",
+      value: `${data.screenWidth}x${data.screenHeight}`,
+    },
+    {
+      key: "创建时间",
+      value: new Date(data.createTime).toLocaleString(),
+    },
+  ];
+}
 
-    const temp = selectedKey.map((item: keyof AccessibilityNode) => {
-        return {
-            key: item,
-            value: props!.nodeData![item],
-        };
-    });
+function buildNodeTableData(data: AccessibilityNode) {
+  return [
+    { key: "viewIdResourceName", value: data.viewIdResourceName },
+    { key: "className", value: data.className },
+    { key: "text", value: data.text },
+    { key: "textLength", value: data.text?.length },
+    { key: "left", value: data.left },
+    { key: "top", value: data.top },
+    { key: "right", value: data.right },
+    { key: "bottom", value: data.bottom },
+    { key: "bound", value: `${data.left},${data.top},${data.right},${data.bottom}` },
+    { key: "childCount", value: data.childCount },
+    { key: "isClickable", value: data.isClickable },
+  ];
+}
 
-    return temp;
-});
+watch(
+  () => segmentedValue.value,
+  (newVal) => {
+    if (newVal === "Window") {
+      tableData.value = buildWindowTableData(props.rawData!);
+    } else if (newVal === "Node") {
+      tableData.value = buildNodeTableData(props.nodeData!);
+    }
+  },
+  { immediate: true }
+);
+
+watch(
+  () => props.nodeData,
+  (newVal) => {
+    if (segmentedValue.value === "Node") {
+      tableData.value = buildNodeTableData(newVal!);
+    }
+  }
+);
 </script>
