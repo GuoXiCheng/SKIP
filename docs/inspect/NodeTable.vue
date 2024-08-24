@@ -19,7 +19,8 @@ const props = defineProps<{
   nodeData: AccessibilityNode | null;
 }>();
 
-function buildWindowTableData(data: AccessibilityWindow) {
+function buildWindowTableData(data: AccessibilityWindow | null) {
+  if (!data) return [];
   return [
     {
       key: "应用名称",
@@ -44,7 +45,8 @@ function buildWindowTableData(data: AccessibilityWindow) {
   ];
 }
 
-function buildNodeTableData(data: AccessibilityNode) {
+function buildNodeTableData(data: AccessibilityNode | null) {
+  if (!data) return [];
   return [
     { key: "viewIdResourceName", value: data.viewIdResourceName },
     { key: "className", value: data.className },
@@ -64,9 +66,9 @@ watch(
   () => segmentedValue.value,
   (newVal) => {
     if (newVal === "Window") {
-      tableData.value = buildWindowTableData(props.rawData!);
+      tableData.value = buildWindowTableData(props.rawData);
     } else if (newVal === "Node") {
-      tableData.value = buildNodeTableData(props.nodeData!);
+      tableData.value = buildNodeTableData(props.nodeData);
     }
   },
   { immediate: true }

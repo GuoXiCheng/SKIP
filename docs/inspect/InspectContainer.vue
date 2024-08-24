@@ -1,11 +1,12 @@
 <template>
-  <el-row class="h-screen" v-if="rawData">
+  <el-row class="h-screen">
     <el-col :span="6">
       <NodePic
         :raw-data="rawData"
         :img-src="imgSrc"
         :current-node-key="currentNodeKey"
         @handle-img-node-click="handleImgNodeClick"
+        v-if="rawData"
       />
     </el-col>
     <el-col :span="9" class="h-full overflow-y-auto">
@@ -13,10 +14,11 @@
         :tree-data="treeData"
         :current-node-key="currentNodeKey"
         @handle-tree-node-click="handleTreeNodeClick"
+        v-if="treeData"
       />
     </el-col>
     <el-col :span="9">
-      <NodeTable :node-data="nodeData" :raw-data="rawData" />
+      <NodeTable :node-data="nodeData" :raw-data="rawData" v-if="rawData" />
     </el-col>
   </el-row>
 </template>

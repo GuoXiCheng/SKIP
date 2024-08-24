@@ -1,5 +1,8 @@
 <template>
   <div class="h-full relative flex justify-center">
+    <div id="subWindow" class="bg-green-500 absolute z-30 hidden">
+      <div>{{ position.x }},{{ position.y }}</div>
+    </div>
     <canvas id="topCanvas" class="cursor-crosshair absolute z-20"></canvas>
     <canvas id="bottomCanvas" class="cursor-crosshair absolute z-10"></canvas>
   </div>
@@ -12,6 +15,7 @@ import { AccessibilityWindow } from "./types";
 const emit = defineEmits(["handleImgNodeClick"]);
 const renderUI = ref({ renderWidth: 0, renderHeight: 0 });
 const renderRectangle = ref({ node: {}, left: 0, top: 0, right: 0, bottom: 0 });
+const position = ref({ x: 0, y: 0 });
 
 const props = defineProps<{
   rawData: AccessibilityWindow | null;
@@ -176,6 +180,29 @@ onMounted(() => {
         emit("handleImgNodeClick", node);
       }
     });
+  });
+
+  topCanvas.addEventListener("mouseenter", () => {
+    const subWindow = document.getElementById("subWindow") as HTMLDivElement;
+    subWindow.classList.remove("hidden");
+
+    subWindow.style.left = topCanvas.parentElement?.clientWidth! + "px";
+    subWindow.style.top = topCanvas.parentElement?.clientWidth! / 10 + "px";
+  });
+
+  topCanvas.addEventListener("mouseleave", () => {
+    const subWindow = document.getElementById("subWindow") as HTMLDivElement;
+    subWindow.classList.add("hidden");
+  });
+
+  topCanvas.addEventListener("mousemove", (event) => {
+    const { offsetX, offsetY } = event;
+    const rateW = topCanvas.width / raw.screenWidth;
+    const rateH = topCanvas.height / raw.screenHeight;
+    position.value = {
+      x: Math.round(offsetX / rateW),
+      y: Math.round(offsetY / rateH),
+    };
   });
 });
 </script>
