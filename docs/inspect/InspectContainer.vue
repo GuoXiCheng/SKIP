@@ -38,7 +38,8 @@ const currentNodeKey = ref<number>(-1);
 const imgSrc = ref<string>("");
 
 onMounted(async () => {
-  const response = await fetch("/94e04ea4-2502-4c24-a7f1-7574270fa921.zip");
+  const params = new URLSearchParams(window.location.href.split("?")[1]);
+  const response = await fetch(`/${params.get("uuid")}.zip`);
   const arrayBuffer = await response.arrayBuffer();
   const zip = await JSZip.loadAsync(arrayBuffer);
 
