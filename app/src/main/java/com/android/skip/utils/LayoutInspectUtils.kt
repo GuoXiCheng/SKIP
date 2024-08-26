@@ -62,16 +62,15 @@ object LayoutInspectUtils {
     }
 
     fun startRecordNodeInfo(rootNode: AccessibilityNodeInfo, className: CharSequence?) {
-        if (className == null) return
+        className?.let {
+            val classNameStr = it.toString()
+            if (!AccessibilityUtils.isSystemClass(classNameStr)) activityName = classNameStr
+        }
 
-        val classNameStr = className.toString()
-        if (!AccessibilityUtils.isSystemClass(classNameStr)) activityName = classNameStr
-
-        if (!isStartInspectNode) return
-
-        isStartInspectNode = false
-
-        bfsTraverse(rootNode)
+        if (isStartInspectNode) {
+            isStartInspectNode = false
+            bfsTraverse(rootNode)
+        }
     }
 
     @SuppressLint("WrongConstant")
