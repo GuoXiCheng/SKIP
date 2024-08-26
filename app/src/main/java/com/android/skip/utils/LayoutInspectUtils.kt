@@ -24,26 +24,27 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.util.UUID
+import kotlin.properties.Delegates
 
 object LayoutInspectUtils {
-    private var filename: String? = null
+    private var fileId: Long? = null
     private var isStartInspectNode: Boolean = false
     private var isStartScreenCapture: Boolean = false
     private var activityName: String? = null
 
     fun startLayoutInspect() {
-        filename = UUID.randomUUID().toString()
+        fileId = System.currentTimeMillis()
         isStartInspectNode = true
         isStartScreenCapture = true
 
         CoroutineScope(Dispatchers.IO).launch {
             repeat(3) { index ->
                 delay(3000)
-                val zipFile = File(SKIPApp.context.filesDir, "$filename.zip")
+                val zipFile = File(SKIPApp.context.filesDir, "$fileId.zip")
                 if (FileUtils.isFileExists(zipFile)) return@repeat
 
-                val pngFile = File(SKIPApp.context.filesDir, "$filename.png")
-                val jsonFile = File(SKIPApp.context.filesDir, "$filename.json")
+                val pngFile = File(SKIPApp.context.filesDir, "$fileId.png")
+                val jsonFile = File(SKIPApp.context.filesDir, "$fileId.json")
                 if (FileUtils.isFileExists(pngFile) && FileUtils.isFileExists(jsonFile)) {
                     ZipUtils.zipFiles(
                         listOf(
@@ -99,7 +100,7 @@ object LayoutInspectUtils {
                 image.close()
 
                 // 保存或处理bitmap
-                val file = File(SKIPApp.context.filesDir, "$filename.png")
+                val file = File(SKIPApp.context.filesDir, "$fileId.png")
                 saveBitmapToFile(bitmap, file)
                 isStartScreenCapture = false
             }
@@ -143,19 +144,18 @@ object LayoutInspectUtils {
         }
 
         val nodeRootSchema = NodeRootSchema(
-            filename.toString(),
+            fileId!!,
             InstalledAppUtils.getAppInfoByPackageName(root.packageName.toString()).name,
             root.packageName.toString(),
             activityName.toString(),
             ScreenUtils.getScreenHeight(),
             ScreenUtils.getScreenWidth(),
-            System.currentTimeMillis(),
             nodeChildSchemaList
         )
 
         val gson = Gson()
         val jsonStr = gson.toJson(nodeRootSchema)
-        val file = File(SKIPApp.context.filesDir, "$filename.json")
+        val file = File(SKIPApp.context.filesDir, "$fileId.json")
         file.writeText(jsonStr)
     }
 
