@@ -4,13 +4,12 @@ export interface Tree {
 }
 
 export interface AccessibilityWindow {
-  uuid: string;
+  fileId: number;
   appName: string;
   activityName: string;
   packageName: string;
   screenHeight: number;
   screenWidth: number;
-  createTime: number;
   nodes: AccessibilityNode[];
 }
 

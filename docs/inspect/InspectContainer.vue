@@ -39,7 +39,7 @@ const imgSrc = ref<string>("");
 
 onMounted(async () => {
   const params = new URLSearchParams(window.location.href.split("?")[1]);
-  const response = await fetch(`/${params.get("uuid")}.zip`);
+  const response = await fetch(`/${params.get("fileId")}.zip`);
   const arrayBuffer = await response.arrayBuffer();
   const zip = await JSZip.loadAsync(arrayBuffer);
 
