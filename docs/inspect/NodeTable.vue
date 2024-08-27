@@ -1,9 +1,11 @@
 <template>
-  <el-segmented v-model="segmentedValue" :options="options" block />
-  <el-table :data="tableData" style="width: 100%">
-    <el-table-column prop="key" label="属性" width="auto" />
-    <el-table-column prop="value" label="值" width="auto" />
-  </el-table>
+  <div>
+    <el-segmented v-model="segmentedValue" :options="options" block />
+    <el-table :data="tableData" style="width: 100%">
+      <el-table-column prop="key" label="属性" width="auto" />
+      <el-table-column prop="value" label="值" width="auto" />
+    </el-table>
+  </div>
 </template>
 
 <script lang="ts" setup>
