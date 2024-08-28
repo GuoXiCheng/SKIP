@@ -31,6 +31,7 @@ import NodePic from "./NodePic.vue";
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { AccessibilityNode, AccessibilityNodeTree, AccessibilityWindow } from "./types";
 import JSZip from "jszip";
+import { NodeDB } from "./MyDB";
 
 const treeData = ref<AccessibilityNodeTree[]>([]);
 const nodeData = ref<AccessibilityNode | null>(null);
@@ -63,6 +64,15 @@ onMounted(async () => {
   treeData.value = buildTree(data.nodes, -1);
 
   colResize.value?.addEventListener("mousedown", handleMouseDown);
+
+  NodeDB.addNodeInfo({
+    fileId: data.fileId,
+    raw: data,
+    pic: blob,
+    appName: data.appName,
+    packageName: data.packageName,
+    activityName: data.activityName,
+  });
 });
 
 const handleColMove = (e: MouseEvent) => {
