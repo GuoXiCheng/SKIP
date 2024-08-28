@@ -30,7 +30,6 @@ import NodeTable from "./NodeTable.vue";
 import NodePic from "./NodePic.vue";
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { AccessibilityNode, AccessibilityNodeTree, AccessibilityWindow } from "./types";
-import JSZip from "jszip";
 
 const treeData = ref<AccessibilityNodeTree[]>([]);
 const nodeData = ref<AccessibilityNode | null>(null);
@@ -41,26 +40,23 @@ const colResize = ref<HTMLDivElement>();
 const nodeTreeWidth = ref<number>(0);
 const nodeTableWidth = ref<number>(0);
 
+const props = defineProps<{ raw: AccessibilityWindow | null; pic: Blob | null }>();
+
 onMounted(async () => {
   const initColWidth = (window.innerWidth / 24) * 9;
   nodeTreeWidth.value = initColWidth;
   nodeTableWidth.value = initColWidth;
 
-  const params = new URLSearchParams(window.location.href.split("?")[1]);
-  const response = await fetch(`/${params.get("fileId")}.zip`);
-  const arrayBuffer = await response.arrayBuffer();
-  const zip = await JSZip.loadAsync(arrayBuffer);
+  const { raw, pic } = props;
+  if (raw == null || pic == null) {
+    return;
+  }
 
-  const pngFile = zip.filter((relativePath, file) => relativePath.endsWith(".png"));
-  const blob = await pngFile[0].async("blob");
-  const imgUrl = URL.createObjectURL(blob);
+  const imgUrl = URL.createObjectURL(pic);
   imgSrc.value = imgUrl;
 
-  const jsonFile = zip.filter((relativePath, file) => relativePath.endsWith(".json"));
-  const jsonText = await jsonFile[0].async("text");
-  const data = JSON.parse(jsonText) as AccessibilityWindow;
-  rawData.value = data;
-  treeData.value = buildTree(data.nodes, -1);
+  rawData.value = raw;
+  treeData.value = buildTree(raw.nodes, -1);
 
   colResize.value?.addEventListener("mousedown", handleMouseDown);
 });
