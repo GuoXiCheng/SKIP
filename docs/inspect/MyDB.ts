@@ -45,4 +45,9 @@ export class NodeDB {
     const db = await NodeDB.getTable();
     return db.getAll(STORE_NAME);
   }
+
+  static async getNodeInfo(fileId: number): Promise<NodeTableField | undefined> {
+    const db = await NodeDB.getTable();
+    return db.get(STORE_NAME, fileId);
+  }
 }
