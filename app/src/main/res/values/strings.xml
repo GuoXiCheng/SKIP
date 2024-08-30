@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">SKIP</string>
+    <string name="layout_inspect">布局检查</string>
+    <string name="alive">应用保活</string>
+    <string name="whitelist">应用白名单</string>
+    <string name="settings">设置</string>
+    <string name="about">关于</string>
 </resources>
