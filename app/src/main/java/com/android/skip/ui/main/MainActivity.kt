@@ -1,6 +1,8 @@
 package com.android.skip.ui.main
 
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +20,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.skip.R
+import com.android.skip.ui.components.FlatButton
+import com.android.skip.ui.components.ResourceIcon
+import com.android.skip.ui.components.RowContent
 import com.android.skip.ui.main.start.StartButton
 import com.android.skip.ui.main.start.StartViewModel
 import com.android.skip.ui.theme.AppTheme
@@ -39,7 +44,14 @@ class MainActivity : AppCompatActivity() {
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     AppTitle()
-                    StartButton(startViewModel = startViewModel)
+                    StartButton(startViewModel = startViewModel) {
+                        startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                    }
+                    KeepAliveButton()
+                    WhitelistButton()
+                    LayoutInspectButton()
+                    SettingsButton()
+                    AboutButton()
                 }
             }
         }
@@ -54,4 +66,67 @@ fun AppTitle() {
         fontWeight = FontWeight.Bold,
         color = MaterialTheme.colorScheme.onBackground
     )
+}
+
+@Composable
+fun LayoutInspectButton() {
+    FlatButton(
+        content = {
+            RowContent(
+                stringResource(id = R.string.layout_inspect),
+                null,
+                { ResourceIcon(iconResource = R.drawable.fit_screen) })
+        }) {
+
+    }
+}
+
+@Composable
+fun KeepAliveButton() {
+    FlatButton(
+        content = {
+            RowContent(
+                stringResource(id = R.string.alive),
+                null,
+                { ResourceIcon(iconResource = R.drawable.all_inclusive) })
+        }) {
+    }
+}
+
+@Composable
+fun WhitelistButton() {
+    FlatButton(
+        content = {
+            RowContent(
+                stringResource(id = R.string.whitelist),
+                null,
+                { ResourceIcon(iconResource = R.drawable.app_registration) }
+            )
+        }) {
+    }
+}
+
+@Composable
+fun SettingsButton() {
+    FlatButton(
+        content = {
+            RowContent(
+                stringResource(id = R.string.settings),
+                null,
+                { ResourceIcon(iconResource = R.drawable.settings) }
+            )
+        }) {
+    }
+}
+
+@Composable
+fun AboutButton() {
+    FlatButton(
+        content = {
+            RowContent(
+                stringResource(id = R.string.about),
+                null,
+                { ResourceIcon(iconResource = R.drawable.info) })
+        }) {
+    }
 }

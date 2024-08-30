@@ -20,14 +20,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun StartButton(startViewModel: StartViewModel) {
+fun StartButton(startViewModel: StartViewModel, onClick: () -> Unit = {}) {
     val buttonState by startViewModel.buttonState.collectAsState()
 
     ExtendedFloatingActionButton(
         modifier = Modifier
             .fillMaxWidth()
             .height(80.dp),
-        onClick = {},
+        onClick = onClick,
         content = {
             Row(
                 modifier = Modifier.fillMaxWidth(),
