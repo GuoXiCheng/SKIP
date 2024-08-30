@@ -1,7 +1,8 @@
-package com.android.skip.ui
+package com.android.skip.ui.main
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,10 +18,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.skip.R
+import com.android.skip.ui.main.start.StartButton
+import com.android.skip.ui.main.start.StartViewModel
 import com.android.skip.ui.theme.AppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    private val startViewModel by viewModels<StartViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -33,6 +39,7 @@ class MainActivity : AppCompatActivity() {
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     AppTitle()
+                    StartButton(startViewModel = startViewModel)
                 }
             }
         }
