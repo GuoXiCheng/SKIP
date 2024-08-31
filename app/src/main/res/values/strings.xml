@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">SKIP</string>
+    <string name="accessibility_description">SKIP 可以帮您自动跳过应用开屏广告</string>
+
     <string name="layout_inspect">布局检查</string>
     <string name="alive">应用保活</string>
     <string name="whitelist">应用白名单</string>
