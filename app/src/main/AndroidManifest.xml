@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
     <application
         android:name=".MyApp"
         android:allowBackup="true"
@@ -13,6 +17,29 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SKIP"
         tools:targetApi="31">
+        <service
+            android:name=".service.InspectService"
+            android:enabled="true"
+            android:foregroundServiceType="mediaProjection" />
+
+        <activity
+            android:name=".ui.inspect.InspectActivity"
+            android:exported="false" />
+
+        <service
+            android:name=".service.MyAccessibilityService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility" />
+        </service>
+
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="true">

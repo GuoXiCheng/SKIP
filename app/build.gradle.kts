@@ -42,8 +42,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.utilcodex)
     implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -53,6 +53,8 @@ dependencies {
     implementation(libs.androidx.material3.android)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.ui)
+    implementation(libs.androidx.runtime.livedata)
+    kapt(libs.hilt.android.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
