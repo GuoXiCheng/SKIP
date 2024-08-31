@@ -16,6 +16,7 @@ foundationAndroid = "1.6.8"
 material3Android = "1.2.1"
 ui = "1.6.8"
 utilcodex = "1.31.1"
+runtimeLivedata = "1.6.8"
 
 
 [libraries]
@@ -34,6 +35,7 @@ androidx-runtime-android = { group = "androidx.compose.runtime", name = "runtime
 androidx-foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "foundationAndroid" }
 androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
 utilcodex = { module = "com.blankj:utilcodex", version.ref = "utilcodex" }
+androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

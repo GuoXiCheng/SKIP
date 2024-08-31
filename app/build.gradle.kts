@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.androidx.material3.android)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.ui)
+    implementation(libs.androidx.runtime.livedata)
     kapt(libs.hilt.android.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

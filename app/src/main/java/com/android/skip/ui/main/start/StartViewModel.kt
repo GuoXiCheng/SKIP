@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.android.skip.MyApp
 import com.android.skip.R
 import com.android.skip.service.MyAccessibilityService
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ServiceUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -54,7 +55,7 @@ class StartViewModel @Inject constructor() : ViewModel() {
                 android.provider.Settings.Secure.ACCESSIBILITY_ENABLED
             )
         } catch (e: Settings.SettingNotFoundException) {
-            e.printStackTrace()
+            LogUtils.e(e)
         }
         val simpleStringSplitter = TextUtils.SimpleStringSplitter(':')
         if (accessibilityEnabled == 1) {

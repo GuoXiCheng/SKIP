@@ -19,10 +19,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.android.skip.MyApp
 import com.android.skip.R
 import com.android.skip.ui.components.FlatButton
 import com.android.skip.ui.components.ResourceIcon
 import com.android.skip.ui.components.RowContent
+import com.android.skip.ui.inspect.InspectActivity
 import com.android.skip.ui.main.start.StartButton
 import com.android.skip.ui.main.start.StartViewModel
 import com.android.skip.ui.theme.AppTheme
@@ -49,7 +51,9 @@ class MainActivity : AppCompatActivity() {
                     }
                     KeepAliveButton()
                     WhitelistButton()
-                    LayoutInspectButton()
+                    InspectButton {
+                        startActivity(Intent(MyApp.context, InspectActivity::class.java))
+                    }
                     SettingsButton()
                     AboutButton()
                 }
@@ -74,16 +78,16 @@ fun AppTitle() {
 }
 
 @Composable
-fun LayoutInspectButton() {
+fun InspectButton(onClick: () -> Unit = {}) {
     FlatButton(
         content = {
             RowContent(
                 stringResource(id = R.string.layout_inspect),
                 null,
                 { ResourceIcon(iconResource = R.drawable.fit_screen) })
-        }) {
-
-    }
+        },
+        onClick = onClick
+    )
 }
 
 @Composable
