@@ -28,7 +28,6 @@ import com.android.skip.ui.inspect.InspectActivity
 import com.android.skip.ui.main.start.StartButton
 import com.android.skip.ui.main.start.StartViewModel
 import com.android.skip.ui.theme.AppTheme
-import com.android.skip.util.AccessibilityStateUtils
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -64,7 +63,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        startViewModel.changeButtonState(AccessibilityStateUtils.getAccessibilityState())
     }
 }
 
