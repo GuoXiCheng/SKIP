@@ -47,11 +47,13 @@ class InspectActivity : AppCompatActivity() {
         startInspectViewModel.inspectState.observe(this) { value ->
             when (value) {
                 true -> {
-                    // TODO(通知权限检查)
-                    val mediaProjectionManager =
-                        getSystemService(MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
-                    val screenCaptureIntent = mediaProjectionManager.createScreenCaptureIntent()
-                    screenshotPermissionLauncher.launch(screenCaptureIntent)
+                    if (!ServiceUtils.isServiceRunning(InspectService::class.java)) {
+                        // TODO(通知权限检查)
+                        val mediaProjectionManager =
+                            getSystemService(MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
+                        val screenCaptureIntent = mediaProjectionManager.createScreenCaptureIntent()
+                        screenshotPermissionLauncher.launch(screenCaptureIntent)
+                    }
                 }
 
                 false -> {
