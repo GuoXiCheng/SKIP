@@ -27,33 +27,46 @@ object AccessibilityStateUtils {
      * 判断无障碍服务是否：启用
      */
     private fun isAccessibilitySettingsOn(): Boolean {
-        var accessibilityEnabled = 0
         val context = MyApp.context
-        val service = context.packageName + "/" + MyAccessibilityService::class.java.canonicalName
+        val serviceNameList = listOf(
+            "com.android.skip/.service.MyAccessibilityService",
+            "com.android.skip/com.android.skip.service.MyAccessibilityService"
+        )
+
+        var accessibilityEnabled = 0
         try {
             accessibilityEnabled = Settings.Secure.getInt(
                 context.applicationContext.contentResolver,
-                android.provider.Settings.Secure.ACCESSIBILITY_ENABLED
+                Settings.Secure.ACCESSIBILITY_ENABLED
             )
         } catch (e: Settings.SettingNotFoundException) {
             LogUtils.e(e)
+            return false
         }
-        val simpleStringSplitter = TextUtils.SimpleStringSplitter(':')
+
+        // 检查无障碍服务是否启用
         if (accessibilityEnabled == 1) {
             val settingsValue = Settings.Secure.getString(
                 context.applicationContext.contentResolver,
                 Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
             )
-            if (settingsValue != null) {
+
+            // 检查启用的无障碍服务列表是否包含目标服务
+            if (!settingsValue.isNullOrEmpty()) {
+                val simpleStringSplitter = TextUtils.SimpleStringSplitter(':')
                 simpleStringSplitter.setString(settingsValue)
                 while (simpleStringSplitter.hasNext()) {
                     val accessibilityService = simpleStringSplitter.next()
-                    if (accessibilityService.equals(service, ignoreCase = true)) return true
+                    if (serviceNameList.contains(accessibilityService)) {
+                        return true
+                    }
                 }
             }
         }
+
         return false
     }
+
 
     /**
      * 判断无障碍服务是否：可用
