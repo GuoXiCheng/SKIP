@@ -17,7 +17,9 @@ import com.android.skip.ui.inspect.start.StartInspectButton
 import com.android.skip.ui.inspect.start.StartInspectViewModel
 import com.android.skip.ui.theme.AppTheme
 import com.blankj.utilcode.util.ServiceUtils
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class InspectActivity : AppCompatActivity() {
     private val startInspectViewModel by viewModels<StartInspectViewModel>()
 

@@ -17,12 +17,19 @@ import android.os.IBinder
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.android.skip.R
+import com.android.skip.ui.inspect.start.StartInspectRepository
 import com.android.skip.ui.main.MainActivity
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class InspectService : Service() {
     private var mMediaProjection: MediaProjection? = null
     private var mProjectionManager: MediaProjectionManager? = null
     private var virtualDisplay: VirtualDisplay? = null
+
+    @Inject
+    lateinit var startInspectRepository: StartInspectRepository
 
     override fun onBind(intent: Intent): IBinder {
         TODO("Return the communication channel to the service.")
@@ -63,6 +70,8 @@ class InspectService : Service() {
                 mMediaProjection = mProjectionManager?.getMediaProjection(resultCode, data)
             }
         }
+
+        startInspectRepository.changeInspectState(true)
         return START_NOT_STICKY
     }
 
@@ -70,5 +79,7 @@ class InspectService : Service() {
         super.onDestroy()
         mMediaProjection?.stop()
         virtualDisplay?.release()
+
+        startInspectRepository.changeInspectState(false)
     }
 }
