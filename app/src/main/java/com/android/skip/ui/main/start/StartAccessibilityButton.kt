@@ -20,8 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun StartButton(startViewModel: StartViewModel, onClick: () -> Unit = {}) {
-    val buttonState by startViewModel.buttonState.collectAsState()
+fun StartButton(startAccessibilityViewModel: StartAccessibilityViewModel, onClick: () -> Unit = {}) {
+    val buttonState by startAccessibilityViewModel.buttonState.collectAsState()
 
     ExtendedFloatingActionButton(
         modifier = Modifier
