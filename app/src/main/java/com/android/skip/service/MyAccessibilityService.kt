@@ -15,11 +15,15 @@ class MyAccessibilityService : AccessibilityService() {
     @Inject
     lateinit var repository: StartAccessibilityRepository
 
-    override fun onAccessibilityEvent(p0: AccessibilityEvent?) {
+    override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         try {
-            getCurrentRootNode()
+            val activityName = getActivityName(event)
+
+            activityName ?: return
+
+            LogUtils.d("className: $activityName")
         } catch (e: Exception) {
-            LogUtils.e(e)
+//            LogUtils.e(e)
         }
     }
 
@@ -39,5 +43,26 @@ class MyAccessibilityService : AccessibilityService() {
 
     private fun getCurrentRootNode(): AccessibilityNodeInfo {
         return rootInActiveWindow ?: throw IllegalStateException("No valid root node available")
+    }
+
+    private fun isSystemClass(className: String): Boolean {
+        return try {
+            val clazz = Class.forName(className)
+            val packageName = clazz.getPackage()?.name
+            packageName != null && (packageName.startsWith("android") || packageName.startsWith("androidx"))
+        } catch (e: ClassNotFoundException) {
+            false
+        }
+    }
+
+    private fun getActivityName(event: AccessibilityEvent?): String? {
+        event ?: return null
+        val className = event.className
+
+        className ?: return null
+        val classNameStr = className.toString()
+
+        val isSystem = isSystemClass(classNameStr)
+        return if (!isSystem) classNameStr else null
     }
 }
