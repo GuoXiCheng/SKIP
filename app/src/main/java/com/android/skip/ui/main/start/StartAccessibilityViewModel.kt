@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class StartViewModel @Inject constructor(private val repository: StartAccessibilityRepository) : ViewModel() {
+class StartAccessibilityViewModel @Inject constructor(private val repository: StartAccessibilityRepository) : ViewModel() {
     private val stopped = ButtonState(Color(0xFF808080), "已停止\n点此启动", R.drawable.block)
     private val started = ButtonState(Color(0xFF1E4377), "运行中", R.drawable.check_circle)
     private val faulted = ButtonState(Color(0xFF771E1E), "发生故障\n点此重新启动", R.drawable.error)

@@ -25,14 +25,14 @@ import com.android.skip.ui.components.FlatButton
 import com.android.skip.ui.components.ResourceIcon
 import com.android.skip.ui.components.RowContent
 import com.android.skip.ui.inspect.InspectActivity
+import com.android.skip.ui.main.start.StartAccessibilityViewModel
 import com.android.skip.ui.main.start.StartButton
-import com.android.skip.ui.main.start.StartViewModel
 import com.android.skip.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    private val startViewModel by viewModels<StartViewModel>()
+    private val startAccessibilityViewModel by viewModels<StartAccessibilityViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     AppTitle()
-                    StartButton(startViewModel = startViewModel) {
+                    StartButton(startAccessibilityViewModel = startAccessibilityViewModel) {
                         startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
                     }
                     KeepAliveButton()
