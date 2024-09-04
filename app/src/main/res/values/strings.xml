@@ -2,9 +2,24 @@
     <string name="app_name">SKIP</string>
     <string name="accessibility_description">SKIP 可以帮您自动跳过应用开屏广告</string>
 
-    <string name="layout_inspect">布局检查</string>
+    <string name="inspect">布局检查</string>
+    <string name="inspect_start_title">是否启用布局检查</string>
+    <string name="inspect_start_subtitle">启用布局检查记录屏幕节点信息</string>
+
+
     <string name="alive">应用保活</string>
     <string name="whitelist">应用白名单</string>
     <string name="settings">设置</string>
+
     <string name="about">关于</string>
+    <string name="about_github_title">源代码</string>
+    <string name="about_github_subtitle">https://github.com/GuoXiCheng/SKIP</string>
+    <string name="about_docs_title">文档</string>
+    <string name="about_docs_subtitle">https://skip.guoxicheng.top</string>
+    <string name="about_docs_url">https://skip.guoxicheng.top/guide/intro/what-is-skip</string>
+    <string name="about_current_version">当前版本号: </string>
+
+    <string name="toast_start_accessibility_first">请先开启无障碍服务</string>
+    <string name="toast_save_success">保存成功</string>
+    <string name="toast_save_fail">保存失败</string>
 </resources>

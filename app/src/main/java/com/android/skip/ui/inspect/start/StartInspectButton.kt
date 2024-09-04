@@ -3,6 +3,7 @@ package com.android.skip.ui.inspect.start
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.res.stringResource
 import com.android.skip.R
 import com.android.skip.ui.components.FlatButton
 import com.android.skip.ui.components.ResourceIcon
@@ -14,8 +15,8 @@ fun StartInspectButton(startInspectViewModel: StartInspectViewModel) {
 
     FlatButton(content = {
         RowContent(
-            title = "是否启用布局检查",
-            subTitle = "启用布局检查记录节点信息",
+            title = stringResource(id = R.string.inspect_start_title),
+            subTitle = stringResource(id = R.string.inspect_start_subtitle),
             icon = { ResourceIcon(iconResource = R.drawable.fit_screen) },
             checked = inspectState,
             {
