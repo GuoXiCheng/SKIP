@@ -27,7 +27,7 @@ class InspectActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
-                ScaffoldPage(stringResource(id = R.string.layout_inspect), { finish() }) {
+                ScaffoldPage(stringResource(id = R.string.inspect), { finish() }) {
                     StartInspectButton(startInspectViewModel)
                 }
             }

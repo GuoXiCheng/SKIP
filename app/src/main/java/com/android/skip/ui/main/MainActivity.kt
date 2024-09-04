@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.skip.MyApp
 import com.android.skip.R
+import com.android.skip.ui.about.AboutActivity
 import com.android.skip.ui.components.FlatButton
 import com.android.skip.ui.components.ResourceIcon
 import com.android.skip.ui.components.RowContent
@@ -55,7 +56,9 @@ class MainActivity : AppCompatActivity() {
                         startActivity(Intent(MyApp.context, InspectActivity::class.java))
                     }
                     SettingsButton()
-                    AboutButton()
+                    AboutButton() {
+                        startActivity(Intent(MyApp.context, AboutActivity::class.java))
+                    }
                 }
             }
         }
@@ -81,7 +84,7 @@ fun InspectButton(onClick: () -> Unit = {}) {
     FlatButton(
         content = {
             RowContent(
-                stringResource(id = R.string.layout_inspect),
+                stringResource(id = R.string.inspect),
                 null,
                 { ResourceIcon(iconResource = R.drawable.fit_screen) })
         },
@@ -128,13 +131,13 @@ fun SettingsButton() {
 }
 
 @Composable
-fun AboutButton() {
+fun AboutButton(onClick: () -> Unit = {}) {
     FlatButton(
         content = {
             RowContent(
                 stringResource(id = R.string.about),
                 null,
                 { ResourceIcon(iconResource = R.drawable.info) })
-        }) {
-    }
+        }, onClick = onClick
+    )
 }
