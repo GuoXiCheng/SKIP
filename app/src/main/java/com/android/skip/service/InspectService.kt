@@ -8,18 +8,29 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.PixelFormat
+import android.hardware.display.DisplayManager
 import android.hardware.display.VirtualDisplay
+import android.media.ImageReader
 import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
 import android.os.Build
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.android.skip.R
 import com.android.skip.ui.inspect.start.StartInspectRepository
 import com.android.skip.ui.main.MainActivity
+import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.ScreenUtils
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -30,6 +41,9 @@ class InspectService : Service() {
 
     @Inject
     lateinit var startInspectRepository: StartInspectRepository
+
+    @Inject
+    lateinit var accessibilityInspectRepository: AccessibilityInspectRepository
 
     override fun onBind(intent: Intent): IBinder {
         TODO("Return the communication channel to the service.")
@@ -63,11 +77,13 @@ class InspectService : Service() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (mMediaProjection == null) {
-            val resultCode = intent?.getIntExtra("resultCode", Activity.RESULT_CANCELED)
-            val data = intent?.getParcelableExtra("data", Intent::class.java)
-            if (resultCode == Activity.RESULT_OK && data != null) {
-                mProjectionManager = getSystemService(MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
-                mMediaProjection = mProjectionManager?.getMediaProjection(resultCode, data)
+            val resultCode = intent?.getIntExtra("result_code", Activity.RESULT_CANCELED)
+            val resultData = intent?.getParcelableExtra("result_data", Intent::class.java)
+            if (resultCode == Activity.RESULT_OK && resultData != null) {
+                mProjectionManager =
+                    getSystemService(MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
+                mMediaProjection = mProjectionManager?.getMediaProjection(resultCode, resultData)
+                setupVirtualDisplay()
             }
         }
 
@@ -77,9 +93,78 @@ class InspectService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        mProjectionManager = null
         mMediaProjection?.stop()
+        mMediaProjection = null
         virtualDisplay?.release()
+        virtualDisplay = null
 
         startInspectRepository.changeInspectState(false)
+    }
+
+    private fun setupVirtualDisplay() {
+        // 在调用 createVirtualDisplay 之前，先注册回调
+        mMediaProjection?.registerCallback(object : MediaProjection.Callback() {
+            override fun onStop() {
+                // 当 MediaProjection 停止时，执行清理操作
+                virtualDisplay?.release()
+                virtualDisplay?.release()
+            }
+        }, null)
+
+        val displayWidth = ScreenUtils.getScreenWidth()
+        val displayHeight = ScreenUtils.getScreenHeight()
+        val density = ScreenUtils.getScreenDensityDpi()
+
+        val imageReader =
+            ImageReader.newInstance(displayWidth, displayHeight, PixelFormat.RGBA_8888, 2)
+        virtualDisplay = mMediaProjection?.createVirtualDisplay(
+            "SCREEN_CAPTURE",
+            displayWidth, displayHeight, density, DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
+            imageReader.surface, null, null
+        )
+
+        imageReader.setOnImageAvailableListener({ reader ->
+            if (!accessibilityInspectRepository.isStartCaptureScreen) {
+                // 清理缓冲区
+                reader.acquireLatestImage()?.close()
+                return@setOnImageAvailableListener
+            }
+
+            val image = reader.acquireLatestImage()
+            if (image != null) {
+                val planes = image.planes
+                val buffer = planes[0].buffer
+                val pixelStride = planes[0].pixelStride
+                val rowStride = planes[0].rowStride
+                val rowPadding = rowStride - pixelStride * displayWidth
+
+                // 计算 Bitmap 的宽度和高度
+                val bitmapWithStride = Bitmap.createBitmap(
+                    displayWidth + rowPadding / pixelStride, displayHeight, Bitmap.Config.ARGB_8888
+                )
+                bitmapWithStride.copyPixelsFromBuffer(buffer)
+                val bitmap =
+                    Bitmap.createBitmap(bitmapWithStride, 0, 0, displayWidth, displayHeight)
+                image.close()
+
+                // save bitmap
+                val file = File(
+                    accessibilityInspectRepository.filepath,
+                    "${accessibilityInspectRepository.fileId}.jpeg"
+                )
+
+                try {
+                    val outputStream = FileOutputStream(file)
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)
+                    outputStream.flush()
+                    outputStream.close()
+                } catch (e: IOException) {
+                    LogUtils.e(e)
+                }
+
+                accessibilityInspectRepository.stopCaptureScreen()
+            }
+        }, Handler(Looper.getMainLooper()))
     }
 }
