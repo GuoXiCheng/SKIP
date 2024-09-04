@@ -48,22 +48,23 @@ class AccessibilityInspectRepository @Inject constructor() {
         _fileId = System.currentTimeMillis()
 
         CoroutineScope(Dispatchers.IO).launch {
-            repeat(5) { index ->
+            val repeatTimes = 5
+            repeat(repeatTimes) { index ->
                 delay(1000)
                 val zipFile = File(filepath, "$fileId.zip")
                 if (FileUtils.isFileExists(zipFile)) return@repeat
 
-                val pngFile = File(filepath, "$fileId.png")
+                val jpegFile = File(filepath, "$fileId.jpeg")
                 val jsonFile = File(filepath, "$fileId.json")
-                if (FileUtils.isFileExists(pngFile) && FileUtils.isFileExists(jsonFile)) {
+                if (FileUtils.isFileExists(jpegFile) && FileUtils.isFileExists(jsonFile)) {
                     ZipUtils.zipFiles(
                         listOf(
-                            pngFile, jsonFile
+                            jpegFile, jsonFile
                         ), zipFile
                     )
                     MyToast.show("保存成功")
                 } else {
-                    if (index == 4) {
+                    if (index == repeatTimes - 1) {
                         MyToast.show("保存失败")
                     }
                 }

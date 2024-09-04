@@ -125,7 +125,6 @@ class InspectService : Service() {
         )
 
         imageReader.setOnImageAvailableListener({ reader ->
-            LogUtils.d("isStartCaptureScreen: ${accessibilityInspectRepository.isStartCaptureScreen}")
             if (!accessibilityInspectRepository.isStartCaptureScreen) {
                 // 清理缓冲区
                 reader.acquireLatestImage()?.close()
@@ -152,12 +151,12 @@ class InspectService : Service() {
                 // save bitmap
                 val file = File(
                     accessibilityInspectRepository.filepath,
-                    "${accessibilityInspectRepository.fileId}.png"
+                    "${accessibilityInspectRepository.fileId}.jpeg"
                 )
 
                 try {
                     val outputStream = FileOutputStream(file)
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)
                     outputStream.flush()
                     outputStream.close()
                 } catch (e: IOException) {
