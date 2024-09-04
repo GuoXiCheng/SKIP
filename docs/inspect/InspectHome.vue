@@ -39,8 +39,8 @@ onMounted(async () => {
   const arrayBuffer = await response.arrayBuffer();
   const zip = await JSZip.loadAsync(arrayBuffer);
 
-  const pngFile = zip.filter((relativePath, file) => relativePath.endsWith(".png"));
-  const blob = await pngFile[0].async("blob");
+  const jpegFile = zip.filter((relativePath, file) => relativePath.endsWith(".jpeg"));
+  const blob = await jpegFile[0].async("blob");
 
   const jsonFile = zip.filter((relativePath, file) => relativePath.endsWith(".json"));
   const jsonText = await jsonFile[0].async("text");
