@@ -77,12 +77,12 @@ class InspectService : Service() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (mMediaProjection == null) {
-            val resultCode = intent?.getIntExtra("resultCode", Activity.RESULT_CANCELED)
-            val data = intent?.getParcelableExtra("data", Intent::class.java)
-            if (resultCode == Activity.RESULT_OK && data != null) {
+            val resultCode = intent?.getIntExtra("result_code", Activity.RESULT_CANCELED)
+            val resultData = intent?.getParcelableExtra("result_data", Intent::class.java)
+            if (resultCode == Activity.RESULT_OK && resultData != null) {
                 mProjectionManager =
                     getSystemService(MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
-                mMediaProjection = mProjectionManager?.getMediaProjection(resultCode, data)
+                mMediaProjection = mProjectionManager?.getMediaProjection(resultCode, resultData)
                 setupVirtualDisplay()
             }
         }
@@ -93,8 +93,11 @@ class InspectService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        mProjectionManager = null
         mMediaProjection?.stop()
+        mMediaProjection = null
         virtualDisplay?.release()
+        virtualDisplay = null
 
         startInspectRepository.changeInspectState(false)
     }
@@ -135,14 +138,15 @@ class InspectService : Service() {
                 val buffer = planes[0].buffer
                 val pixelStride = planes[0].pixelStride
                 val rowStride = planes[0].rowStride
+                val rowPadding = rowStride - pixelStride * displayWidth
 
-                // create bitmap
-                val bitmapWidthStride = Bitmap.createBitmap(
-                    rowStride / pixelStride, displayHeight, Bitmap.Config.ARGB_8888
+                // 计算 Bitmap 的宽度和高度
+                val bitmapWithStride = Bitmap.createBitmap(
+                    displayWidth + rowPadding / pixelStride, displayHeight, Bitmap.Config.ARGB_8888
                 )
-                bitmapWidthStride.copyPixelsToBuffer(buffer)
+                bitmapWithStride.copyPixelsFromBuffer(buffer)
                 val bitmap =
-                    Bitmap.createBitmap(bitmapWidthStride, 0, 0, displayWidth, displayHeight)
+                    Bitmap.createBitmap(bitmapWithStride, 0, 0, displayWidth, displayHeight)
                 image.close()
 
                 // save bitmap

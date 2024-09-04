@@ -37,8 +37,8 @@ class InspectActivity : AppCompatActivity() {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == Activity.RESULT_OK) {
                     val intent = Intent(this, InspectService::class.java).apply {
-                        putExtra("resultCode", result.resultCode)
-                        putExtra("data", result.data)
+                        putExtra("result_code", result.resultCode)
+                        putExtra("result_data", result.data)
                     }
                     ContextCompat.startForegroundService(this, intent)
                 } else {
