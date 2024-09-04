@@ -42,6 +42,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.gson)
     implementation(libs.utilcodex)
     implementation(libs.hilt.android)
     implementation(libs.androidx.core.ktx)

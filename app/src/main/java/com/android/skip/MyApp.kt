@@ -8,7 +8,7 @@ import com.blankj.utilcode.util.Utils
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class MyApp: Application() {
+class MyApp : Application() {
     override fun onCreate() {
         super.onCreate()
         context = this
