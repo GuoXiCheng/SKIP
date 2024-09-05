@@ -18,13 +18,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
 fun RowContent(
-    title: String,
-    subTitle: String? = null,
+    title: Int,
+    subTitle: Int? = null,
     icon: @Composable (() -> Unit)? = null,
     checked: Boolean? = null,
     onCheckedChange: (Boolean) -> Unit = {}
@@ -44,9 +45,9 @@ fun RowContent(
                 Spacer(Modifier.width(16.dp))
             }
             Column {
-                Text(title, fontSize = 16.sp, color = MaterialTheme.colorScheme.onBackground)
+                Text(stringResource(id = title), fontSize = 16.sp, color = MaterialTheme.colorScheme.onBackground)
                 if (subTitle != null) {
-                    Text(subTitle, fontSize = 12.sp, color = MaterialTheme.colorScheme.onBackground)
+                    Text(stringResource(id = subTitle), fontSize = 12.sp, color = MaterialTheme.colorScheme.onBackground)
                 }
             }
         }

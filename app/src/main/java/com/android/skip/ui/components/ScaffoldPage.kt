@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -13,13 +12,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.skip.R
 
 @Composable
 fun ScaffoldPage(
-    barTitle: String,
+    barTitle: Int,
     onBackClick: () -> Unit,
     content: @Composable (PaddingValues) -> Unit
 ) {
@@ -32,7 +32,7 @@ fun ScaffoldPage(
                 ResourceIcon(iconResource = R.drawable.arrow_back)
             }
             Text(
-                text = barTitle,
+                text = stringResource(id = barTitle),
                 fontSize = 24.sp,
                 modifier = Modifier.align(Alignment.CenterVertically)
             )
