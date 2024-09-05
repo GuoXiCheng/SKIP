@@ -1,8 +1,8 @@
 <template>
-  <template v-if="isShowInspectContainer">
+  <template v-if="isShowInspectContainer == true">
     <InspectContainer :raw="raw" :pic="pic" />
   </template>
-  <template v-else>
+  <template v-else-if="isShowInspectContainer == false">
     <el-container>
       <el-header class="flex items-center"><InspectHeader @upload-success="handleUploadSuccess" /></el-header>
       <el-main><InspectTable :table-data="tableData" /></el-main>
@@ -18,7 +18,7 @@ import { NodeDB } from "./MyDB";
 import { AccessibilityWindow, FileTableData } from "./types";
 import { useZip } from "./hook/useZip";
 
-const isShowInspectContainer = ref(false);
+const isShowInspectContainer = ref();
 const raw = ref<AccessibilityWindow | null>(null);
 const pic = ref<Blob | null>(null);
 const tableData = ref<FileTableData[]>([]);
