@@ -3,13 +3,17 @@
     <InspectContainer :raw="raw" :pic="pic" />
   </template>
   <template v-else>
-    <InspectTable />
+    <el-container>
+      <el-header class="flex items-center"><InspectHeader /></el-header>
+      <el-main><InspectTable /></el-main>
+    </el-container>
   </template>
 </template>
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 import InspectContainer from "./InspectContainer.vue";
 import InspectTable from "./InspectTable.vue";
+import InspectHeader from "./InspectHeader.vue";
 import { NodeDB } from "./MyDB";
 import { AccessibilityWindow } from "./types";
 import JSZip from "jszip";

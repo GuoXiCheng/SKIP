@@ -1,0 +1,42 @@
+import JSZip from "jszip";
+import { AccessibilityWindow } from "../types";
+import { ref } from "vue";
+import { NodeDB } from "../MyDB";
+
+export function useZip(arrayBuffer: ArrayBuffer) {
+  const pic = ref<Blob>();
+  const raw = ref<AccessibilityWindow>();
+  const added = ref(false);
+
+  const extractZip = async () => {
+    const zip = await JSZip.loadAsync(arrayBuffer);
+
+    const jpegFile = zip.filter((relativePath, file) => relativePath.endsWith(".jpeg"));
+    const blobPromise = jpegFile[0].async("blob");
+
+    const jsonFile = zip.filter((relativePath, file) => relativePath.endsWith(".json"));
+    const jsonPromise = jsonFile[0].async("text");
+
+    const [blobFile, jsonText] = await Promise.all([blobPromise, jsonPromise]);
+    const jsonObj = JSON.parse(jsonText) as AccessibilityWindow;
+
+    raw.value = jsonObj;
+    pic.value = blobFile;
+
+    const { fileId, appName, packageName, activityName } = jsonObj;
+    const targetNode = await NodeDB.getNodeInfo(fileId);
+    if (targetNode == null) {
+      await NodeDB.addNodeInfo({
+        fileId,
+        raw: jsonObj,
+        pic: blobFile,
+        appName,
+        packageName,
+        activityName,
+      });
+      added.value = true;
+    }
+  };
+
+  return { pic, raw, added, extractZip };
+}
