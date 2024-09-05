@@ -26,14 +26,14 @@ const tableData = ref<FileTableData[]>([]);
 const refreshTable = async () => {
   const nodeInfoList = await NodeDB.getAllNodeInfo();
   tableData.value = nodeInfoList
+    .sort((a, b) => b.createTime - a.createTime)
     .map((item) => ({
       fileId: item.fileId,
-      createTime: new Date(item.fileId).toLocaleString(),
+      createTime: new Date(item.createTime).toLocaleString(),
       appName: item.appName,
       packageName: item.packageName,
       activityName: item.activityName,
-    }))
-    .sort((a, b) => b.fileId - a.fileId);
+    }));
 };
 
 const handleUploadSuccess = () => {
@@ -42,14 +42,13 @@ const handleUploadSuccess = () => {
 
 onMounted(async () => {
   const params = new URLSearchParams(window.location.href.split("?")[1]);
-  const fileIdParam = params.get("fileId");
-  if (fileIdParam == null) {
+  const fileId = params.get("fileId");
+  if (fileId == null) {
     isShowInspectContainer.value = false;
     refreshTable();
     return;
   }
 
-  const fileId = parseInt(fileIdParam);
   const nodeInfo = await NodeDB.getNodeInfo(fileId);
   if (nodeInfo != null) {
     raw.value = nodeInfo.raw;

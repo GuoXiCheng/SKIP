@@ -23,7 +23,7 @@ export function useZip(arrayBuffer: ArrayBuffer) {
     raw.value = jsonObj;
     pic.value = blobFile;
 
-    const { fileId, appName, packageName, activityName } = jsonObj;
+    const { fileId, appName, packageName, activityName, createTime } = jsonObj;
     const targetNode = await NodeDB.getNodeInfo(fileId);
     if (targetNode == null) {
       await NodeDB.addNodeInfo({
@@ -33,6 +33,7 @@ export function useZip(arrayBuffer: ArrayBuffer) {
         appName,
         packageName,
         activityName,
+        createTime,
       });
       added.value = true;
     }

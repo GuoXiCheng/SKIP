@@ -2,17 +2,18 @@ import { openDB, DBSchema, IDBPDatabase } from "idb";
 import { AccessibilityWindow } from "./types";
 
 interface NodeTableField {
-  fileId: number;
+  fileId: string;
   appName: string;
   packageName: string;
   activityName: string;
+  createTime: number;
   raw: AccessibilityWindow;
   pic: Blob;
 }
 
 interface MyDBSchema extends DBSchema {
   NodeTableSchema: {
-    key: number;
+    key: string;
     value: NodeTableField;
   };
 }
@@ -46,7 +47,7 @@ export class NodeDB {
     return db.getAll(STORE_NAME);
   }
 
-  static async getNodeInfo(fileId: number): Promise<NodeTableField | undefined> {
+  static async getNodeInfo(fileId: string): Promise<NodeTableField | undefined> {
     const db = await NodeDB.getTable();
     return db.get(STORE_NAME, fileId);
   }

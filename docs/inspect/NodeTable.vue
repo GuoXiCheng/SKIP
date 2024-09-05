@@ -42,7 +42,7 @@ function buildWindowTableData(data: AccessibilityWindow | null) {
     },
     {
       key: "创建时间",
-      value: new Date(data.fileId).toLocaleString(),
+      value: new Date(data.createTime).toLocaleString(),
     },
   ];
 }
