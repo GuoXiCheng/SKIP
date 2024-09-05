@@ -18,9 +18,9 @@ class WebViewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
-                val url = intent.getStringExtra("url")
-                if (url != null) {
-                    WebViewPage(url = url)
+                val url = intent.getIntExtra("url", -1)
+                if (url != -1) {
+                    WebViewPage(url = getString(url))
                 }
             }
         }

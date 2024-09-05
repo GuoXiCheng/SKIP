@@ -8,7 +8,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import com.android.skip.R
 import com.android.skip.service.InspectService
@@ -27,7 +26,7 @@ class InspectActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
-                ScaffoldPage(stringResource(id = R.string.inspect), { finish() }) {
+                ScaffoldPage(R.string.inspect, { finish() }) {
                     StartInspectButton(startInspectViewModel)
                 }
             }

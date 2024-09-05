@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
 import com.android.skip.MyApp
 import com.android.skip.R
 import com.android.skip.ui.components.FlatButton
@@ -19,17 +18,17 @@ class AboutActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
-                ScaffoldPage(stringResource(id = R.string.about), { finish() }) {
+                ScaffoldPage(R.string.about, { finish() }) {
                     AboutGithub {
                         val intent = Intent(MyApp.context, WebViewActivity::class.java).apply {
-                            putExtra("url", getString(R.string.about_github_subtitle))
+                            putExtra("url", R.string.about_github_subtitle)
                         }
                         startActivity(intent)
                     }
 
                     AboutDocs {
                         val intent = Intent(MyApp.context, WebViewActivity::class.java).apply {
-                            putExtra("url", getString(R.string.about_docs_url))
+                            putExtra("url", R.string.about_docs_url)
                         }
                         startActivity(intent)
                     }
@@ -43,10 +42,8 @@ class AboutActivity : AppCompatActivity() {
 fun AboutGithub(onClick: () -> Unit) {
     FlatButton(content = {
         RowContent(
-            title = stringResource(id = R.string.about_github_title),
-            subTitle = stringResource(
-                id = R.string.about_github_subtitle
-            )
+            title = R.string.about_github_title,
+            subTitle = R.string.about_github_subtitle
         )
     }, onClick = onClick)
 }
@@ -55,8 +52,8 @@ fun AboutGithub(onClick: () -> Unit) {
 fun AboutDocs(onClick: () -> Unit) {
     FlatButton(content = {
         RowContent(
-            title = stringResource(id = R.string.about_docs_title),
-            subTitle = stringResource(id = R.string.about_docs_subtitle)
+            title = R.string.about_docs_title,
+            subTitle = R.string.about_docs_subtitle
         )
     }, onClick = onClick)
 }

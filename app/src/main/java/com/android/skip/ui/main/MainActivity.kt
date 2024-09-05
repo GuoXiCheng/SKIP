@@ -84,7 +84,7 @@ fun InspectButton(onClick: () -> Unit = {}) {
     FlatButton(
         content = {
             RowContent(
-                stringResource(id = R.string.inspect),
+                R.string.inspect,
                 null,
                 { ResourceIcon(iconResource = R.drawable.fit_screen) })
         },
@@ -97,7 +97,7 @@ fun KeepAliveButton() {
     FlatButton(
         content = {
             RowContent(
-                stringResource(id = R.string.alive),
+                R.string.alive,
                 null,
                 { ResourceIcon(iconResource = R.drawable.all_inclusive) })
         }) {
@@ -109,7 +109,7 @@ fun WhitelistButton() {
     FlatButton(
         content = {
             RowContent(
-                stringResource(id = R.string.whitelist),
+                R.string.whitelist,
                 null,
                 { ResourceIcon(iconResource = R.drawable.app_registration) }
             )
@@ -122,7 +122,7 @@ fun SettingsButton() {
     FlatButton(
         content = {
             RowContent(
-                stringResource(id = R.string.settings),
+                R.string.settings,
                 null,
                 { ResourceIcon(iconResource = R.drawable.settings) }
             )
@@ -135,7 +135,7 @@ fun AboutButton(onClick: () -> Unit = {}) {
     FlatButton(
         content = {
             RowContent(
-                stringResource(id = R.string.about),
+                R.string.about,
                 null,
                 { ResourceIcon(iconResource = R.drawable.info) })
         }, onClick = onClick

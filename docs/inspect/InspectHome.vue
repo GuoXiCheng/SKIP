@@ -1,32 +1,54 @@
 <template>
-  <template v-if="isShowInspectContainer">
+  <template v-if="isShowInspectContainer == true">
     <InspectContainer :raw="raw" :pic="pic" />
   </template>
-  <template v-else>
-    <InspectTable />
+  <template v-else-if="isShowInspectContainer == false">
+    <el-container>
+      <el-header class="flex items-center"><InspectHeader @upload-success="handleUploadSuccess" /></el-header>
+      <el-main><InspectTable :table-data="tableData" /></el-main>
+    </el-container>
   </template>
 </template>
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 import InspectContainer from "./InspectContainer.vue";
 import InspectTable from "./InspectTable.vue";
+import InspectHeader from "./InspectHeader.vue";
 import { NodeDB } from "./MyDB";
-import { AccessibilityWindow } from "./types";
-import JSZip from "jszip";
+import { AccessibilityWindow, FileTableData } from "./types";
+import { useZip } from "./hook/useZip";
 
-const isShowInspectContainer = ref(false);
+const isShowInspectContainer = ref();
 const raw = ref<AccessibilityWindow | null>(null);
 const pic = ref<Blob | null>(null);
+const tableData = ref<FileTableData[]>([]);
+
+const refreshTable = async () => {
+  const nodeInfoList = await NodeDB.getAllNodeInfo();
+  tableData.value = nodeInfoList
+    .sort((a, b) => b.createTime - a.createTime)
+    .map((item) => ({
+      fileId: item.fileId,
+      createTime: new Date(item.createTime).toLocaleString(),
+      appName: item.appName,
+      packageName: item.packageName,
+      activityName: item.activityName,
+    }));
+};
+
+const handleUploadSuccess = () => {
+  refreshTable();
+};
 
 onMounted(async () => {
   const params = new URLSearchParams(window.location.href.split("?")[1]);
-  const fileIdParam = params.get("fileId");
-  if (fileIdParam == null) {
+  const fileId = params.get("fileId");
+  if (fileId == null) {
     isShowInspectContainer.value = false;
+    refreshTable();
     return;
   }
 
-  const fileId = parseInt(fileIdParam);
   const nodeInfo = await NodeDB.getNodeInfo(fileId);
   if (nodeInfo != null) {
     raw.value = nodeInfo.raw;
@@ -37,26 +59,10 @@ onMounted(async () => {
 
   const response = await fetch(`/${fileId}.zip`);
   const arrayBuffer = await response.arrayBuffer();
-  const zip = await JSZip.loadAsync(arrayBuffer);
-
-  const jpegFile = zip.filter((relativePath, file) => relativePath.endsWith(".jpeg"));
-  const blob = await jpegFile[0].async("blob");
-
-  const jsonFile = zip.filter((relativePath, file) => relativePath.endsWith(".json"));
-  const jsonText = await jsonFile[0].async("text");
-  const data = JSON.parse(jsonText) as AccessibilityWindow;
-
-  raw.value = data;
-  pic.value = blob;
+  const { raw: rawJson, pic: picBlob, extractZip } = useZip(arrayBuffer);
+  await extractZip();
+  raw.value = rawJson.value as AccessibilityWindow;
+  pic.value = picBlob.value as Blob;
   isShowInspectContainer.value = true;
-
-  NodeDB.addNodeInfo({
-    fileId: data.fileId,
-    raw: data,
-    pic: blob,
-    appName: data.appName,
-    packageName: data.packageName,
-    activityName: data.activityName,
-  });
 });
 </script>
