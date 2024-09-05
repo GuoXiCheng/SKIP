@@ -129,6 +129,7 @@ class MyAccessibilityService : AccessibilityService() {
             className,
             ScreenUtils.getScreenHeight(),
             ScreenUtils.getScreenWidth(),
+            System.currentTimeMillis(),
             nodeChildSchemaList
         )
 

@@ -12,12 +12,13 @@ import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
+import java.util.UUID.randomUUID
 
 
 @Singleton
 class AccessibilityInspectRepository @Inject constructor() {
-    private var _fileId: Long = 0
-    val fileId: Long
+    private var _fileId: String = "none"
+    val fileId: String
         get() = _fileId
 
     private var _isStartCaptureNode: Boolean = false
@@ -46,7 +47,7 @@ class AccessibilityInspectRepository @Inject constructor() {
 
         _isStartCaptureScreen = true
         _isStartCaptureNode = true
-        _fileId = System.currentTimeMillis()
+        _fileId = randomUUID().toString()
 
         CoroutineScope(Dispatchers.IO).launch {
             val repeatTimes = 5
