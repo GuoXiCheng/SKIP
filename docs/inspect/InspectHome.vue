@@ -4,8 +4,8 @@
   </template>
   <template v-else>
     <el-container>
-      <el-header class="flex items-center"><InspectHeader /></el-header>
-      <el-main><InspectTable /></el-main>
+      <el-header class="flex items-center"><InspectHeader @upload-success="handleUploadSuccess" /></el-header>
+      <el-main><InspectTable :table-data="tableData" /></el-main>
     </el-container>
   </template>
 </template>
@@ -15,18 +15,37 @@ import InspectContainer from "./InspectContainer.vue";
 import InspectTable from "./InspectTable.vue";
 import InspectHeader from "./InspectHeader.vue";
 import { NodeDB } from "./MyDB";
-import { AccessibilityWindow } from "./types";
+import { AccessibilityWindow, FileTableData } from "./types";
 import { useZip } from "./hook/useZip";
 
 const isShowInspectContainer = ref(false);
 const raw = ref<AccessibilityWindow | null>(null);
 const pic = ref<Blob | null>(null);
+const tableData = ref<FileTableData[]>([]);
+
+const refreshTable = async () => {
+  const nodeInfoList = await NodeDB.getAllNodeInfo();
+  tableData.value = nodeInfoList
+    .map((item) => ({
+      fileId: item.fileId,
+      createTime: new Date(item.fileId).toLocaleString(),
+      appName: item.appName,
+      packageName: item.packageName,
+      activityName: item.activityName,
+    }))
+    .sort((a, b) => b.fileId - a.fileId);
+};
+
+const handleUploadSuccess = () => {
+  refreshTable();
+};
 
 onMounted(async () => {
   const params = new URLSearchParams(window.location.href.split("?")[1]);
   const fileIdParam = params.get("fileId");
   if (fileIdParam == null) {
     isShowInspectContainer.value = false;
+    refreshTable();
     return;
   }
 

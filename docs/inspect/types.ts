@@ -37,3 +37,11 @@ export interface AccessibilityNodeTree {
   viewIdResourceName?: string;
   childCount: number;
 }
+
+export interface FileTableData {
+  fileId: number;
+  createTime: string;
+  appName: string;
+  packageName: string;
+  activityName: string;
+}

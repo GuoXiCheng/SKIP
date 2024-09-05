@@ -15,6 +15,8 @@ import { useZip } from "./hook/useZip";
 const fullscreenLoading = ref(false);
 const fileList = ref<UploadFile[]>([]);
 
+const emits = defineEmits(["uploadSuccess"]);
+
 const handleOnChange = async () => {
   fullscreenLoading.value = false;
 
@@ -26,6 +28,8 @@ const handleOnChange = async () => {
   });
   const result = await Promise.all(fileListPromise);
   const count = result.filter((item) => item.added.value === true).length;
+
+  if (count > 0) emits("uploadSuccess");
 
   ElNotification({
     title: `上传完成 ${new Date().toLocaleString()}`,
