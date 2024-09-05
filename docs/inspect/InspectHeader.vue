@@ -1,20 +1,13 @@
 <template>
   <div>
-    <el-upload
-      v-model:file-list="fileList"
-      accept=".zip"
-      multiple
-      :show-file-list="false"
-      :auto-upload="false"
-      :on-change="handleOnChange"
-    >
-      <el-button v-loading.fullscreen.lock="fullscreenLoading" @click="handleStartUpload">批量上传</el-button>
+    <el-upload v-model:file-list="fileList" accept=".zip" multiple :show-file-list="false" :auto-upload="false">
+      <el-button v-loading.fullscreen.lock="fullscreenLoading">批量上传</el-button>
     </el-upload>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import type { UploadFile } from "element-plus";
 import { ElNotification } from "element-plus";
 import { useZip } from "./hook/useZip";
@@ -22,24 +15,7 @@ import { useZip } from "./hook/useZip";
 const fullscreenLoading = ref(false);
 const fileList = ref<UploadFile[]>([]);
 
-const debounce = (fn: Function, delay: number) => {
-  let timer: NodeJS.Timeout;
-  return (...args: any[]) => {
-    if (timer) {
-      clearTimeout(timer);
-    }
-    timer = setTimeout(() => {
-      fn(...args);
-    }, delay);
-  };
-};
-
-const handleStartUpload = () => {
-  fileList.value.length = 0;
-  fullscreenLoading.value = true;
-};
-
-const handleOnChange = debounce(async () => {
+const handleOnChange = async () => {
   fullscreenLoading.value = false;
 
   const fileListPromise = fileList.value.map(async (item) => {
@@ -52,7 +28,7 @@ const handleOnChange = debounce(async () => {
   const count = result.filter((item) => item.added.value === true).length;
 
   ElNotification({
-    title: "上传完成",
+    title: `上传完成 ${new Date().toLocaleString()}`,
     dangerouslyUseHTMLString: true,
     message: `
     <div>
@@ -62,10 +38,22 @@ const handleOnChange = debounce(async () => {
     </div>
     <div>
         成功上传 ${count} 个文件
-    </div> 
+    </div>
     `,
     type: "success",
     duration: 0,
   });
-}, 500);
+};
+
+onMounted(() => {
+  const el = document.querySelector<HTMLInputElement>(".el-upload__input")!;
+  el.oncancel = () => {
+    fullscreenLoading.value = false;
+  };
+  el.onclick = () => {
+    fileList.value.length = 0;
+    fullscreenLoading.value = true;
+  };
+  el.onchange = () => handleOnChange();
+});
 </script>

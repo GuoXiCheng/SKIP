@@ -16,7 +16,7 @@ import InspectTable from "./InspectTable.vue";
 import InspectHeader from "./InspectHeader.vue";
 import { NodeDB } from "./MyDB";
 import { AccessibilityWindow } from "./types";
-import JSZip from "jszip";
+import { useZip } from "./hook/useZip";
 
 const isShowInspectContainer = ref(false);
 const raw = ref<AccessibilityWindow | null>(null);
@@ -41,26 +41,10 @@ onMounted(async () => {
 
   const response = await fetch(`/${fileId}.zip`);
   const arrayBuffer = await response.arrayBuffer();
-  const zip = await JSZip.loadAsync(arrayBuffer);
-
-  const jpegFile = zip.filter((relativePath, file) => relativePath.endsWith(".jpeg"));
-  const blob = await jpegFile[0].async("blob");
-
-  const jsonFile = zip.filter((relativePath, file) => relativePath.endsWith(".json"));
-  const jsonText = await jsonFile[0].async("text");
-  const data = JSON.parse(jsonText) as AccessibilityWindow;
-
-  raw.value = data;
-  pic.value = blob;
+  const { raw: rawJson, pic: picBlob, extractZip } = useZip(arrayBuffer);
+  await extractZip();
+  raw.value = rawJson.value as AccessibilityWindow;
+  pic.value = picBlob.value as Blob;
   isShowInspectContainer.value = true;
-
-  NodeDB.addNodeInfo({
-    fileId: data.fileId,
-    raw: data,
-    pic: blob,
-    appName: data.appName,
-    packageName: data.packageName,
-    activityName: data.activityName,
-  });
 });
 </script>
