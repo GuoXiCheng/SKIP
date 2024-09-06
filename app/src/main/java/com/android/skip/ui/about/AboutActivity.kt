@@ -18,7 +18,7 @@ class AboutActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
-                ScaffoldPage(R.string.about, { finish() }) {
+                ScaffoldPage(R.string.about, { finish() },{
                     AboutGithub {
                         val intent = Intent(MyApp.context, WebViewActivity::class.java).apply {
                             putExtra("url", R.string.about_github_subtitle)
@@ -32,7 +32,7 @@ class AboutActivity : AppCompatActivity() {
                         }
                         startActivity(intent)
                     }
-                }
+                })
             }
         }
     }

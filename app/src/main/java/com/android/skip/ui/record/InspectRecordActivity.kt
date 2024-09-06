@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Text
 import com.android.skip.R
 import com.android.skip.ui.components.ScaffoldPage
 import com.android.skip.ui.record.list.InspectListColumn
@@ -20,8 +22,13 @@ class InspectRecordActivity : AppCompatActivity() {
 
         setContent {
             AppTheme {
-                ScaffoldPage(R.string.inspect_record_title, { finish() }) {
+                ScaffoldPage(R.string.inspect_record_title, { finish() }, {
                     InspectListColumn(inspectListViewModel)
+                }) {
+                    DropdownMenuItem(
+                        text = { Text(text = "全部删除") },
+                        onClick = { /*TODO*/ }
+                    )
                 }
             }
         }
