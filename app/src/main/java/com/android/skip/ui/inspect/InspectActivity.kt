@@ -32,12 +32,12 @@ class InspectActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
-                ScaffoldPage(R.string.inspect, { finish() }) {
+                ScaffoldPage(R.string.inspect, { finish() },{
                     StartInspectButton(startInspectViewModel)
                     InspectRecordButton(inspectRecordViewModel) {
                         startActivity(Intent(MyApp.context, InspectRecordActivity::class.java))
                     }
-                }
+                })
             }
         }
 
