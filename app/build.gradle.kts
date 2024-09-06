@@ -42,6 +42,9 @@ android {
 }
 
 dependencies {
+    implementation(libs.accompanist.drawablepainter)
+    implementation(libs.androidx.paging.compose)
+    implementation(libs.androidx.paging.runtime)
     implementation(libs.gson)
     implementation(libs.utilcodex)
     implementation(libs.hilt.android)

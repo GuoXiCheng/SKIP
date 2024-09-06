@@ -1,15 +1,18 @@
 package com.android.skip.service
 
 import android.accessibilityservice.AccessibilityService
+import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
+import com.android.skip.MyApp
 import com.android.skip.dataclass.AccessibilityNodeInfoCarrier
 import com.android.skip.dataclass.NodeChildSchema
 import com.android.skip.dataclass.NodeRootSchema
 import com.android.skip.ui.main.start.StartAccessibilityRepository
 import com.android.skip.util.AccessibilityState
+import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.ServiceUtils
@@ -124,7 +127,7 @@ class MyAccessibilityService : AccessibilityService() {
 
         val nodeRootSchema = NodeRootSchema(
             accessibilityInspectRepository.fileId,
-            rootNode.packageName.toString(),
+            getAppName(rootNode.packageName.toString()),
             rootNode.packageName.toString(),
             className,
             ScreenUtils.getScreenHeight(),
@@ -178,4 +181,17 @@ class MyAccessibilityService : AccessibilityService() {
 
         nodeChildSchemaList.add(myNodeChild)
     }
+
+    private fun getAppName(packageName: String): String {
+        return try {
+            val context = MyApp.context
+            val packageManager = context.packageManager
+            val applicationInfo = packageManager.getApplicationInfo(packageName, 0)
+            val appName = packageManager.getApplicationLabel(applicationInfo).toString()
+            appName
+        } catch (e: PackageManager.NameNotFoundException) {
+            "com.unknown.app"
+        }
+    }
+
 }

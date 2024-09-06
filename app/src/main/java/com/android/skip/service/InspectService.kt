@@ -74,11 +74,15 @@ class InspectService : Service() {
         startForeground(1, notification)
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (mMediaProjection == null) {
             val resultCode = intent?.getIntExtra("result_code", Activity.RESULT_CANCELED)
-            val resultData = intent?.getParcelableExtra("result_data", Intent::class.java)
+            val resultData = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                intent?.getParcelableExtra("result_data", Intent::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                intent?.getParcelableExtra("result_data")
+            }
             if (resultCode == Activity.RESULT_OK && resultData != null) {
                 mProjectionManager =
                     getSystemService(MEDIA_PROJECTION_SERVICE) as MediaProjectionManager

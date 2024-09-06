@@ -28,6 +28,7 @@ import com.android.skip.ui.components.RowContent
 import com.android.skip.ui.inspect.InspectActivity
 import com.android.skip.ui.main.start.StartAccessibilityViewModel
 import com.android.skip.ui.main.start.StartButton
+import com.android.skip.ui.record.InspectRecordActivity
 import com.android.skip.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
