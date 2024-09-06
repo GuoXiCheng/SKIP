@@ -9,5 +9,9 @@ import javax.inject.Inject
 class InspectRecordViewModel @Inject constructor(private val repository: InspectRecordRepository): ViewModel() {
     val zipFileCount: LiveData<Int> = repository.zipFileCount
 
-    fun changeZipFileCount() = repository.changeZipFileCount()
+    init {
+        changeZipFileCount()
+    }
+
+    private fun changeZipFileCount() = repository.changeZipFileCount()
 }

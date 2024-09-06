@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun RowContent(
-    title: Int,
+    title: Any? = null,
     subTitle: Any? = null,
     icon: @Composable (() -> Unit)? = null,
     checked: Boolean? = null,
@@ -45,14 +45,27 @@ fun RowContent(
                 Spacer(Modifier.width(16.dp))
             }
             Column {
-                Text(stringResource(id = title), fontSize = 16.sp, color = MaterialTheme.colorScheme.onBackground)
+                val titleValue = when (title) {
+                    is Int -> stringResource(id = title)
+                    is String -> title
+                    else -> throw Error("no match type")
+                }
+                Text(
+                    titleValue,
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
                 if (subTitle != null) {
-                    val textValue = when(subTitle) {
+                    val subTitleValue = when (subTitle) {
                         is Int -> stringResource(id = subTitle)
                         is String -> subTitle
                         else -> throw Error("no match type")
                     }
-                    Text(textValue, fontSize = 12.sp, color = MaterialTheme.colorScheme.onBackground)
+                    Text(
+                        subTitleValue,
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
                 }
             }
         }

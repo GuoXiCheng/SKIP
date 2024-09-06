@@ -19,6 +19,9 @@
         android:theme="@style/Theme.SKIP"
         tools:targetApi="31">
         <activity
+            android:name=".ui.record.InspectRecordActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.about.AboutActivity"
             android:exported="false" />
         <activity

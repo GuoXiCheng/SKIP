@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.android.skip.MyApp
 import com.android.skip.R
 import com.android.skip.service.InspectService
 import com.android.skip.ui.components.ScaffoldPage
@@ -16,6 +17,7 @@ import com.android.skip.ui.inspect.record.InspectRecordButton
 import com.android.skip.ui.inspect.record.InspectRecordViewModel
 import com.android.skip.ui.inspect.start.StartInspectButton
 import com.android.skip.ui.inspect.start.StartInspectViewModel
+import com.android.skip.ui.record.InspectRecordActivity
 import com.android.skip.ui.theme.AppTheme
 import com.blankj.utilcode.util.ServiceUtils
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,7 +34,9 @@ class InspectActivity : AppCompatActivity() {
             AppTheme {
                 ScaffoldPage(R.string.inspect, { finish() }) {
                     StartInspectButton(startInspectViewModel)
-                    InspectRecordButton(inspectRecordViewModel)
+                    InspectRecordButton(inspectRecordViewModel) {
+                        startActivity(Intent(MyApp.context, InspectRecordActivity::class.java))
+                    }
                 }
             }
         }
@@ -69,8 +73,6 @@ class InspectActivity : AppCompatActivity() {
                 }
             }
         }
-
-        inspectRecordViewModel.changeZipFileCount()
     }
 
     override fun onResume() {
