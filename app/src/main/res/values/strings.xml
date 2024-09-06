@@ -5,6 +5,8 @@
     <string name="inspect">布局检查</string>
     <string name="inspect_start_title">是否启用布局检查</string>
     <string name="inspect_start_subtitle">启用布局检查记录屏幕节点信息</string>
+    <string name="inspect_record_title">布局检查记录</string>
+    <string name="inspect_record_subtitle">当前存在 %1$s 条记录</string>
 
 
     <string name="alive">应用保活</string>

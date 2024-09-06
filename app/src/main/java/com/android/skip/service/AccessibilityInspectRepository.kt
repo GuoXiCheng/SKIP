@@ -2,6 +2,7 @@ package com.android.skip.service
 
 import com.android.skip.MyApp
 import com.android.skip.R
+import com.android.skip.ui.inspect.record.InspectRecordRepository
 import com.android.skip.util.MyToast
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.ZipUtils
@@ -17,6 +18,9 @@ import java.util.UUID.randomUUID
 
 @Singleton
 class AccessibilityInspectRepository @Inject constructor() {
+    @Inject
+    lateinit var inspectRecordRepository: InspectRecordRepository
+
     private var _fileId: String = "none"
     val fileId: String
         get() = _fileId
@@ -65,6 +69,7 @@ class AccessibilityInspectRepository @Inject constructor() {
                         ), zipFile
                     )
                     MyToast.show(R.string.toast_save_success)
+                    inspectRecordRepository.changeZipFileCount()
                 } else {
                     if (index == repeatTimes - 1) {
                         MyToast.show(R.string.toast_save_fail)
