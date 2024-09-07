@@ -6,6 +6,8 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -14,13 +16,17 @@ import com.android.skip.ui.components.RowContent
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 
 @Composable
-fun InspectListColumn(inspectListViewModel: InspectListViewModel, onClick: (fileId: String)->Unit) {
+fun InspectListColumn(
+    inspectListViewModel: InspectListViewModel,
+    onClick: (fileId: String) -> Unit
+) {
     // 获取分页数据流
     val lazyPagingItems = inspectListViewModel.filePagingData.collectAsLazyPagingItems()
 
     LazyColumn {
         items(lazyPagingItems.itemCount) { index ->
             lazyPagingItems[index]?.let {
+                val expandedState = remember { mutableStateOf(false) }
                 FlatButtonMenu(content = {
                     RowContent(
                         title = it.appName,
@@ -35,10 +41,19 @@ fun InspectListColumn(inspectListViewModel: InspectListViewModel, onClick: (file
                     )
                 }, menuItems = {
                     DropdownMenuItem(
+                        text = { Text(text = "删除") },
+                        onClick = {
+                            inspectListViewModel.changeDeleteFileId(it.fileId)
+                            expandedState.value = false
+                        })
+                    DropdownMenuItem(
                         text = { Text(text = "发送") },
-                        onClick = { onClick(it.fileId) }
+                        onClick = {
+                            onClick(it.fileId)
+                            expandedState.value = false
+                        }
                     )
-                })
+                }, expandedState)
             }
         }
 

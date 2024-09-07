@@ -46,5 +46,10 @@ class InspectRecordActivity : AppCompatActivity() {
                 }
             }
         }
+
+        inspectListViewModel.delFileId.observe(this) {
+            inspectListViewModel.deleteByFileId(it)
+            inspectListViewModel.reloadData()
+        }
     }
 }

@@ -7,10 +7,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
@@ -19,21 +16,22 @@ import com.blankj.utilcode.util.ScreenUtils
 @Composable
 fun FlatButtonMenu(
     content: @Composable RowScope.() -> Unit,
-    menuItems: @Composable (ColumnScope.() -> Unit)
+    menuItems: @Composable (ColumnScope.() -> Unit),
+    expanded: MutableState<Boolean>
 ) {
-    var expanded by remember { mutableStateOf(false) }
+//    var expanded by remember { mutableStateOf(false) }
 
     Row {
         FlatButton(content = content) {
-            expanded = true
+            expanded.value = true
         }
 
         DropdownMenu(
-            expanded = expanded,
+            expanded = expanded.value,
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.background),
             offset = DpOffset((ScreenUtils.getScreenXDpi() / 3).dp, 0.dp),
-            onDismissRequest = { expanded = false },
+            onDismissRequest = { expanded.value = false },
         ) {
             menuItems()
         }
