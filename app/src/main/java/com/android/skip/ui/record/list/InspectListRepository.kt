@@ -32,6 +32,7 @@ class InspectListRepository @Inject constructor() {
             val node = gson.fromJson(br, NodeRootSchema::class.java)
 
             val item = InspectRecordItem(
+                node.fileId,
                 getAppIcon(node.packageName),
                 node.appName,
                 node.packageName,

@@ -14,7 +14,7 @@ import com.android.skip.ui.components.RowContent
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 
 @Composable
-fun InspectListColumn(inspectListViewModel: InspectListViewModel) {
+fun InspectListColumn(inspectListViewModel: InspectListViewModel, onClick: (fileId: String)->Unit) {
     // 获取分页数据流
     val lazyPagingItems = inspectListViewModel.filePagingData.collectAsLazyPagingItems()
 
@@ -36,7 +36,7 @@ fun InspectListColumn(inspectListViewModel: InspectListViewModel) {
                 }, menuItems = {
                     DropdownMenuItem(
                         text = { Text(text = "发送") },
-                        onClick = { /*TODO*/ }
+                        onClick = { onClick(it.fileId) }
                     )
                 })
             }
