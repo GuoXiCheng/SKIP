@@ -5,9 +5,8 @@ import androidx.paging.PagingState
 import com.android.skip.dataclass.InspectRecordItem
 import com.blankj.utilcode.util.LogUtils
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+
 class ZipFilePagingSource @Inject constructor(private val inspectListRepository: InspectListRepository) :
     PagingSource<Int, InspectRecordItem>() {
     override fun getRefreshKey(state: PagingState<Int, InspectRecordItem>): Int? {

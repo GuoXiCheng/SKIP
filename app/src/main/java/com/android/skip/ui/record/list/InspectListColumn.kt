@@ -2,25 +2,32 @@ package com.android.skip.ui.record.list
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.android.skip.ui.components.FlatButton
+import com.android.skip.ui.components.FlatButtonMenu
 import com.android.skip.ui.components.RowContent
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 
 @Composable
-fun InspectListColumn(inspectListViewModel: InspectListViewModel) {
+fun InspectListColumn(
+    inspectListViewModel: InspectListViewModel,
+    onClick: (fileId: String) -> Unit
+) {
     // 获取分页数据流
     val lazyPagingItems = inspectListViewModel.filePagingData.collectAsLazyPagingItems()
 
     LazyColumn {
         items(lazyPagingItems.itemCount) { index ->
             lazyPagingItems[index]?.let {
-                FlatButton(content = {
+                val expandedState = remember { mutableStateOf(false) }
+                FlatButtonMenu(content = {
                     RowContent(
                         title = it.appName,
                         subTitle = it.activityName,
@@ -32,7 +39,21 @@ fun InspectListColumn(inspectListViewModel: InspectListViewModel) {
                             )
                         }
                     )
-                })
+                }, menuItems = {
+                    DropdownMenuItem(
+                        text = { Text(text = "删除") },
+                        onClick = {
+                            inspectListViewModel.changeDeleteFileId(it.fileId)
+                            expandedState.value = false
+                        })
+                    DropdownMenuItem(
+                        text = { Text(text = "发送") },
+                        onClick = {
+                            onClick(it.fileId)
+                            expandedState.value = false
+                        }
+                    )
+                }, expandedState)
             }
         }
 
