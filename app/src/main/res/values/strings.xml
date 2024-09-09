@@ -26,4 +26,5 @@
     <string name="toast_save_fail">保存失败</string>
     <string name="toast_del_success">删除成功</string>
     <string name="toast_del_fail">删除失败</string>
+    <string name="toast_skip_tip">已为您跳过广告</string>
 </resources>
