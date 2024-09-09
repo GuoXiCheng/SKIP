@@ -25,15 +25,13 @@ const tableData = ref<FileTableData[]>([]);
 
 const refreshTable = async () => {
   const nodeInfoList = await NodeDB.getAllNodeInfo();
-  tableData.value = nodeInfoList
-    .sort((a, b) => b.createTime - a.createTime)
-    .map((item) => ({
-      fileId: item.fileId,
-      createTime: new Date(item.createTime).toLocaleString(),
-      appName: item.appName,
-      packageName: item.packageName,
-      activityName: item.activityName,
-    }));
+  tableData.value = nodeInfoList.map((item) => ({
+    fileId: item.fileId,
+    createTime: new Date(item.createTime).toLocaleString(),
+    appName: item.appName,
+    packageName: item.packageName,
+    activityName: item.activityName,
+  }));
 };
 
 const handleUploadSuccess = () => {
