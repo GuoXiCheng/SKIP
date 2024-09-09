@@ -42,6 +42,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.snakeyaml)
     implementation(libs.accompanist.drawablepainter)
     implementation(libs.androidx.paging.compose)
     implementation(libs.androidx.paging.runtime)

@@ -17,6 +17,7 @@ pagingRuntime = "3.3.0"
 runtimeAndroid = "1.6.8"
 foundationAndroid = "1.6.8"
 material3Android = "1.2.1"
+snakeyaml = "1.29"
 ui = "1.6.8"
 utilcodex = "1.31.1"
 runtimeLivedata = "1.6.8"
@@ -41,6 +42,7 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-runtime-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "runtimeAndroid" }
 androidx-foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "foundationAndroid" }
 androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
+snakeyaml = { module = "org.yaml:snakeyaml", version.ref = "snakeyaml" }
 utilcodex = { module = "com.blankj:utilcodex", version.ref = "utilcodex" }
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 

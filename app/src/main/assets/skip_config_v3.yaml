@@ -1,0 +1,19 @@
+# 京东阅读
+- activityName: com.jingdong.app.reader.logo.JdLogoActivity
+  skipTexts:
+    # fileId=7ba85f98-5b07-4947-95e0-dca6431b1fc6&nodeId=13
+    - text: 跳过
+      length: 5
+
+# 前程无忧51Job
+- activityName: com.job.android.pages.launcher.LauncherActivity
+  skipIds:
+    # fileId=ee283a25-cbbf-43b0-84dd-aaf9ccf24c83&nodeId=10
+    - id: com.job.android:id/skipBtn
+
+# 酷安
+- activityName: com.coolapk.market.view.main.MainActivity
+  skipTexts:
+    # fileId=73538149-c805-48ff-bf74-147b03605d92&nodeId=110
+    - text: 跳过
+      length: 3
