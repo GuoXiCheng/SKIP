@@ -2,26 +2,28 @@ package com.android.skip.service
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
-import android.content.pm.PackageManager
 import android.graphics.Path
 import android.graphics.Rect
 import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
-import com.android.skip.MyApp
 import com.android.skip.R
-import com.android.skip.data.ConfigLoadRepository
+import com.android.skip.data.config.ConfigLoadRepository
 import com.android.skip.dataclass.AccessibilityNodeInfoCarrier
 import com.android.skip.dataclass.NodeChildSchema
 import com.android.skip.dataclass.NodeRootSchema
 import com.android.skip.ui.main.start.StartAccessibilityRepository
 import com.android.skip.util.AccessibilityState
+import com.android.skip.util.AppBasicInfoUtils
 import com.android.skip.util.MyToast
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.ServiceUtils
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 
@@ -29,6 +31,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MyAccessibilityService : AccessibilityService() {
     private var activityName: String? = null
+    private var appPackageName: String? = null
+    private val clickedRect: MutableSet<String> = mutableSetOf()
 
     @Inject
     lateinit var repository: StartAccessibilityRepository
@@ -42,6 +46,25 @@ class MyAccessibilityService : AccessibilityService() {
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         try {
             val rootNode = getCurrentRootNode()
+
+            val rootNodePackageName = rootNode.packageName.toString()
+            if (rootNodePackageName != appPackageName) {
+                clickedRect.clear()
+                appPackageName = rootNodePackageName
+            }
+
+            val scope = CoroutineScope(Dispatchers.Main)
+            val that = this
+            scope.launch {
+                val rect = configLoadRepository.getTargetRect(rootNode)
+                rect?.let {
+                    val rectStr = rect.toString()
+                    if (!clickedRect.contains(rectStr)) {
+                        click(that, rect)
+                        clickedRect.add(rectStr)
+                    }
+                }
+            }
 
             getActivityName(event)?.let {
                 activityName = it
@@ -155,7 +178,7 @@ class MyAccessibilityService : AccessibilityService() {
 
         val nodeRootSchema = NodeRootSchema(
             accessibilityInspectRepository.fileId,
-            getAppName(rootNode.packageName.toString()),
+            AppBasicInfoUtils.getAppName(rootNode.packageName.toString()),
             rootNode.packageName.toString(),
             className,
             ScreenUtils.getScreenHeight(),
@@ -208,17 +231,5 @@ class MyAccessibilityService : AccessibilityService() {
         }
 
         nodeChildSchemaList.add(myNodeChild)
-    }
-
-    private fun getAppName(packageName: String): String {
-        return try {
-            val context = MyApp.context
-            val packageManager = context.packageManager
-            val applicationInfo = packageManager.getApplicationInfo(packageName, 0)
-            val appName = packageManager.getApplicationLabel(applicationInfo).toString()
-            appName
-        } catch (e: PackageManager.NameNotFoundException) {
-            "com.unknown.app"
-        }
     }
 }

@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.skip.MyApp
 import com.android.skip.R
-import com.android.skip.data.ConfigViewModel
+import com.android.skip.data.config.ConfigViewModel
 import com.android.skip.ui.about.AboutActivity
 import com.android.skip.ui.components.FlatButton
 import com.android.skip.ui.components.ResourceIcon

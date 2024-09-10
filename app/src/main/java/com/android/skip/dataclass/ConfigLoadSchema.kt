@@ -9,7 +9,7 @@ data class LoadSkipId(val id: String, val click: Rect?)
 data class LoadSkipBound(val bound: Rect, val click: Rect?)
 
 data class ConfigLoadSchema(
-    val activityName: String,
+    val packageName: String,
     val skipTexts: List<LoadSkipText>?,
     val skipIds: List<LoadSkipId>?,
     val skipBounds: List<LoadSkipBound>?

@@ -1,4 +1,4 @@
-package com.android.skip.data
+package com.android.skip.data.config
 
 import android.content.Context
 import androidx.lifecycle.LiveData

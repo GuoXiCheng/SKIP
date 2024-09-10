@@ -1,4 +1,4 @@
-package com.android.skip.data
+package com.android.skip.data.config
 
 import android.graphics.Rect
 import android.view.accessibility.AccessibilityNodeInfo
@@ -17,9 +17,9 @@ class ConfigLoadRepository @Inject constructor() {
         configLoadSchemaMap = config
     }
 
-    suspend fun getTargetRect(rootNode: AccessibilityNodeInfo, activityName: String) =
+    suspend fun getTargetRect(rootNode: AccessibilityNodeInfo) =
         coroutineScope {
-            val targetConfig = configLoadSchemaMap[activityName]
+            val targetConfig = configLoadSchemaMap[rootNode.packageName]
 
             select {
                 targetConfig?.skipTexts?.forEach { skipText ->

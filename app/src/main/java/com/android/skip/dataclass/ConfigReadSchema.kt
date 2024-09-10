@@ -9,7 +9,7 @@ data class ReadSkipId(val id: String, val click: ReadClick?)
 data class ReadSkipBound(val bound: String, val resolution: String, val click: ReadClick?)
 
 data class ConfigReadSchema(
-    val activityName: String,
+    val packageName: String,
     val skipTexts: List<ReadSkipText>?,
     val skipIds: List<ReadSkipId>?,
     val skipBounds: List<ReadSkipBound>?
