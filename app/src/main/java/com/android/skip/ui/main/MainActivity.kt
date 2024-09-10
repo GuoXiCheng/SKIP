@@ -21,8 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.skip.MyApp
 import com.android.skip.R
-import com.android.skip.data.ConfigReadRepository
-import com.android.skip.dataclass.ConfigReadSchema
+import com.android.skip.data.ConfigViewModel
 import com.android.skip.ui.about.AboutActivity
 import com.android.skip.ui.components.FlatButton
 import com.android.skip.ui.components.ResourceIcon
@@ -31,14 +30,13 @@ import com.android.skip.ui.inspect.InspectActivity
 import com.android.skip.ui.main.start.StartAccessibilityViewModel
 import com.android.skip.ui.main.start.StartButton
 import com.android.skip.ui.theme.AppTheme
-import com.blankj.utilcode.util.LogUtils
 import dagger.hilt.android.AndroidEntryPoint
-import org.yaml.snakeyaml.Yaml
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val startAccessibilityViewModel by viewModels<StartAccessibilityViewModel>()
+
+    private val configViewModel by viewModels<ConfigViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,17 +65,12 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        configViewModel.readConfig(this)
     }
 
-    @Inject
-    lateinit var configReadRepository:ConfigReadRepository
     override fun onResume() {
         super.onResume()
-        val yaml = Yaml().load<List<ConfigReadSchema>>(assets.open("skip_config_v3.yaml"))
-        configReadRepository.readConfig(yaml)
-
-        val map = configReadRepository.loadConfig()
-        LogUtils.d(map)
     }
 }
 

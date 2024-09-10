@@ -10,7 +10,7 @@ import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import com.android.skip.MyApp
 import com.android.skip.R
-import com.android.skip.data.SkipConfigRepository
+import com.android.skip.data.ConfigLoadRepository
 import com.android.skip.dataclass.AccessibilityNodeInfoCarrier
 import com.android.skip.dataclass.NodeChildSchema
 import com.android.skip.dataclass.NodeRootSchema
@@ -22,9 +22,6 @@ import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.ServiceUtils
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 
@@ -40,7 +37,7 @@ class MyAccessibilityService : AccessibilityService() {
     lateinit var accessibilityInspectRepository: AccessibilityInspectRepository
 
     @Inject
-    lateinit var skipConfigRepository: SkipConfigRepository
+    lateinit var configLoadRepository: ConfigLoadRepository
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         try {
@@ -55,20 +52,31 @@ class MyAccessibilityService : AccessibilityService() {
                     startCaptureNode(rootNode, it)
                     accessibilityInspectRepository.stopCaptureNode()
                 }
-
-                val scope = CoroutineScope(Dispatchers.Default)
-                val that = this
-                scope.launch {
-                    val rect = skipConfigRepository.getTargetRect(rootNode, it)
-                    rect?.let {
-                        click(that, rect)
-                    }
-                }
             }
 
         } catch (e: Exception) {
 //            LogUtils.e(e)
         }
+    }
+
+    private fun click(accessibilityService: AccessibilityService, rect: Rect) {
+        val path = Path()
+        path.moveTo(rect.centerX().toFloat(), rect.centerY().toFloat())
+
+        val gesture = GestureDescription.Builder()
+            .addStroke(GestureDescription.StrokeDescription(path, 0, 100))
+            .build()
+
+        accessibilityService.dispatchGesture(
+            gesture,
+            object : GestureResultCallback() {
+                override fun onCompleted(gestureDescription: GestureDescription) {
+                    super.onCompleted(gestureDescription)
+                    MyToast.show(R.string.toast_skip_tip)
+                }
+            },
+            null
+        )
     }
 
     override fun onInterrupt() {
@@ -212,25 +220,5 @@ class MyAccessibilityService : AccessibilityService() {
         } catch (e: PackageManager.NameNotFoundException) {
             "com.unknown.app"
         }
-    }
-
-    private fun click(accessibilityService: AccessibilityService, rect: Rect) {
-        val path = Path()
-        path.moveTo(rect.centerX().toFloat(), rect.centerY().toFloat())
-
-        val gesture = GestureDescription.Builder()
-            .addStroke(GestureDescription.StrokeDescription(path, 0, 100))
-            .build()
-
-        accessibilityService.dispatchGesture(
-            gesture,
-            object : GestureResultCallback() {
-                override fun onCompleted(gestureDescription: GestureDescription) {
-                    super.onCompleted(gestureDescription)
-                    MyToast.show(R.string.toast_skip_tip)
-                }
-            },
-            null
-        )
     }
 }
