@@ -1,0 +1,41 @@
+# 京东读书
+- packageName: com.jd.app.reader
+  skipTexts:
+  # fileId=7ba85f98-5b07-4947-95e0-dca6431b1fc6&nodeId=13
+    - text: 跳过
+      length: 5
+  skipBounds:
+  # fileId=20f3db03-af60-4dc3-885a-b954b985931f&nodeId=14
+    - bound: 1243,176,1383,316
+      resolution: 1440x3200
+
+
+# 前程无忧51Job
+- packageName: com.job.android
+  skipIds:
+  # fileId=ee283a25-cbbf-43b0-84dd-aaf9ccf24c83&nodeId=10
+    - id: com.job.android:id/skipBtn
+
+# 酷安
+- packageName: com.coolapk.market
+  skipTexts:
+  # fileId=73538149-c805-48ff-bf74-147b03605d92&nodeId=110
+    - text: 跳过
+      length: 3
+
+# 铁路12306
+- packageName: com.MobileTicket
+  # fileId=b8592c72-1a8a-42ea-8022-2ba15bc83444&nodeId=9
+  skipIds:
+    - id: com.MobileTicket:id/tv_skip
+
+# 人人视频
+- packageName: com.example.pptv
+  skipTexts:
+  # fileId=f074f9ba-2fdd-4885-8b16-df8afdcbb46d&nodeId=47
+    - text: 跳过
+      length: 7
+  skipBounds:
+  # fileId=84603cb6-3647-42aa-a0f9-e013a3c1e74c&nodeId=61
+    - bound: 56,175,182,301
+      resolution: 1440x3200

@@ -8,6 +8,7 @@ import com.android.skip.R
 import com.android.skip.dataclass.InspectRecordItem
 import com.android.skip.dataclass.NodeRootSchema
 import com.android.skip.ui.inspect.record.InspectRecordRepository
+import com.android.skip.util.AppBasicInfoUtils
 import com.android.skip.util.MyToast
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.LogUtils
@@ -39,7 +40,7 @@ class InspectListRepository @Inject constructor() {
 
             val item = InspectRecordItem(
                 node.fileId,
-                getAppIcon(node.packageName),
+                AppBasicInfoUtils.getAppIcon(node.packageName),
                 node.appName,
                 node.packageName,
                 node.activityName.split(".").last(),
@@ -74,18 +75,4 @@ class InspectListRepository @Inject constructor() {
             MyToast.show(R.string.toast_del_fail)
         }
     }
-
-    private fun getAppIcon(packageName: String): Drawable {
-        val context = MyApp.context
-        return try {
-            val packageManager = context.packageManager
-            val appInfo = packageManager.getApplicationInfo(packageName, 0)
-            appInfo.loadIcon(packageManager)
-        } catch (e: PackageManager.NameNotFoundException) {
-            LogUtils.e(e)
-            ContextCompat.getDrawable(context, R.drawable.ic_launcher_foreground)
-                ?: context.applicationInfo.loadIcon(context.packageManager)
-        }
-    }
-
 }
