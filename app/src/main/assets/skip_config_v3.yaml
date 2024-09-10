@@ -42,6 +42,11 @@
 
 # CSDN
 - packageName: net.csdn.csdnplus
+  skipTexts:
+  # fileId=3737625b-383a-4891-aada-493e811f048a&nodeId=12
+  # fileId=7d45a0ad-f0ce-4856-b38b-dd545bfadeb5&nodeId=28
+    - text: 跳过
+      length: 5
   skipBounds:
   # fileId=e2c456c9-2db5-4ff9-9f79-f42acf557358&nodeId=13
     - bound: 1244,176,1384,316
