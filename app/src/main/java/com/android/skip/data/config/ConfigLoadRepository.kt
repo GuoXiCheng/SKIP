@@ -29,8 +29,10 @@ class ConfigLoadRepository @Inject constructor() {
 
         return withContext(Dispatchers.Default) {
             try {
-                val skipByTextTasks = createSkipByTextTasks(this, rootNode, targetConfig?.skipTexts)
-                val skipByIdTasks = createSkipByIdTasks(this, rootNode, targetConfig?.skipIds)
+                val skipByTextTasks =
+                    createSkipByTextTasks(this, rootNode, targetConfig?.skipTexts)
+                val skipByIdTasks =
+                    createSkipByIdTasks(this, rootNode, targetConfig?.skipIds)
                 val skipByBoundTasks =
                     createSkipByBoundTasks(this, rootNode, targetConfig?.skipBounds)
                 val tasks = skipByTextTasks + skipByIdTasks + skipByBoundTasks
@@ -96,9 +98,13 @@ class ConfigLoadRepository @Inject constructor() {
                 }
 
                 if (targetNode != null) {
-                    val rect = Rect()
-                    targetNode.getBoundsInScreen(rect)
-                    rect
+                    if (skipText.click != null) {
+                        skipText.click
+                    } else {
+                        val rect = Rect()
+                        targetNode.getBoundsInScreen(rect)
+                        rect
+                    }
                 } else {
                     null
                 }
@@ -120,9 +126,13 @@ class ConfigLoadRepository @Inject constructor() {
                 val foundNode = rootNode.findAccessibilityNodeInfosByViewId(skipId.id).firstOrNull()
 
                 if (foundNode != null) {
-                    val rect = Rect()
-                    foundNode.getBoundsInScreen(rect)
-                    rect
+                    if (skipId.click != null) {
+                        skipId.click
+                    } else {
+                        val rect = Rect()
+                        foundNode.getBoundsInScreen(rect)
+                        rect
+                    }
                 } else {
                     null
                 }
@@ -142,15 +152,9 @@ class ConfigLoadRepository @Inject constructor() {
 
         skipBounds.forEach { skipBound ->
             deferredResults.add(scope.async {
-                val foundNode = traverseNode(rootNode, skipBound.bound)
+                val foundRect = traverseNode(rootNode, skipBound.bound)
 
-                if (foundNode != null) {
-                    val rect = Rect()
-                    foundNode.getBoundsInScreen(rect)
-                    rect
-                } else {
-                    null
-                }
+                skipBound.click ?: foundRect
             })
         }
 
@@ -160,7 +164,7 @@ class ConfigLoadRepository @Inject constructor() {
     private fun traverseNode(
         rootNode: AccessibilityNodeInfo,
         targetRect: Rect
-    ): AccessibilityNodeInfo? {
+    ): Rect? {
         val queue: MutableList<AccessibilityNodeInfo> = mutableListOf(rootNode)
 
         while (queue.isNotEmpty()) {
@@ -172,7 +176,7 @@ class ConfigLoadRepository @Inject constructor() {
                 && abs(nodeRect.right - targetRect.right) <= 1
                 && abs(nodeRect.bottom - targetRect.bottom) <= 1
             ) {
-                return node
+                return nodeRect
             }
 
             for (i in 0 until node.childCount) {
