@@ -51,4 +51,9 @@ export class NodeDB {
     const db = await NodeDB.getTable();
     return db.get(STORE_NAME, fileId);
   }
+
+  static async deleteNodeInfo(fileId: string) {
+    const db = await NodeDB.getTable();
+    return db.delete(STORE_NAME, fileId);
+  }
 }

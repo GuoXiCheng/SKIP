@@ -1,8 +1,9 @@
 <template>
-  <div>
+  <div class="w-1/6 flex flex-row justify-around">
     <el-upload v-model:file-list="fileList" accept=".zip" multiple :show-file-list="false" :auto-upload="false">
       <el-button v-loading.fullscreen.lock="fullscreenLoading">批量上传</el-button>
     </el-upload>
+    <el-button @click="emits('onDelete')">批量删除</el-button>
   </div>
 </template>
 
@@ -15,7 +16,7 @@ import { useZip } from "./hook/useZip";
 const fullscreenLoading = ref(false);
 const fileList = ref<UploadFile[]>([]);
 
-const emits = defineEmits(["uploadSuccess"]);
+const emits = defineEmits(["uploadSuccess", "onDelete"]);
 
 const handleOnChange = async () => {
   fullscreenLoading.value = false;

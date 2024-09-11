@@ -4,8 +4,12 @@
   </template>
   <template v-else-if="isShowInspectContainer == false">
     <el-container>
-      <el-header class="flex items-center"><InspectHeader @upload-success="handleUploadSuccess" /></el-header>
-      <el-main><InspectTable :table-data="tableData" /></el-main>
+      <el-header class="flex items-end">
+        <InspectHeader @upload-success="refreshTable()" @on-delete="handleDelete" />
+      </el-header>
+      <el-main>
+        <InspectTable :table-data="tableData" @on-selection-change="handleSelectionChange" />
+      </el-main>
     </el-container>
   </template>
 </template>
@@ -22,21 +26,25 @@ const isShowInspectContainer = ref();
 const raw = ref<AccessibilityWindow | null>(null);
 const pic = ref<Blob | null>(null);
 const tableData = ref<FileTableData[]>([]);
+const selection = ref<FileTableData[]>([]);
 
 const refreshTable = async () => {
   const nodeInfoList = await NodeDB.getAllNodeInfo();
   tableData.value = nodeInfoList.map((item) => ({
     fileId: item.fileId,
-    createTime: new Date(item.createTime).toLocaleString(),
+    createTime: item.createTime,
     appName: item.appName,
     packageName: item.packageName,
     activityName: item.activityName,
   }));
 };
 
-const handleUploadSuccess = () => {
+const handleDelete = async () => {
+  await Promise.all(selection.value.map((item) => NodeDB.deleteNodeInfo(item.fileId)));
   refreshTable();
 };
+
+const handleSelectionChange = (selectionData: FileTableData[]) => (selection.value = selectionData);
 
 onMounted(async () => {
   const params = new URLSearchParams(window.location.href.split("?")[1]);

@@ -41,7 +41,7 @@ export interface AccessibilityNodeTree {
 
 export interface FileTableData {
   fileId: string;
-  createTime: string;
+  createTime: number;
   appName: string;
   packageName: string;
   activityName: string;
