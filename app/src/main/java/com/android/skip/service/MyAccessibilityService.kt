@@ -8,7 +8,7 @@ import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import com.android.skip.R
-import com.android.skip.data.config.ConfigLoadRepository
+import com.android.skip.data.config.ConfigLoadRepository2
 import com.android.skip.dataclass.AccessibilityNodeInfoCarrier
 import com.android.skip.dataclass.NodeChildSchema
 import com.android.skip.dataclass.NodeRootSchema
@@ -16,13 +16,14 @@ import com.android.skip.ui.main.start.StartAccessibilityRepository
 import com.android.skip.util.AccessibilityState
 import com.android.skip.util.AppBasicInfoUtils
 import com.android.skip.util.MyToast
-import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.ServiceUtils
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
@@ -33,6 +34,7 @@ class MyAccessibilityService : AccessibilityService() {
     private var activityName: String? = null
     private var appPackageName: String? = null
     private val clickedRect: MutableSet<String> = mutableSetOf()
+    private val serviceScope = CoroutineScope(Dispatchers.Main + Job())
 
     @Inject
     lateinit var repository: StartAccessibilityRepository
@@ -41,7 +43,7 @@ class MyAccessibilityService : AccessibilityService() {
     lateinit var accessibilityInspectRepository: AccessibilityInspectRepository
 
     @Inject
-    lateinit var configLoadRepository: ConfigLoadRepository
+    lateinit var configLoadRepository2: ConfigLoadRepository2
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         try {
@@ -53,11 +55,10 @@ class MyAccessibilityService : AccessibilityService() {
                 appPackageName = rootNodePackageName
             }
 
-            val scope = CoroutineScope(Dispatchers.Main)
             val that = this
-            scope.launch {
-                val rect = configLoadRepository.getTargetRect(rootNode)
-                rect?.let {
+            serviceScope.launch {
+                val targetRect = configLoadRepository2.getTargetRect(rootNode)
+                targetRect?.let { rect ->
                     val rectStr = rect.toString()
                     if (!clickedRect.contains(rectStr)) {
                         click(that, rect)
@@ -113,6 +114,7 @@ class MyAccessibilityService : AccessibilityService() {
 
     override fun onDestroy() {
         super.onDestroy()
+        serviceScope.cancel()
         repository.changeAccessibilityState(AccessibilityState.STOPPED)
     }
 
