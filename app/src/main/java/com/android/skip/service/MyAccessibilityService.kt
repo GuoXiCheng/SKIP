@@ -8,7 +8,7 @@ import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import com.android.skip.R
-import com.android.skip.data.config.ConfigLoadRepository2
+import com.android.skip.data.config.ConfigLoadRepository
 import com.android.skip.dataclass.AccessibilityNodeInfoCarrier
 import com.android.skip.dataclass.NodeChildSchema
 import com.android.skip.dataclass.NodeRootSchema
@@ -43,7 +43,7 @@ class MyAccessibilityService : AccessibilityService() {
     lateinit var accessibilityInspectRepository: AccessibilityInspectRepository
 
     @Inject
-    lateinit var configLoadRepository2: ConfigLoadRepository2
+    lateinit var configLoadRepository: ConfigLoadRepository
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         try {
@@ -57,7 +57,7 @@ class MyAccessibilityService : AccessibilityService() {
 
             val that = this
             serviceScope.launch {
-                val targetRect = configLoadRepository2.getTargetRect(rootNode)
+                val targetRect = configLoadRepository.getTargetRect(rootNode)
                 targetRect?.let { rect ->
                     val rectStr = rect.toString()
                     if (!clickedRect.contains(rectStr)) {

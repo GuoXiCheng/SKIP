@@ -9,14 +9,14 @@ import javax.inject.Inject
 @HiltViewModel
 class ConfigViewModel @Inject constructor(
     private val configReadRepository: ConfigReadRepository,
-    private val configLoadRepository2: ConfigLoadRepository2
+    private val configLoadRepository: ConfigLoadRepository
 ) : ViewModel() {
     var configHashCode: LiveData<Int> = configReadRepository.configHashCode
 
     init {
         configReadRepository.configHashCode.observeForever{
             val configMap = configReadRepository.handleConfig()
-            configLoadRepository2.loadConfig(configMap)
+            configLoadRepository.loadConfig(configMap)
         }
     }
 

@@ -15,8 +15,6 @@ import com.google.gson.reflect.TypeToken
 import org.yaml.snakeyaml.Yaml
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.math.ceil
-import kotlin.math.floor
 
 @Singleton
 class ConfigReadRepository @Inject constructor() {
@@ -100,14 +98,14 @@ class ConfigReadRepository @Inject constructor() {
     }
 
     private fun convertRect(rect: Rect, resolution: String, widthA: Int, heightA: Int): Rect {
-        val (widthB, heightB) = resolution.split("x").map { it.toInt() }
-        val ratioWidth = widthB.toFloat() / widthA
-        val ratioHeight = heightB.toFloat() / heightA
+        val (widthB, heightB) = resolution.split("x")
+        val ratioWidth = widthA / widthB.toFloat()
+        val ratioHeight = heightA / heightB.toFloat()
         return Rect(
-            floor(rect.left * ratioWidth).toInt(),
-            floor(rect.top * ratioHeight).toInt(),
-            ceil(rect.right * ratioWidth).toInt(),
-            ceil(rect.bottom * ratioHeight).toInt()
+            (rect.left * ratioWidth).toInt(),
+            (rect.top * ratioHeight).toInt(),
+            (rect.right * ratioWidth).toInt(),
+            (rect.bottom * ratioHeight).toInt()
         )
     }
 }

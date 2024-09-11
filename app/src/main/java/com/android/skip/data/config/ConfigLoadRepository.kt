@@ -17,7 +17,7 @@ import javax.inject.Singleton
 import kotlin.math.abs
 
 @Singleton
-class ConfigLoadRepository2 @Inject constructor() {
+class ConfigLoadRepository @Inject constructor() {
     private lateinit var configLoadSchemaMap: Map<String, ConfigLoadSchema>
 
     fun loadConfig(config: Map<String, ConfigLoadSchema>) {
