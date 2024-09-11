@@ -33,12 +33,9 @@
 - packageName: com.example.pptv
   skipTexts:
   # fileId=f074f9ba-2fdd-4885-8b16-df8afdcbb46d&nodeId=47
+  # fileId=84603cb6-3647-42aa-a0f9-e013a3c1e74c&nodeId=67
     - text: 跳过
       length: 7
-  skipBounds:
-  # fileId=84603cb6-3647-42aa-a0f9-e013a3c1e74c&nodeId=61
-    - bound: 56,175,182,301
-      resolution: 1440x3200
 
 # CSDN
 - packageName: net.csdn.csdnplus
@@ -62,5 +59,5 @@
   # fileId=cfe9660a-1d45-4904-a8a7-8d846faa1a49&nodeId=14
     - id: com.douban.frodo:id/ad_mark
       click:
-        - position: 1280,180
-          resolution: 1440x3200
+        position: 1280,180
+        resolution: 1440x3200

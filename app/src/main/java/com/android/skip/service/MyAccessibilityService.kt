@@ -123,7 +123,6 @@ class MyAccessibilityService : AccessibilityService() {
             && event.keyCode == KeyEvent.KEYCODE_VOLUME_DOWN
             && isServiceRunning
         ) {
-            LogUtils.d("onKeyEvent")
             accessibilityInspectRepository.startAccessibilityInspect()
             return true
         }
