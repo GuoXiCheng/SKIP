@@ -27,7 +27,7 @@ const refreshTable = async () => {
   const nodeInfoList = await NodeDB.getAllNodeInfo();
   tableData.value = nodeInfoList.map((item) => ({
     fileId: item.fileId,
-    createTime: new Date(item.createTime).toLocaleString(),
+    createTime: item.createTime,
     appName: item.appName,
     packageName: item.packageName,
     activityName: item.activityName,

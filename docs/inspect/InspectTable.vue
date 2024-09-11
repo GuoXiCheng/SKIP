@@ -7,7 +7,7 @@
     @row-click="handleRowClick"
     :default-sort="{ prop: 'createTime', order: 'descending' }"
   >
-    <el-table-column prop="createTime" label="创建时间" sortable width="200" />
+    <el-table-column prop="createTime" label="创建时间" sortable width="200" :formatter="formatter" />
     <el-table-column prop="appName" label="应用名称" :filters="appFilters" :filter-method="filterHandler" width="150" />
     <el-table-column prop="packageName" label="应用包名" />
     <el-table-column prop="activityName" label="Activity 名称" />
@@ -17,7 +17,7 @@
 <script lang="ts" setup>
 import { TableColumnCtx } from "element-plus";
 import { FileTableData } from "./types";
-import { ref, computed } from "vue";
+import { computed } from "vue";
 
 const props = defineProps<{
   tableData: FileTableData[];
@@ -37,5 +37,9 @@ const appFilters = computed(() => {
 
 const filterHandler = (value: string, row: FileTableData, column: TableColumnCtx<FileTableData>) => {
   return row.packageName === value;
+};
+
+const formatter = (row: FileTableData, column: TableColumnCtx<FileTableData>) => {
+  return new Date(row.createTime).toLocaleString();
 };
 </script>
