@@ -24,17 +24,17 @@ class ConfigLoadRepository @Inject constructor() {
         configLoadSchemaMap = config
     }
 
-    suspend fun getTargetRect(rootNode: AccessibilityNodeInfo): Rect? {
+    suspend fun getTargetRect(rootNode: AccessibilityNodeInfo, activityName: String?): Rect? {
         val targetConfig = configLoadSchemaMap[rootNode.packageName]
 
         return withContext(Dispatchers.Default) {
             try {
                 val skipByTextTasks =
-                    createSkipByTextTasks(this, rootNode, targetConfig?.skipTexts)
+                    createSkipByTextTasks(this, rootNode, targetConfig?.skipTexts, activityName)
                 val skipByIdTasks =
-                    createSkipByIdTasks(this, rootNode, targetConfig?.skipIds)
+                    createSkipByIdTasks(this, rootNode, targetConfig?.skipIds, activityName)
                 val skipByBoundTasks =
-                    createSkipByBoundTasks(this, rootNode, targetConfig?.skipBounds)
+                    createSkipByBoundTasks(this, rootNode, targetConfig?.skipBounds, activityName)
                 val tasks = skipByTextTasks + skipByIdTasks + skipByBoundTasks
                 awaitFirstNonNullOrComplete(this, tasks)
             } catch (e: Exception) {
@@ -73,12 +73,14 @@ class ConfigLoadRepository @Inject constructor() {
     private fun createSkipByTextTasks(
         scope: CoroutineScope,
         rootNode: AccessibilityNodeInfo,
-        skipTexts: List<LoadSkipText>?
+        skipTexts: List<LoadSkipText>?,
+        activityName: String?
     ): List<Deferred<Rect?>> {
         val deferredResults = mutableListOf<Deferred<Rect?>>()
         if (skipTexts.isNullOrEmpty()) return deferredResults
 
-        skipTexts.forEach { skipText ->
+        for (skipText in skipTexts) {
+            if (skipText.activityName != null && skipText.activityName != activityName) continue
             deferredResults.add(scope.async {
                 val foundNode =
                     rootNode.findAccessibilityNodeInfosByText(skipText.text).firstOrNull()
@@ -116,12 +118,14 @@ class ConfigLoadRepository @Inject constructor() {
     private fun createSkipByIdTasks(
         scope: CoroutineScope,
         rootNode: AccessibilityNodeInfo,
-        skipIds: List<LoadSkipId>?
+        skipIds: List<LoadSkipId>?,
+        activityName: String?
     ): List<Deferred<Rect?>> {
         val deferredResults = mutableListOf<Deferred<Rect?>>()
         if (skipIds.isNullOrEmpty()) return deferredResults
 
-        skipIds.forEach { skipId ->
+        for (skipId in skipIds) {
+            if (skipId.activityName != null && skipId.activityName != activityName) continue
             deferredResults.add(scope.async {
                 val foundNode = rootNode.findAccessibilityNodeInfosByViewId(skipId.id).firstOrNull()
 
@@ -138,26 +142,27 @@ class ConfigLoadRepository @Inject constructor() {
                 }
             })
         }
-
         return deferredResults
     }
 
     private fun createSkipByBoundTasks(
         scope: CoroutineScope,
         rootNode: AccessibilityNodeInfo,
-        skipBounds: List<LoadSkipBound>?
+        skipBounds: List<LoadSkipBound>?,
+        activityName: String?
     ): List<Deferred<Rect?>> {
         val deferredResults = mutableListOf<Deferred<Rect?>>()
         if (skipBounds.isNullOrEmpty()) return deferredResults
 
-        skipBounds.forEach { skipBound ->
+        for (skipBound in skipBounds) {
+            if (skipBound.activityName != null && skipBound.activityName != activityName) continue
+
             deferredResults.add(scope.async {
                 val foundRect = traverseNode(rootNode, skipBound.bound)
 
                 skipBound.click ?: foundRect
             })
         }
-
         return deferredResults
     }
 

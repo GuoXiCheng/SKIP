@@ -25,7 +25,7 @@ class ConfigReadRepository @Inject constructor() {
     private lateinit var configReadSchemaList: List<ConfigReadSchema>
 
     fun readConfig(context: Context) {
-        val yamlContent = context.assets.open("skip_config_v3.yaml").use { input->
+        val yamlContent = context.assets.open("skip_config_v3.yaml").use { input ->
             val yaml = Yaml().load<List<ConfigReadSchema>>(input)
             yaml
         }
@@ -47,14 +47,19 @@ class ConfigReadRepository @Inject constructor() {
                 val clickRect = skipText.click?.let { c ->
                     convertClick(c, screenWidth, screenHeight)
                 }
-                LoadSkipText(text = skipText.text, length = skipText.length, click = clickRect)
+                LoadSkipText(
+                    text = skipText.text,
+                    activityName = skipText.activityName,
+                    length = skipText.length,
+                    click = clickRect
+                )
             }
 
             val newSkipIds = config.skipIds?.map { skipId ->
                 val clickRect = skipId.click?.let { c ->
                     convertClick(c, screenWidth, screenHeight)
                 }
-                LoadSkipId(id = skipId.id, click = clickRect)
+                LoadSkipId(id = skipId.id, activityName = skipId.activityName, click = clickRect)
             }
 
             val newSkipBounds = config.skipBounds?.map { skipBound ->
@@ -68,7 +73,11 @@ class ConfigReadRepository @Inject constructor() {
                 val clickRect = skipBound.click?.let { c ->
                     convertClick(c, screenWidth, screenHeight)
                 }
-                LoadSkipBound(bound = clickBound, click=clickRect)
+                LoadSkipBound(
+                    bound = clickBound,
+                    activityName = skipBound.activityName,
+                    click = clickRect
+                )
             }
 
             config.packageName to ConfigLoadSchema(

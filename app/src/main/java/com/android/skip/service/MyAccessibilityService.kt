@@ -16,6 +16,7 @@ import com.android.skip.ui.main.start.StartAccessibilityRepository
 import com.android.skip.util.AccessibilityState
 import com.android.skip.util.AppBasicInfoUtils
 import com.android.skip.util.MyToast
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.ServiceUtils
 import com.google.gson.Gson
@@ -31,7 +32,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MyAccessibilityService : AccessibilityService() {
-    private var activityName: String? = null
+    private var appActivityName: String? = null
     private var appPackageName: String? = null
     private val clickedRect: MutableSet<String> = mutableSetOf()
     private val serviceScope = CoroutineScope(Dispatchers.Main + Job())
@@ -57,7 +58,7 @@ class MyAccessibilityService : AccessibilityService() {
 
             val that = this
             serviceScope.launch {
-                val targetRect = configLoadRepository.getTargetRect(rootNode)
+                val targetRect = configLoadRepository.getTargetRect(rootNode, appActivityName)
                 targetRect?.let { rect ->
                     val rectStr = rect.toString()
                     if (!clickedRect.contains(rectStr)) {
@@ -68,10 +69,10 @@ class MyAccessibilityService : AccessibilityService() {
             }
 
             getActivityName(event)?.let {
-                activityName = it
+                appActivityName = it
             }
 
-            activityName?.let {
+            appActivityName?.let {
                 if (accessibilityInspectRepository.isStartCaptureNode) {
                     startCaptureNode(rootNode, it)
                     accessibilityInspectRepository.stopCaptureNode()
