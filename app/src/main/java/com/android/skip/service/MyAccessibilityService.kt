@@ -23,6 +23,8 @@ import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
@@ -30,9 +32,10 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MyAccessibilityService : AccessibilityService() {
-    private var activityName: String? = null
+    private var appActivityName: String? = null
     private var appPackageName: String? = null
     private val clickedRect: MutableSet<String> = mutableSetOf()
+    private val serviceScope = CoroutineScope(Dispatchers.Main + Job())
 
     @Inject
     lateinit var repository: StartAccessibilityRepository
@@ -53,11 +56,10 @@ class MyAccessibilityService : AccessibilityService() {
                 appPackageName = rootNodePackageName
             }
 
-            val scope = CoroutineScope(Dispatchers.Main)
             val that = this
-            scope.launch {
-                val rect = configLoadRepository.getTargetRect(rootNode)
-                rect?.let {
+            serviceScope.launch {
+                val targetRect = configLoadRepository.getTargetRect(rootNode, appActivityName)
+                targetRect?.let { rect ->
                     val rectStr = rect.toString()
                     if (!clickedRect.contains(rectStr)) {
                         click(that, rect)
@@ -67,10 +69,10 @@ class MyAccessibilityService : AccessibilityService() {
             }
 
             getActivityName(event)?.let {
-                activityName = it
+                appActivityName = it
             }
 
-            activityName?.let {
+            appActivityName?.let {
                 if (accessibilityInspectRepository.isStartCaptureNode) {
                     startCaptureNode(rootNode, it)
                     accessibilityInspectRepository.stopCaptureNode()
@@ -113,6 +115,7 @@ class MyAccessibilityService : AccessibilityService() {
 
     override fun onDestroy() {
         super.onDestroy()
+        serviceScope.cancel()
         repository.changeAccessibilityState(AccessibilityState.STOPPED)
     }
 
@@ -123,7 +126,6 @@ class MyAccessibilityService : AccessibilityService() {
             && event.keyCode == KeyEvent.KEYCODE_VOLUME_DOWN
             && isServiceRunning
         ) {
-            LogUtils.d("onKeyEvent")
             accessibilityInspectRepository.startAccessibilityInspect()
             return true
         }

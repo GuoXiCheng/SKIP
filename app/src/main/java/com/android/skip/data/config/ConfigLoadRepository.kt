@@ -3,11 +3,18 @@ package com.android.skip.data.config
 import android.graphics.Rect
 import android.view.accessibility.AccessibilityNodeInfo
 import com.android.skip.dataclass.ConfigLoadSchema
+import com.android.skip.dataclass.LoadSkipBound
+import com.android.skip.dataclass.LoadSkipId
+import com.android.skip.dataclass.LoadSkipText
+import com.blankj.utilcode.util.LogUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.selects.select
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.abs
 
 @Singleton
 class ConfigLoadRepository @Inject constructor() {
@@ -17,45 +24,172 @@ class ConfigLoadRepository @Inject constructor() {
         configLoadSchemaMap = config
     }
 
-    suspend fun getTargetRect(rootNode: AccessibilityNodeInfo) =
-        coroutineScope {
-            val targetConfig = configLoadSchemaMap[rootNode.packageName]
+    suspend fun getTargetRect(rootNode: AccessibilityNodeInfo, activityName: String?): Rect? {
+        val targetConfig = configLoadSchemaMap[rootNode.packageName]
 
-            select {
-                targetConfig?.skipTexts?.forEach { skipText ->
-                    async {
-                        rootNode.findAccessibilityNodeInfosByText(skipText.text).firstOrNull()
-                    }.onAwait {
-                        if (it != null) {
-                            if (skipText.click != null) {
-                                skipText.click
-                            } else {
-                                val rect = Rect()
-                                it.getBoundsInScreen(rect)
-                                rect
-                            }
-                        } else {
-                            null
-                        }
-                    }
+        return withContext(Dispatchers.Default) {
+            try {
+                val skipByTextTasks =
+                    createSkipByTextTasks(this, rootNode, targetConfig?.skipTexts, activityName)
+                val skipByIdTasks =
+                    createSkipByIdTasks(this, rootNode, targetConfig?.skipIds, activityName)
+                val skipByBoundTasks =
+                    createSkipByBoundTasks(this, rootNode, targetConfig?.skipBounds, activityName)
+                val tasks = skipByTextTasks + skipByIdTasks + skipByBoundTasks
+                awaitFirstNonNullOrComplete(this, tasks)
+            } catch (e: Exception) {
+                LogUtils.e(e)
+                null
+            }
+        }
+    }
+
+    private suspend fun <T> awaitFirstNonNullOrComplete(
+        scope: CoroutineScope,
+        tasks: List<Deferred<T?>>
+    ): T? {
+        val deferredResults = mutableListOf<Deferred<T?>>()
+
+        tasks.forEach { deferred ->
+            deferredResults.add(scope.async {
+                val result = deferred.await()
+                if (result != null) {
+                    return@async result
                 }
-                targetConfig?.skipIds?.forEach{ skipId ->
-                    async {
-                        rootNode.findAccessibilityNodeInfosByViewId(skipId.id).firstOrNull()
-                    }.onAwait {
-                        if (it != null) {
-                            if (skipId.click != null) {
-                                skipId.click
-                            } else {
-                                val rect = Rect()
-                                it.getBoundsInScreen(rect)
-                                rect
-                            }
+                null
+            })
+        }
+
+        deferredResults.forEach { result ->
+            val nonNullResult = result.await()
+            if (nonNullResult != null) {
+                return nonNullResult
+            }
+        }
+
+        return null
+    }
+
+    private fun createSkipByTextTasks(
+        scope: CoroutineScope,
+        rootNode: AccessibilityNodeInfo,
+        skipTexts: List<LoadSkipText>?,
+        activityName: String?
+    ): List<Deferred<Rect?>> {
+        val deferredResults = mutableListOf<Deferred<Rect?>>()
+        if (skipTexts.isNullOrEmpty()) return deferredResults
+
+        for (skipText in skipTexts) {
+            if (skipText.activityName != null && skipText.activityName != activityName) continue
+            deferredResults.add(scope.async {
+                val foundNode =
+                    rootNode.findAccessibilityNodeInfosByText(skipText.text).firstOrNull()
+
+                val targetNode = if (foundNode != null) {
+                    if (skipText.length != null) {
+                        if (foundNode.text.length <= skipText.length) {
+                            foundNode
                         } else {
                             null
                         }
+                    } else {
+                        foundNode
                     }
+                } else {
+                    null
+                }
+
+                if (targetNode != null) {
+                    if (skipText.click != null) {
+                        skipText.click
+                    } else {
+                        val rect = Rect()
+                        targetNode.getBoundsInScreen(rect)
+                        rect
+                    }
+                } else {
+                    null
+                }
+            })
+        }
+        return deferredResults
+    }
+
+    private fun createSkipByIdTasks(
+        scope: CoroutineScope,
+        rootNode: AccessibilityNodeInfo,
+        skipIds: List<LoadSkipId>?,
+        activityName: String?
+    ): List<Deferred<Rect?>> {
+        val deferredResults = mutableListOf<Deferred<Rect?>>()
+        if (skipIds.isNullOrEmpty()) return deferredResults
+
+        for (skipId in skipIds) {
+            if (skipId.activityName != null && skipId.activityName != activityName) continue
+            deferredResults.add(scope.async {
+                val foundNode = rootNode.findAccessibilityNodeInfosByViewId(skipId.id).firstOrNull()
+
+                if (foundNode != null) {
+                    if (skipId.click != null) {
+                        skipId.click
+                    } else {
+                        val rect = Rect()
+                        foundNode.getBoundsInScreen(rect)
+                        rect
+                    }
+                } else {
+                    null
+                }
+            })
+        }
+        return deferredResults
+    }
+
+    private fun createSkipByBoundTasks(
+        scope: CoroutineScope,
+        rootNode: AccessibilityNodeInfo,
+        skipBounds: List<LoadSkipBound>?,
+        activityName: String?
+    ): List<Deferred<Rect?>> {
+        val deferredResults = mutableListOf<Deferred<Rect?>>()
+        if (skipBounds.isNullOrEmpty()) return deferredResults
+
+        for (skipBound in skipBounds) {
+            if (skipBound.activityName != null && skipBound.activityName != activityName) continue
+
+            deferredResults.add(scope.async {
+                val foundRect = traverseNode(rootNode, skipBound.bound)
+
+                skipBound.click ?: foundRect
+            })
+        }
+        return deferredResults
+    }
+
+    private fun traverseNode(
+        rootNode: AccessibilityNodeInfo,
+        targetRect: Rect
+    ): Rect? {
+        val queue: MutableList<AccessibilityNodeInfo> = mutableListOf(rootNode)
+
+        while (queue.isNotEmpty()) {
+            val node = queue.removeAt(0)
+            val nodeRect = Rect()
+            node.getBoundsInScreen(nodeRect)
+            if (abs(nodeRect.left - targetRect.left) <= 1
+                && abs(nodeRect.top - targetRect.top) <= 1
+                && abs(nodeRect.right - targetRect.right) <= 1
+                && abs(nodeRect.bottom - targetRect.bottom) <= 1
+            ) {
+                return nodeRect
+            }
+
+            for (i in 0 until node.childCount) {
+                node.getChild(i)?.let {
+                    queue.add(it)
                 }
             }
         }
+        return null
+    }
 }
