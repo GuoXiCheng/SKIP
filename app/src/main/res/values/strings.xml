@@ -27,4 +27,11 @@
     <string name="toast_del_success">删除成功</string>
     <string name="toast_del_fail">删除失败</string>
     <string name="toast_skip_tip">已为您跳过广告</string>
+
+    <string name="record_please_choose">请选择一个应用来分享文件</string>
+    <string name="record_look">查看</string>
+    <string name="record_share">分享</string>
+    <string name="record_delete">删除</string>
+
+    <string name="dialog_close">关闭</string>
 </resources>

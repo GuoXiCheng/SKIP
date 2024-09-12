@@ -44,7 +44,16 @@ const filterHandler = (value: string, row: FileTableData, column: TableColumnCtx
 };
 
 const formatter = (row: FileTableData, column: TableColumnCtx<FileTableData>) => {
-  return new Date(row.createTime).toLocaleString();
+  return new Date(row.createTime)
+    .toLocaleString("zh-CN", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    })
+    .replace(/\//g, "-");
 };
 
 const onSelectionChange = (selection: FileTableData[]) => emits("onSelectionChange", selection);

@@ -46,3 +46,11 @@ export interface FileTableData {
   packageName: string;
   activityName: string;
 }
+
+export interface FileItemData {
+  fileId: string;
+  pic: Blob;
+  raw: AccessibilityWindow;
+}
+
+export type FileData = FileTableData & FileItemData;

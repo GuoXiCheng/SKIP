@@ -5,12 +5,12 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Text
 import androidx.core.content.FileProvider
 import com.android.skip.MyApp
 import com.android.skip.R
 import com.android.skip.ui.components.ScaffoldPage
+import com.android.skip.ui.record.dialog.JpegDialog
+import com.android.skip.ui.record.dialog.JpegDialogViewModel
 import com.android.skip.ui.record.list.InspectListColumn
 import com.android.skip.ui.record.list.InspectListViewModel
 import com.android.skip.ui.theme.AppTheme
@@ -21,29 +21,48 @@ import java.io.File
 class InspectRecordActivity : AppCompatActivity() {
     private val inspectListViewModel by viewModels<InspectListViewModel>()
 
+    private val jpegDialogViewModel by viewModels<JpegDialogViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
             AppTheme {
                 ScaffoldPage(R.string.inspect_record_title, { finish() }, {
-                    InspectListColumn(inspectListViewModel) {
-                        val file = File("${MyApp.context.filesDir}/capture/${it}.zip")
-                        val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
-                        val shareIntent = Intent().apply{
-                            action = Intent.ACTION_SEND
-                            type = "application/zip"
-                            putExtra(Intent.EXTRA_STREAM, uri)
-                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    JpegDialog(jpegDialogViewModel)
+                    InspectListColumn(inspectListViewModel) { fileId, menuType ->
+                        when (menuType) {
+                            R.string.record_look.toString() -> jpegDialogViewModel.changeJpegFileId(
+                                fileId
+                            )
+
+                            R.string.record_share.toString() -> {
+                                val file = File("${MyApp.context.filesDir}/capture/${fileId}.zip")
+                                val uri = FileProvider.getUriForFile(
+                                    this,
+                                    "${packageName}.fileprovider",
+                                    file
+                                )
+                                val shareIntent = Intent().apply {
+                                    action = Intent.ACTION_SEND
+                                    type = "application/zip"
+                                    putExtra(Intent.EXTRA_STREAM, uri)
+                                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                }
+                                startActivity(
+                                    Intent.createChooser(
+                                        shareIntent,
+                                        getString(R.string.record_please_choose)
+                                    )
+                                )
+                            }
+
+                            R.string.record_delete.toString() -> inspectListViewModel.changeDeleteFileId(
+                                fileId
+                            )
                         }
-                        startActivity(Intent.createChooser(shareIntent, "选择一个应用来分享文件"))
                     }
-                }) {
-                    DropdownMenuItem(
-                        text = { Text(text = "全部删除") },
-                        onClick = { /*TODO*/ }
-                    )
-                }
+                })
             }
         }
 
