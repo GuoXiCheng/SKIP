@@ -64,6 +64,7 @@ class MyAccessibilityService : AccessibilityService() {
                     if (!clickedRect.contains(rectStr)) {
                         click(that, rect)
                         clickedRect.add(rectStr)
+                        LogUtils.d("clicked: packageName is $rootNodePackageName rect is $rectStr")
                     }
                 }
             }

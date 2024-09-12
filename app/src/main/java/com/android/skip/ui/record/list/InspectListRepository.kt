@@ -1,8 +1,5 @@
 package com.android.skip.ui.record.list
 
-import android.content.pm.PackageManager
-import android.graphics.drawable.Drawable
-import androidx.core.content.ContextCompat
 import com.android.skip.MyApp
 import com.android.skip.R
 import com.android.skip.dataclass.InspectRecordItem
@@ -11,7 +8,6 @@ import com.android.skip.ui.inspect.record.InspectRecordRepository
 import com.android.skip.util.AppBasicInfoUtils
 import com.android.skip.util.MyToast
 import com.blankj.utilcode.util.FileUtils
-import com.blankj.utilcode.util.LogUtils
 import com.google.gson.Gson
 import java.io.BufferedReader
 import java.io.File
