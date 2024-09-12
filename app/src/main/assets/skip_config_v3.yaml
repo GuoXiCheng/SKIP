@@ -19,9 +19,13 @@
 # 酷安
 - packageName: com.coolapk.market
   skipTexts:
-  # fileId=73538149-c805-48ff-bf74-147b03605d92&nodeId=110
+  # fileId=94969846-73e3-41de-aca0-ad9994566fc6&nodeId=46
     - text: 跳过
-      length: 3
+      length: 4
+  # fileId=92e729ea-dd19-4384-93af-ec7581f306cf&nodeId=66
+  skipBounds:
+    - bound: 1244,176,1384,316
+      resolution: 1440x3200
 
 # 铁路12306
 - packageName: com.MobileTicket
@@ -61,3 +65,73 @@
       click:
         position: 1280,180
         resolution: 1440x3200
+
+# 什么值得买
+- packageName: com.smzdm.client.android
+  skipTexts:
+  # fileId=2adae253-623d-4fd3-ad75-b5b32b667dcd&nodeId=18
+    - text: 跳过
+      length: 4
+
+# 哔哩哔哩
+- packageName: tv.danmaku.bili
+  skipTexts:
+  # fileId=368caf09-c152-4f6b-b8dd-3ee4718df65d&nodeId=26
+    - text: 跳过
+      length: 4
+
+# 小时工记账
+- packageName: com.julangling.xsgjz
+  skipBounds:
+  # fileId=43bcef4b-4b5b-4b63-a7f2-ad28e4f5f690&nodeId=30
+    - bound: 1244,176,1384,316
+      resolution: 1440x3200
+
+# 搜狗输入法
+- packageName: com.sohu.inputmethod.sogou
+  skipTexts:
+  # fileId=450b0add-b8e2-4cac-9b49-015744bb786f&nodeId=14
+    - text: 跳过
+      length: 2
+
+# 菜鸟
+- packageName: com.cainiao.wireless
+  skipTexts:
+  # fileId=5656e116-5a93-44da-8687-1a1dec170984&nodeId=11
+    - text: 跳过
+      length: 4
+
+# 高德地图
+- packageName: com.autonavi.minimap
+  skipTexts:
+  # fileId=57861a13-956b-4ae1-be60-d77c33b82010&nodeId=61
+    - text: 跳过
+      length: 2
+
+# 帆书
+- packageName: io.dushu.fandengreader
+  skipIds:
+  # fileId=88ad5f6b-e65b-4424-be8e-ab57e0eb613b&nodeId=9
+    - id: io.dushu.fandengreader:id/layout_skip
+
+# 腾讯微云
+- packageName: com.qq.qcloud
+  skipBounds:
+  # fileId=a310356a-4841-40fd-8a4f-314e77318230&nodeId=10
+    - bound: 1223,177,1384,289
+      resolution: 1440x3200
+      activityName: com.qq.qcloud.activity.WeiyunRootActivity
+
+# 鹿路通
+- packageName: com.psbc.citizencard
+  skipTexts:
+  # fileId=bb3de897-19d4-4c6d-ac7a-e11130420b4a&nodeId=8
+    - text: 跳过
+      length: 4
+
+# 滴滴出行
+- packageName: com.sdu.didi.psnger
+  skipTexts:
+  # fileId=e835b293-7845-4988-9423-fe7f9d740d43&nodeId=13
+    - text: 跳过
+      length: 2
