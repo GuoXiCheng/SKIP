@@ -1,7 +1,8 @@
 import JSZip from "jszip";
 import { AccessibilityWindow } from "../types";
 import { ref } from "vue";
-import { NodeDB } from "../MyDB";
+import { FileTable } from "../../my-index-db/file-table";
+import { MyIndexDB } from "../../my-index-db";
 
 export function useZip(arrayBuffer: ArrayBuffer) {
   const pic = ref<Blob>();
@@ -24,16 +25,16 @@ export function useZip(arrayBuffer: ArrayBuffer) {
     pic.value = blobFile;
 
     const { fileId, appName, packageName, activityName, createTime } = jsonObj;
-    const targetNode = await NodeDB.getNodeInfo(fileId);
-    if (targetNode == null) {
-      await NodeDB.addNodeInfo({
+    const targetFileTable = await FileTable.findFileTableByFileId(fileId);
+    if (targetFileTable == null) {
+      MyIndexDB.addFileData({
         fileId,
-        raw: jsonObj,
         pic: blobFile,
+        raw: jsonObj,
+        createTime,
         appName,
         packageName,
         activityName,
-        createTime,
       });
       added.value = true;
     }

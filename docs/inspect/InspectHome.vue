@@ -18,9 +18,11 @@ import { ref, onMounted } from "vue";
 import InspectContainer from "./InspectContainer.vue";
 import InspectTable from "./InspectTable.vue";
 import InspectHeader from "./InspectHeader.vue";
-import { NodeDB } from "./MyDB";
 import { AccessibilityWindow, FileTableData } from "./types";
 import { useZip } from "./hook/useZip";
+import { FileTable } from "../my-index-db/file-table";
+import { FileItem } from "../my-index-db/file-item";
+import { MyIndexDB } from "../my-index-db";
 
 const isShowInspectContainer = ref();
 const raw = ref<AccessibilityWindow | null>(null);
@@ -29,18 +31,11 @@ const tableData = ref<FileTableData[]>([]);
 const selection = ref<FileTableData[]>([]);
 
 const refreshTable = async () => {
-  const nodeInfoList = await NodeDB.getAllNodeInfo();
-  tableData.value = nodeInfoList.map((item) => ({
-    fileId: item.fileId,
-    createTime: item.createTime,
-    appName: item.appName,
-    packageName: item.packageName,
-    activityName: item.activityName,
-  }));
+  tableData.value = await FileTable.findAllFileTable();
 };
 
 const handleDelete = async () => {
-  await Promise.all(selection.value.map((item) => NodeDB.deleteNodeInfo(item.fileId)));
+  await Promise.all(selection.value.map((item) => MyIndexDB.deleteFileData(item.fileId)));
   refreshTable();
 };
 
@@ -55,10 +50,10 @@ onMounted(async () => {
     return;
   }
 
-  const nodeInfo = await NodeDB.getNodeInfo(fileId);
-  if (nodeInfo != null) {
-    raw.value = nodeInfo.raw;
-    pic.value = nodeInfo.pic;
+  const fileItem = await FileItem.findFileItemByFileId(fileId);
+  if (fileItem != null) {
+    raw.value = fileItem.raw;
+    pic.value = fileItem.pic;
     isShowInspectContainer.value = true;
     return;
   }
