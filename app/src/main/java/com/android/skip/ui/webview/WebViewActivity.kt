@@ -21,6 +21,11 @@ class WebViewActivity : AppCompatActivity() {
                 val url = intent.getIntExtra("url", -1)
                 if (url != -1) {
                     WebViewPage(url = getString(url))
+                } else {
+                    val address = intent.getStringExtra("address")
+                    if (address != null) {
+                        WebViewPage(url = address)
+                    }
                 }
             }
         }

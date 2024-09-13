@@ -1,9 +1,8 @@
 # 京东读书
 - packageName: com.jd.app.reader
-  skipTexts:
-  # fileId=7ba85f98-5b07-4947-95e0-dca6431b1fc6&nodeId=13
-    - text: 跳过
-      length: 5
+  skipIds:
+  # fileId=7ba85f98-5b07-4947-95e0-dca6431b1fc6&nodeId=10
+    - id: com.jd.app.reader:id/mJumpBtn
   skipBounds:
   # fileId=20f3db03-af60-4dc3-885a-b954b985931f&nodeId=14
     - bound: 1243,176,1383,316
@@ -68,17 +67,15 @@
 
 # 什么值得买
 - packageName: com.smzdm.client.android
-  skipTexts:
+  skipIds:
   # fileId=2adae253-623d-4fd3-ad75-b5b32b667dcd&nodeId=18
-    - text: 跳过
-      length: 4
+    - id: com.smzdm.client.android:id/tv_skip
 
 # 哔哩哔哩
 - packageName: tv.danmaku.bili
-  skipTexts:
+  skipIds:
   # fileId=368caf09-c152-4f6b-b8dd-3ee4718df65d&nodeId=26
-    - text: 跳过
-      length: 4
+    - id: tv.danmaku.bili:id/count_down
 
 # 小时工记账
 - packageName: com.julangling.xsgjz
