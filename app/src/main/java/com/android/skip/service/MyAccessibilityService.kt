@@ -7,11 +7,13 @@ import android.graphics.Rect
 import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
+import androidx.lifecycle.Observer
 import com.android.skip.R
 import com.android.skip.data.config.ConfigLoadRepository
 import com.android.skip.dataclass.AccessibilityNodeInfoCarrier
 import com.android.skip.dataclass.NodeChildSchema
 import com.android.skip.dataclass.NodeRootSchema
+import com.android.skip.ui.alive.notificationbar.NotificationBarRepository
 import com.android.skip.ui.main.start.StartAccessibilityRepository
 import com.android.skip.util.AccessibilityState
 import com.android.skip.util.AppBasicInfoUtils
@@ -45,6 +47,17 @@ class MyAccessibilityService : AccessibilityService() {
 
     @Inject
     lateinit var configLoadRepository: ConfigLoadRepository
+
+    @Inject
+    lateinit var notificationBarRepository: NotificationBarRepository
+
+    private val observer = Observer<Boolean> { enabled ->
+        if (enabled) {
+            ServiceUtils.startService(MyForegroundService::class.java)
+        } else {
+            ServiceUtils.stopService(MyForegroundService::class.java)
+        }
+    }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         try {
@@ -112,12 +125,19 @@ class MyAccessibilityService : AccessibilityService() {
     override fun onServiceConnected() {
         super.onServiceConnected()
         repository.changeAccessibilityState(AccessibilityState.STARTED)
+
+        notificationBarRepository.enable.observeForever(observer)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         serviceScope.cancel()
         repository.changeAccessibilityState(AccessibilityState.STOPPED)
+        notificationBarRepository.enable.removeObserver(observer)
+
+        if (ServiceUtils.isServiceRunning(MyForegroundService::class.java)) {
+            ServiceUtils.stopService(MyForegroundService::class.java)
+        }
     }
 
     override fun onKeyEvent(event: KeyEvent?): Boolean {

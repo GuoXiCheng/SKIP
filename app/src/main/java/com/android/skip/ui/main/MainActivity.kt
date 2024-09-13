@@ -23,6 +23,7 @@ import com.android.skip.MyApp
 import com.android.skip.R
 import com.android.skip.data.config.ConfigViewModel
 import com.android.skip.ui.about.AboutActivity
+import com.android.skip.ui.alive.AliveActivity
 import com.android.skip.ui.components.FlatButton
 import com.android.skip.ui.components.ResourceIcon
 import com.android.skip.ui.components.RowContent
@@ -53,7 +54,9 @@ class MainActivity : AppCompatActivity() {
                     StartButton(startAccessibilityViewModel = startAccessibilityViewModel) {
                         startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
                     }
-                    KeepAliveButton()
+                    KeepAliveButton() {
+                        startActivity(Intent(MyApp.context, AliveActivity::class.java))
+                    }
                     WhitelistButton()
                     InspectButton {
                         startActivity(Intent(MyApp.context, InspectActivity::class.java))
@@ -96,10 +99,10 @@ fun InspectButton(onClick: () -> Unit = {}) {
 }
 
 @Composable
-fun KeepAliveButton() {
+fun KeepAliveButton(onClick: () -> Unit = {}) {
     FlatButton(content = {
         RowContent(R.string.alive, null, { ResourceIcon(iconResource = R.drawable.all_inclusive) })
-    }) {}
+    }, onClick = onClick)
 }
 
 @Composable

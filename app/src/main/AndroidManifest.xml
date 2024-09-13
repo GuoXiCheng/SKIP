@@ -18,6 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SKIP"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.alive.AliveActivity"
+            android:exported="false" />
         <!-- 配置 FileProvider -->
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -28,6 +31,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
         <activity
             android:name=".ui.record.InspectRecordActivity"
             android:exported="false" />
@@ -42,6 +46,10 @@
             android:name=".service.InspectService"
             android:enabled="true"
             android:foregroundServiceType="mediaProjection" />
+
+        <service
+            android:name=".service.MyForegroundService"
+            android:enabled="true" />
 
         <activity
             android:name=".ui.inspect.InspectActivity"
