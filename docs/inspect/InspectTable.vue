@@ -1,16 +1,19 @@
 <template>
   <el-table
+    ref="tableRef"
     :border="true"
     :data="props.tableData"
     style="width: 100%"
     row-class-name="cursor-pointer"
     @row-click="handleRowClick"
-    @selection-change="onSelectionChange"
-    :default-sort="{ prop: 'createTime', order: 'descending' }"
+    @sort-change="onSortChange"
+    @filter-change="onFilterChange"
+    @select="onSelect"
+    @select-all="onSelectAll"
   >
     <el-table-column type="selection" width="55" />
-    <el-table-column prop="createTime" label="创建时间" sortable width="200" :formatter="formatter" />
-    <el-table-column prop="appName" label="应用名称" :filters="appFilters" :filter-method="filterHandler" width="150" />
+    <el-table-column prop="createTime" label="创建时间" sortable="custom" width="200" :formatter="formatter" />
+    <el-table-column prop="appName" label="应用名称" :filters="appFilters" width="150" />
     <el-table-column prop="packageName" label="应用包名" />
     <el-table-column prop="activityName" label="Activity 名称" />
   </el-table>
@@ -19,28 +22,21 @@
 <script lang="ts" setup>
 import { TableColumnCtx } from "element-plus";
 import { FileTableData } from "./types";
-import { computed } from "vue";
+import { ref, nextTick, watch } from "vue";
+import { ElTable } from "element-plus";
+
+const tableRef = ref<InstanceType<typeof ElTable>>();
 
 const props = defineProps<{
   tableData: FileTableData[];
+  appFilters: { text: string; value: string }[];
+  selection: { fileId: string; select: boolean }[];
 }>();
 
-const emits = defineEmits(["onSelectionChange"]);
+const emits = defineEmits(["onSelect", "onSortChange", "onFilterChange", "onSelectAll"]);
 
 const handleRowClick = (row: FileTableData) => {
   window.open(`/inspect?fileId=${row.fileId}`);
-};
-
-const appFilters = computed(() => {
-  const map = new Map<string, string>();
-  props.tableData.forEach((item) => {
-    map.set(item.packageName, item.appName);
-  });
-  return Array.from(map).map((item) => ({ text: item[1], value: item[0] }));
-});
-
-const filterHandler = (value: string, row: FileTableData, column: TableColumnCtx<FileTableData>) => {
-  return row.packageName === value;
 };
 
 const formatter = (row: FileTableData, column: TableColumnCtx<FileTableData>) => {
@@ -56,5 +52,28 @@ const formatter = (row: FileTableData, column: TableColumnCtx<FileTableData>) =>
     .replace(/\//g, "-");
 };
 
-const onSelectionChange = (selection: FileTableData[]) => emits("onSelectionChange", selection);
+const onSelect = (selection: FileTableData[], row: FileTableData) =>
+  emits("onSelect", { fileId: row.fileId, select: selection.includes(row) });
+
+const onSelectAll = (selection: FileTableData[]) => {
+  const selected = props.tableData.length === selection.length;
+  const items = props.tableData.map((item) => ({ fileId: item.fileId, select: selected }));
+  emits("onSelectAll", items);
+};
+
+const onSortChange = ({ prop, order }: { prop: string; order: string }) => emits("onSortChange", order);
+
+const onFilterChange = (filters: { [key: string]: string[] }) => emits("onFilterChange", Object.values(filters)[0]);
+
+watch(
+  () => props.tableData,
+  () => {
+    nextTick(() => {
+      props.tableData.forEach((item) => {
+        const foundItem = props.selection.find((it) => it.fileId === item.fileId);
+        tableRef.value!.toggleRowSelection(item, foundItem?.select === true);
+      });
+    });
+  }
+);
 </script>
