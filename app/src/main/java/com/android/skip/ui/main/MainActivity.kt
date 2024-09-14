@@ -30,6 +30,7 @@ import com.android.skip.ui.components.RowContent
 import com.android.skip.ui.inspect.InspectActivity
 import com.android.skip.ui.main.start.StartAccessibilityViewModel
 import com.android.skip.ui.main.start.StartButton
+import com.android.skip.ui.settings.SettingsActivity
 import com.android.skip.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -54,14 +55,16 @@ class MainActivity : AppCompatActivity() {
                     StartButton(startAccessibilityViewModel = startAccessibilityViewModel) {
                         startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
                     }
-                    KeepAliveButton() {
+                    KeepAliveButton {
                         startActivity(Intent(MyApp.context, AliveActivity::class.java))
                     }
                     WhitelistButton()
                     InspectButton {
                         startActivity(Intent(MyApp.context, InspectActivity::class.java))
                     }
-                    SettingsButton()
+                    SettingsButton {
+                        startActivity(Intent(MyApp.context, SettingsActivity::class.java))
+                    }
                     AboutButton() {
                         startActivity(Intent(MyApp.context, AboutActivity::class.java))
                     }
@@ -115,10 +118,10 @@ fun WhitelistButton() {
 }
 
 @Composable
-fun SettingsButton() {
+fun SettingsButton(onClick: () -> Unit) {
     FlatButton(content = {
         RowContent(R.string.settings, null, { ResourceIcon(iconResource = R.drawable.settings) })
-    }) {}
+    }, onClick = onClick)
 }
 
 @Composable

@@ -21,9 +21,14 @@
     <string name="alive_warn">请注意</string>
     <string name="alive_warn_subtitle">以上操作方法可能仅适用于MIUI或HyperOS，其他系统手机请自行查询相应的应用保活方法</string>
     <string name="alive_warn_search_content">如何实现应用后台保活</string>
-    
+
     <string name="whitelist">应用白名单</string>
+
     <string name="settings">设置</string>
+    <string name="settings_tip">是否允许提示</string>
+    <string name="settings_tip_subtitle">执行「跳过」时%1$s提示</string>
+    <string name="settings_tip_no">不要显示</string>
+    <string name="settings_tip_yes">需要显示</string>
 
     <string name="about">关于</string>
     <string name="about_github_title">源代码</string>

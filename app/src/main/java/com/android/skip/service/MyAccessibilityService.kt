@@ -15,6 +15,7 @@ import com.android.skip.dataclass.NodeChildSchema
 import com.android.skip.dataclass.NodeRootSchema
 import com.android.skip.ui.alive.notificationbar.NotificationBarRepository
 import com.android.skip.ui.main.start.StartAccessibilityRepository
+import com.android.skip.ui.settings.tip.TipRepository
 import com.android.skip.util.AccessibilityState
 import com.android.skip.util.AppBasicInfoUtils
 import com.android.skip.util.MyToast
@@ -36,11 +37,13 @@ import javax.inject.Inject
 class MyAccessibilityService : AccessibilityService() {
     private var appActivityName: String? = null
     private var appPackageName: String? = null
+    private var isShowTip: Boolean = false
+
     private val clickedRect: MutableSet<String> = mutableSetOf()
     private val serviceScope = CoroutineScope(Dispatchers.Main + Job())
 
     @Inject
-    lateinit var repository: StartAccessibilityRepository
+    lateinit var startAccessibilityRepository: StartAccessibilityRepository
 
     @Inject
     lateinit var accessibilityInspectRepository: AccessibilityInspectRepository
@@ -51,12 +54,19 @@ class MyAccessibilityService : AccessibilityService() {
     @Inject
     lateinit var notificationBarRepository: NotificationBarRepository
 
-    private val observer = Observer<Boolean> { enabled ->
+    @Inject
+    lateinit var tipRepository: TipRepository
+
+    private val notificationBarObserver = Observer<Boolean> { enabled ->
         if (enabled) {
             ServiceUtils.startService(MyForegroundService::class.java)
         } else {
             ServiceUtils.stopService(MyForegroundService::class.java)
         }
+    }
+
+    private val tipObserver = Observer<Boolean> {enabled ->
+        isShowTip = enabled
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
@@ -111,7 +121,9 @@ class MyAccessibilityService : AccessibilityService() {
             object : GestureResultCallback() {
                 override fun onCompleted(gestureDescription: GestureDescription) {
                     super.onCompleted(gestureDescription)
-                    MyToast.show(R.string.toast_skip_tip)
+                    if (isShowTip) {
+                        MyToast.show(R.string.toast_skip_tip)
+                    }
                 }
             },
             null
@@ -124,16 +136,19 @@ class MyAccessibilityService : AccessibilityService() {
 
     override fun onServiceConnected() {
         super.onServiceConnected()
-        repository.changeAccessibilityState(AccessibilityState.STARTED)
+        startAccessibilityRepository.changeAccessibilityState(AccessibilityState.STARTED)
 
-        notificationBarRepository.enable.observeForever(observer)
+        notificationBarRepository.enable.observeForever(notificationBarObserver)
+        tipRepository.enable.observeForever(tipObserver)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         serviceScope.cancel()
-        repository.changeAccessibilityState(AccessibilityState.STOPPED)
-        notificationBarRepository.enable.removeObserver(observer)
+        startAccessibilityRepository.changeAccessibilityState(AccessibilityState.STOPPED)
+
+        notificationBarRepository.enable.removeObserver(notificationBarObserver)
+        tipRepository.enable.removeObserver(tipObserver)
 
         if (ServiceUtils.isServiceRunning(MyForegroundService::class.java)) {
             ServiceUtils.stopService(MyForegroundService::class.java)
