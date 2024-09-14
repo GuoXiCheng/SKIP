@@ -132,3 +132,9 @@
   # fileId=e835b293-7845-4988-9423-fe7f9d740d43&nodeId=13
     - text: 跳过
       length: 2
+
+# 知乎
+- packageName: com.zhihu.android
+  skipIds:
+  # fileId=812b304e-63fd-42da-b200-7497a2e635c4&nodeId=21
+    - id: com.zhihu.android:id/btn_skip

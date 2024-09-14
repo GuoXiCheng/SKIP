@@ -15,6 +15,7 @@ import com.android.skip.dataclass.NodeChildSchema
 import com.android.skip.dataclass.NodeRootSchema
 import com.android.skip.ui.alive.notificationbar.NotificationBarRepository
 import com.android.skip.ui.main.start.StartAccessibilityRepository
+import com.android.skip.ui.settings.strict.StrictRepository
 import com.android.skip.ui.settings.tip.TipRepository
 import com.android.skip.util.AccessibilityState
 import com.android.skip.util.AppBasicInfoUtils
@@ -38,6 +39,7 @@ class MyAccessibilityService : AccessibilityService() {
     private var appActivityName: String? = null
     private var appPackageName: String? = null
     private var isShowTip: Boolean = false
+    private var isStrict: Boolean = false
 
     private val clickedRect: MutableSet<String> = mutableSetOf()
     private val serviceScope = CoroutineScope(Dispatchers.Main + Job())
@@ -57,6 +59,9 @@ class MyAccessibilityService : AccessibilityService() {
     @Inject
     lateinit var tipRepository: TipRepository
 
+    @Inject
+    lateinit var strictRepository: StrictRepository
+
     private val notificationBarObserver = Observer<Boolean> { enabled ->
         if (enabled) {
             ServiceUtils.startService(MyForegroundService::class.java)
@@ -65,9 +70,9 @@ class MyAccessibilityService : AccessibilityService() {
         }
     }
 
-    private val tipObserver = Observer<Boolean> {enabled ->
-        isShowTip = enabled
-    }
+    private val tipObserver = Observer<Boolean> { isShowTip = it }
+
+    private val strictObserver = Observer<Boolean> { isStrict = it }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         try {
@@ -81,7 +86,7 @@ class MyAccessibilityService : AccessibilityService() {
 
             val that = this
             serviceScope.launch {
-                val targetRect = configLoadRepository.getTargetRect(rootNode, appActivityName)
+                val targetRect = configLoadRepository.getTargetRect(rootNode, appActivityName, isStrict)
                 targetRect?.let { rect ->
                     val rectStr = rect.toString()
                     if (!clickedRect.contains(rectStr)) {
@@ -140,6 +145,7 @@ class MyAccessibilityService : AccessibilityService() {
 
         notificationBarRepository.enable.observeForever(notificationBarObserver)
         tipRepository.enable.observeForever(tipObserver)
+        strictRepository.enable.observeForever(strictObserver)
     }
 
     override fun onDestroy() {
@@ -149,6 +155,7 @@ class MyAccessibilityService : AccessibilityService() {
 
         notificationBarRepository.enable.removeObserver(notificationBarObserver)
         tipRepository.enable.removeObserver(tipObserver)
+        strictRepository.enable.removeObserver(strictObserver)
 
         if (ServiceUtils.isServiceRunning(MyForegroundService::class.java)) {
             ServiceUtils.stopService(MyForegroundService::class.java)

@@ -29,6 +29,10 @@
     <string name="settings_tip_subtitle">执行「跳过」时%1$s提示</string>
     <string name="settings_tip_no">不要显示</string>
     <string name="settings_tip_yes">需要显示</string>
+    <string name="settings_strict">是否使用严格模式</string>
+    <string name="settings_strict_yes">完全遵循配置规则</string>
+    <string name="settings_strict_no">默认匹配「跳过」关键字</string>
+    <string name="settings_strict_skip">跳过</string>
 
     <string name="about">关于</string>
     <string name="about_github_title">源代码</string>
