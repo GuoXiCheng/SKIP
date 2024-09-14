@@ -51,7 +51,7 @@ fun ScaffoldPage(
                 fontSize = 24.sp,
                 modifier = Modifier.align(Alignment.CenterVertically)
             )
-            Spacer(modifier = Modifier.width(110.dp))
+            Spacer(modifier = Modifier.width(150.dp))
             menuItems?.let {
                 IconButton(onClick = { expanded = true }) {
                     Icon(Icons.Default.MoreVert, contentDescription = null)

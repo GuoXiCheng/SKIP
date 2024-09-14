@@ -23,6 +23,7 @@
     <string name="alive_warn_search_content">如何实现应用后台保活</string>
 
     <string name="whitelist">应用白名单</string>
+    <string name="whitelist_show_system">显示系统应用</string>
 
     <string name="settings">设置</string>
     <string name="settings_tip">是否允许提示</string>

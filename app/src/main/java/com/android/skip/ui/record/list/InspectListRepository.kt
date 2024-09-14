@@ -27,7 +27,7 @@ class InspectListRepository @Inject constructor() {
         }
 
         val inspectRecordItemList = mutableListOf<InspectRecordItem>()
-        fileList.forEach() {
+        fileList.forEach {
             val filename = it.name.substringBefore(".zip")
             val br =
                 BufferedReader(FileReader("${MyApp.context.filesDir}/capture/${filename}.json"))

@@ -32,6 +32,7 @@ import com.android.skip.ui.main.start.StartAccessibilityViewModel
 import com.android.skip.ui.main.start.StartButton
 import com.android.skip.ui.settings.SettingsActivity
 import com.android.skip.ui.theme.AppTheme
+import com.android.skip.ui.whitelist.WhiteListActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -58,7 +59,9 @@ class MainActivity : AppCompatActivity() {
                     KeepAliveButton {
                         startActivity(Intent(MyApp.context, AliveActivity::class.java))
                     }
-                    WhitelistButton()
+                    WhiteListButton {
+                        startActivity(Intent(MyApp.context, WhiteListActivity::class.java))
+                    }
                     InspectButton {
                         startActivity(Intent(MyApp.context, InspectActivity::class.java))
                     }
@@ -109,12 +112,12 @@ fun KeepAliveButton(onClick: () -> Unit = {}) {
 }
 
 @Composable
-fun WhitelistButton() {
+fun WhiteListButton(onClick: () -> Unit) {
     FlatButton(content = {
         RowContent(R.string.whitelist,
             null,
             { ResourceIcon(iconResource = R.drawable.app_registration) })
-    }) {}
+    }, onClick = onClick)
 }
 
 @Composable
