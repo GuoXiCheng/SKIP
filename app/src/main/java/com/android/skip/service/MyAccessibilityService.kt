@@ -17,6 +17,7 @@ import com.android.skip.ui.alive.notificationbar.NotificationBarRepository
 import com.android.skip.ui.main.start.StartAccessibilityRepository
 import com.android.skip.ui.settings.strict.StrictRepository
 import com.android.skip.ui.settings.tip.TipRepository
+import com.android.skip.ui.whitelist.WhiteListRepository
 import com.android.skip.util.AccessibilityState
 import com.android.skip.util.AppBasicInfoUtils
 import com.android.skip.util.MyToast
@@ -62,6 +63,9 @@ class MyAccessibilityService : AccessibilityService() {
     @Inject
     lateinit var strictRepository: StrictRepository
 
+    @Inject
+    lateinit var whiteListRepository: WhiteListRepository
+
     private val notificationBarObserver = Observer<Boolean> { enabled ->
         if (enabled) {
             ServiceUtils.startService(MyForegroundService::class.java)
@@ -84,15 +88,18 @@ class MyAccessibilityService : AccessibilityService() {
                 appPackageName = rootNodePackageName
             }
 
-            val that = this
-            serviceScope.launch {
-                val targetRect = configLoadRepository.getTargetRect(rootNode, appActivityName, isStrict)
-                targetRect?.let { rect ->
-                    val rectStr = rect.toString()
-                    if (!clickedRect.contains(rectStr)) {
-                        click(that, rect)
-                        clickedRect.add(rectStr)
-                        LogUtils.d("clicked: packageName is $rootNodePackageName rect is $rectStr")
+            if (!whiteListRepository.isAppInWhiteList(rootNodePackageName)) {
+                val that = this
+                serviceScope.launch {
+                    val targetRect =
+                        configLoadRepository.getTargetRect(rootNode, appActivityName, isStrict)
+                    targetRect?.let { rect ->
+                        val rectStr = rect.toString()
+                        if (!clickedRect.contains(rectStr)) {
+                            click(that, rect)
+                            clickedRect.add(rectStr)
+                            LogUtils.d("clicked: packageName is $rootNodePackageName rect is $rectStr")
+                        }
                     }
                 }
             }

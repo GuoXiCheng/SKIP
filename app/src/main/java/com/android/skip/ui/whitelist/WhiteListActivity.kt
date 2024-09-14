@@ -19,12 +19,14 @@ class WhiteListActivity : AppCompatActivity() {
 
     private val showSystemViewModel by viewModels<ShowSystemViewModel>()
 
+    private val whiteListViewModel by viewModels<WhiteListViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
                 ScaffoldPage(R.string.whitelist, { finish() }, {
-                    AppListColumn(appListViewModel)
+                    AppListColumn(appListViewModel, whiteListViewModel)
                 }, {
                     ShowSystemButton(showSystemViewModel)
                 })
