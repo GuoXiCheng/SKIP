@@ -42,7 +42,7 @@ function buildWindowTableData(data: AccessibilityWindow | null) {
     },
     {
       key: "创建时间",
-      value: new Date(data.fileId).toLocaleString(),
+      value: new Date(data.createTime).toLocaleString(),
     },
   ];
 }
@@ -54,13 +54,10 @@ function buildNodeTableData(data: AccessibilityNode | null) {
     { key: "className", value: data.className },
     { key: "text", value: data.text },
     { key: "textLength", value: data.text?.length },
-    { key: "left", value: data.left },
-    { key: "top", value: data.top },
-    { key: "right", value: data.right },
-    { key: "bottom", value: data.bottom },
-    { key: "bound", value: `${data.left},${data.top},${data.right},${data.bottom}` },
+    { key: "bound(left,top,right,bottom)", value: `${data.left},${data.top},${data.right},${data.bottom}` },
     { key: "childCount", value: data.childCount },
     { key: "isClickable", value: data.isClickable },
+    { key: "nodeId", value: data.nodeId },
   ];
 }
 

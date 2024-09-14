@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.SKIP" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- 深色主题时使用的颜色 -->
         <item name="colorPrimary">@color/colorPrimaryNight</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryDarkNight</item>

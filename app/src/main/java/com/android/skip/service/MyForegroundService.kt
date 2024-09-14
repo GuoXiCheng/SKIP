@@ -7,13 +7,12 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
-import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
-import com.android.skip.NewMainActivity
 import com.android.skip.R
+import com.android.skip.ui.main.MainActivity
 
-class MyForegroundService: Service() {
+class MyForegroundService : Service() {
     override fun onBind(p0: Intent?): IBinder? {
         TODO("Not yet implemented")
     }
@@ -22,18 +21,22 @@ class MyForegroundService: Service() {
         super.onCreate()
 
         val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel("skip_foreground_service", "无障碍服务", NotificationManager.IMPORTANCE_DEFAULT)
-            manager.createNotificationChannel(channel)
-        }
-        val it = Intent(this, NewMainActivity::class.java)
-        val pi = PendingIntent.getActivity(this, 0, it, PendingIntent.FLAG_IMMUTABLE)
-        val notification = NotificationCompat.Builder(this, "skip_foreground_service")
+        val channel = NotificationChannel(
+            "SKIP_FOREGROUND_SERVICE",
+            "SKIP 无障碍服务",
+            NotificationManager.IMPORTANCE_DEFAULT
+        )
+        manager.createNotificationChannel(channel)
+
+        val intent = Intent(this, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(this, 0 , intent, PendingIntent.FLAG_IMMUTABLE)
+        val notification = NotificationCompat.Builder(this, "SKIP_FOREGROUND_SERVICE")
             .setContentTitle("SKIP 无障碍服务运行中")
-            .setSmallIcon(R.drawable.warning)
-            .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.warning))
-            .setContentIntent(pi)
+            .setSmallIcon(R.drawable.info)
+            .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.info))
+            .setContentIntent(pendingIntent)
             .build()
-        startForeground(1, notification)
+
+        startForeground(2, notification)
     }
 }

@@ -37,4 +37,5 @@ export function releaseFile(options: ReleaseFileOptions) {
   // 复制 config
   fs.copyFileSync("app/src/main/assets/skip_config.yaml", `${releasePath}/skip_config.yaml`);
   fs.copyFileSync("app/src/main/assets/skip_config_v2.yaml", `${releasePath}/skip_config_v2.yaml`);
+  fs.copyFileSync("app/src/main/assets/skip_config_v3.yaml", `${releasePath}/skip_config_v3.yaml`);
 }

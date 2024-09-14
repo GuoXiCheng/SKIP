@@ -1,55 +1,60 @@
 <resources>
     <string name="app_name">SKIP</string>
-    <string name="activity_main">SKIP</string>
-    <string name="accessibility_description">若无障碍服务发生故障，可以关闭后再打开。</string>
-    <string name="main_check_new_version">检查更新</string>
+    <string name="accessibility_description">SKIP 可以帮您自动跳过应用开屏广告</string>
 
-    <string name="about">关于</string>
-    <string name="about_github_name">源代码</string>
-    <string name="about_github_url">https://github.com/GuoXiCheng/SKIP</string>
-    <string name="about_skip_docs_name">文档</string>
-    <string name="about_skip_docs_url">https://skip.guoxicheng.top</string>
-    <string name="about_current_version">当前版本号：</string>
-    <string name="about_current_resolution">当前分辨率：</string>
+    <string name="inspect">布局检查</string>
+    <string name="inspect_start_title">是否启用布局检查</string>
+    <string name="inspect_start_subtitle">启用布局检查记录屏幕节点信息</string>
+    <string name="inspect_record_title">布局检查记录</string>
+    <string name="inspect_record_subtitle">当前存在 %1$s 条记录</string>
 
-    <string name="settings">设置</string>
-    <string name="settings_pattern_light_title">浅色模式</string>
-    <string name="settings_pattern_light_subtitle">保持明亮模式</string>
-    <string name="settings_pattern_dark_title">深色模式</string>
-    <string name="settings_pattern_dark_subtitle">保持暗黑模式</string>
-    <string name="settings_pattern_system_title">跟随系统</string>
-    <string name="settings_pattern_system_subtitle">跟随系统设置</string>
-    <string name="settings_check_update_title">自动检查更新</string>
-    <string name="settings_check_update_subtitle">打开应用时自动检查新版本</string>
-    <string name="settings_sync_config_title">自动同步配置</string>
-    <string name="settings_sync_config_subtitle">打开应用时自动获取并更新配置文件</string>
-    <string name="settings_permit_notice_title">允许通知</string>
-    <string name="settings_permit_notice_subtitle">是否允许发送「跳过」通知</string>
-    <string name="settings_include_system_apps_title">列出系统应用</string>
-    <string name="settings_include_system_apps_subtitle">应用白名单中是否包含系统应用</string>
 
     <string name="alive">应用保活</string>
-    <string name="alive_power_saving_title">省电策略</string>
+    <string name="alive_power_saving">省电策略</string>
     <string name="alive_power_saving_subtitle">点击省电策略，进入后选择「无限制」</string>
-    <string name="alive_self_start_title">自启动管理</string>
+    <string name="alive_self_start">自启动管理</string>
     <string name="alive_self_start_subtitle">在应用列表找到「SKIP」，将开关打开</string>
-    <string name="alive_backstage_title">后台任务管理</string>
+    <string name="alive_backstage">后台任务管理</string>
     <string name="alive_backstage_subtitle">进入最近打开程序页面，长按「SKIP」卡片，锁定</string>
-    <string name="alive_warn_title">请注意</string>
+    <string name="alive_notification_bar">常驻通知栏</string>
+    <string name="alive_notification_bar_subtitle">可提升应用存活率</string>
+    <string name="alive_warn">请注意</string>
     <string name="alive_warn_subtitle">以上操作方法可能仅适用于MIUI或HyperOS，其他系统手机请自行查询相应的应用保活方法</string>
     <string name="alive_warn_search_content">如何实现应用后台保活</string>
-    <string name="alive_foreground_service_title">前台服务</string>
-    <string name="alive_foreground_service_subtitle">是否允许以前台服务方式运行无障碍服务</string>
 
     <string name="whitelist">应用白名单</string>
+    <string name="whitelist_show_system">显示系统应用</string>
 
-    <string name="dialog_confirm_allow">允许</string>
-    <string name="dialog_confirm_dismiss">拒绝</string>
-    <string name="dialog_open_browser_title">启动浏览器</string>
-    <string name="dialog_open_browser_content">是否要通过浏览器访问</string>
+    <string name="settings">设置</string>
+    <string name="settings_tip">是否允许提示</string>
+    <string name="settings_tip_subtitle">执行「跳过」时%1$s提示</string>
+    <string name="settings_tip_no">不要显示</string>
+    <string name="settings_tip_yes">需要显示</string>
+    <string name="settings_strict">是否使用严格模式</string>
+    <string name="settings_strict_yes">完全遵循配置规则</string>
+    <string name="settings_strict_no">默认匹配「跳过」关键字</string>
+    <string name="settings_strict_skip">跳过</string>
 
-    <string name="layout_inspect">布局检查</string>
-    <string name="layout_inspect_title">布局检查服务</string>
-    <string name="layout_inspect_subtitle">启用布局检查以便保存布局图片和节点信息</string>
+    <string name="about">关于</string>
+    <string name="about_github_title">源代码</string>
+    <string name="about_github_subtitle">https://github.com/GuoXiCheng/SKIP</string>
+    <string name="about_docs_title">文档</string>
+    <string name="about_docs_subtitle">https://skip.guoxicheng.top</string>
+    <string name="about_docs_url">https://skip.guoxicheng.top/guide/intro/what-is-skip</string>
+    <string name="about_current_version">当前版本号: </string>
 
+    <string name="toast_start_accessibility_first">请先开启无障碍服务</string>
+    <string name="toast_save_success">保存成功</string>
+    <string name="toast_save_fail">保存失败</string>
+    <string name="toast_del_success">删除成功</string>
+    <string name="toast_del_fail">删除失败</string>
+    <string name="toast_skip_tip">已为您跳过广告</string>
+
+    <string name="record_please_choose">请选择一个应用来分享文件</string>
+    <string name="record_look">查看</string>
+    <string name="record_share">分享</string>
+    <string name="record_delete">删除</string>
+    <string name="record_delete_all">全部删除</string>
+
+    <string name="dialog_close">关闭</string>
 </resources>

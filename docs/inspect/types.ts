@@ -4,12 +4,13 @@ export interface Tree {
 }
 
 export interface AccessibilityWindow {
-  fileId: number;
+  fileId: string;
   appName: string;
   activityName: string;
   packageName: string;
   screenHeight: number;
   screenWidth: number;
+  createTime: number;
   nodes: AccessibilityNode[];
 }
 
@@ -37,3 +38,19 @@ export interface AccessibilityNodeTree {
   viewIdResourceName?: string;
   childCount: number;
 }
+
+export interface FileTableData {
+  fileId: string;
+  createTime: number;
+  appName: string;
+  packageName: string;
+  activityName: string;
+}
+
+export interface FileItemData {
+  fileId: string;
+  pic: Blob;
+  raw: AccessibilityWindow;
+}
+
+export type FileData = FileTableData & FileItemData;

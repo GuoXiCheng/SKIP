@@ -1,0 +1,140 @@
+# 京东读书
+- packageName: com.jd.app.reader
+  skipIds:
+  # fileId=7ba85f98-5b07-4947-95e0-dca6431b1fc6&nodeId=10
+    - id: com.jd.app.reader:id/mJumpBtn
+  skipBounds:
+  # fileId=20f3db03-af60-4dc3-885a-b954b985931f&nodeId=14
+    - bound: 1243,176,1383,316
+      resolution: 1440x3200
+
+
+# 前程无忧51Job
+- packageName: com.job.android
+  skipIds:
+  # fileId=ee283a25-cbbf-43b0-84dd-aaf9ccf24c83&nodeId=10
+    - id: com.job.android:id/skipBtn
+
+# 酷安
+- packageName: com.coolapk.market
+  skipTexts:
+  # fileId=94969846-73e3-41de-aca0-ad9994566fc6&nodeId=46
+    - text: 跳过
+      length: 4
+  # fileId=92e729ea-dd19-4384-93af-ec7581f306cf&nodeId=66
+  skipBounds:
+    - bound: 1244,176,1384,316
+      resolution: 1440x3200
+
+# 铁路12306
+- packageName: com.MobileTicket
+  # fileId=b8592c72-1a8a-42ea-8022-2ba15bc83444&nodeId=9
+  skipIds:
+    - id: com.MobileTicket:id/tv_skip
+
+# 人人视频
+- packageName: com.example.pptv
+  skipTexts:
+  # fileId=f074f9ba-2fdd-4885-8b16-df8afdcbb46d&nodeId=47
+  # fileId=84603cb6-3647-42aa-a0f9-e013a3c1e74c&nodeId=67
+    - text: 跳过
+      length: 7
+
+# CSDN
+- packageName: net.csdn.csdnplus
+  skipTexts:
+  # fileId=3737625b-383a-4891-aada-493e811f048a&nodeId=12
+  # fileId=7d45a0ad-f0ce-4856-b38b-dd545bfadeb5&nodeId=28
+    - text: 跳过
+      length: 5
+  skipBounds:
+  # fileId=e2c456c9-2db5-4ff9-9f79-f42acf557358&nodeId=13
+    - bound: 1244,176,1384,316
+      resolution: 1440x3200
+
+# 豆瓣
+- packageName: com.douban.frodo
+  skipTexts:
+  # fileId=7aa2544b-8a80-41f3-bf0c-ee03c7cf83b2&nodeId=107
+    - text: 跳过
+      length: 3
+  skipIds:
+  # fileId=cfe9660a-1d45-4904-a8a7-8d846faa1a49&nodeId=14
+    - id: com.douban.frodo:id/ad_mark
+      click:
+        position: 1280,180
+        resolution: 1440x3200
+
+# 什么值得买
+- packageName: com.smzdm.client.android
+  skipIds:
+  # fileId=2adae253-623d-4fd3-ad75-b5b32b667dcd&nodeId=18
+    - id: com.smzdm.client.android:id/tv_skip
+
+# 哔哩哔哩
+- packageName: tv.danmaku.bili
+  skipIds:
+  # fileId=368caf09-c152-4f6b-b8dd-3ee4718df65d&nodeId=26
+    - id: tv.danmaku.bili:id/count_down
+
+# 小时工记账
+- packageName: com.julangling.xsgjz
+  skipBounds:
+  # fileId=43bcef4b-4b5b-4b63-a7f2-ad28e4f5f690&nodeId=30
+    - bound: 1244,176,1384,316
+      resolution: 1440x3200
+
+# 搜狗输入法
+- packageName: com.sohu.inputmethod.sogou
+  skipTexts:
+  # fileId=450b0add-b8e2-4cac-9b49-015744bb786f&nodeId=14
+    - text: 跳过
+      length: 2
+
+# 菜鸟
+- packageName: com.cainiao.wireless
+  skipTexts:
+  # fileId=5656e116-5a93-44da-8687-1a1dec170984&nodeId=11
+    - text: 跳过
+      length: 4
+
+# 高德地图
+- packageName: com.autonavi.minimap
+  skipTexts:
+  # fileId=57861a13-956b-4ae1-be60-d77c33b82010&nodeId=61
+    - text: 跳过
+      length: 2
+
+# 帆书
+- packageName: io.dushu.fandengreader
+  skipIds:
+  # fileId=88ad5f6b-e65b-4424-be8e-ab57e0eb613b&nodeId=9
+    - id: io.dushu.fandengreader:id/layout_skip
+
+# 腾讯微云
+- packageName: com.qq.qcloud
+  skipBounds:
+  # fileId=a310356a-4841-40fd-8a4f-314e77318230&nodeId=10
+    - bound: 1223,177,1384,289
+      resolution: 1440x3200
+      activityName: com.qq.qcloud.activity.WeiyunRootActivity
+
+# 鹿路通
+- packageName: com.psbc.citizencard
+  skipTexts:
+  # fileId=bb3de897-19d4-4c6d-ac7a-e11130420b4a&nodeId=8
+    - text: 跳过
+      length: 4
+
+# 滴滴出行
+- packageName: com.sdu.didi.psnger
+  skipTexts:
+  # fileId=e835b293-7845-4988-9423-fe7f9d740d43&nodeId=13
+    - text: 跳过
+      length: 2
+
+# 知乎
+- packageName: com.zhihu.android
+  skipIds:
+  # fileId=812b304e-63fd-42da-b200-7497a2e635c4&nodeId=21
+    - id: com.zhihu.android:id/btn_skip

@@ -1,0 +1,52 @@
+[versions]
+accompanistDrawablepainter = "0.34.0"
+activityCompose = "1.9.0"
+agp = "8.5.1"
+gson = "2.10.1"
+hiltAndroidCompiler = "2.51.1"
+hiltAndroid = "2.51.1"
+kotlin = "2.0.0"
+coreKtx = "1.13.1"
+junit = "4.13.2"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+appcompat = "1.7.0"
+material = "1.10.0"
+activity = "1.9.0"
+pagingRuntime = "3.3.0"
+runtimeAndroid = "1.6.8"
+foundationAndroid = "1.6.8"
+material3Android = "1.2.1"
+snakeyaml = "1.29"
+ui = "1.6.8"
+utilcodex = "1.31.1"
+runtimeLivedata = "1.6.8"
+
+
+[libraries]
+accompanist-drawablepainter = { module = "com.google.accompanist:accompanist-drawablepainter", version.ref = "accompanistDrawablepainter" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pagingRuntime" }
+androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "pagingRuntime" }
+androidx-ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+androidx-runtime-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "runtimeAndroid" }
+androidx-foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "foundationAndroid" }
+androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
+snakeyaml = { module = "org.yaml:snakeyaml", version.ref = "snakeyaml" }
+utilcodex = { module = "com.blankj:utilcodex", version.ref = "utilcodex" }
+androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
