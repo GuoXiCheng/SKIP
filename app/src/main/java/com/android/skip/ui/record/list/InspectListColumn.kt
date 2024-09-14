@@ -1,17 +1,18 @@
 package com.android.skip.ui.record.list
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Share
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.paging.LoadState
@@ -73,17 +74,26 @@ fun InspectListColumn(
             }
         }
 
-        // 添加一个加载状态的 Footer
         lazyPagingItems.apply {
             when {
                 loadState.refresh is LoadState.Loading -> {
-                    item { CircularProgressIndicator() } // 加载中状态
+                    item {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(text = "加载中...")
+                        }
+                    }
                 }
 
+                // 加载更多
                 loadState.append is LoadState.Loading -> {
-                    item { CircularProgressIndicator() } // 上拉加载更多状态
+                    item {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(text = "加载更多...")
+                        }
+                    }
                 }
 
+                // 加载失败时
                 loadState.append is LoadState.Error -> {
                     item {
                         val e = lazyPagingItems.loadState.append as LoadState.Error

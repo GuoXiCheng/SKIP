@@ -13,5 +13,5 @@ class InspectRecordViewModel @Inject constructor(private val repository: Inspect
         changeZipFileCount()
     }
 
-    private fun changeZipFileCount() = repository.changeZipFileCount()
+    fun changeZipFileCount() = repository.changeZipFileCount()
 }

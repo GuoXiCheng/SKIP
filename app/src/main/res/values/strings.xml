@@ -54,6 +54,7 @@
     <string name="record_look">查看</string>
     <string name="record_share">分享</string>
     <string name="record_delete">删除</string>
+    <string name="record_delete_all">全部删除</string>
 
     <string name="dialog_close">关闭</string>
 </resources>

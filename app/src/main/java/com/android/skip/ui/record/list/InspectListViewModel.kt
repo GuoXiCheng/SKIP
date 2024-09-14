@@ -24,6 +24,8 @@ class InspectListViewModel @Inject constructor(
 
     fun deleteByFileId(fileId: String) = inspectListRepository.deleteByFileId(fileId)
 
+    fun deleteAllFile() = inspectListRepository.deleteAllFile()
+
     fun changeDeleteFileId(fileId: String) {
         _delFileId.postValue(fileId)
     }

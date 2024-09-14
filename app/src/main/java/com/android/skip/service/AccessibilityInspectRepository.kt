@@ -1,5 +1,7 @@
 package com.android.skip.service
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.android.skip.MyApp
 import com.android.skip.R
 import com.android.skip.ui.inspect.record.InspectRecordRepository
@@ -20,6 +22,9 @@ import java.util.UUID.randomUUID
 class AccessibilityInspectRepository @Inject constructor() {
     @Inject
     lateinit var inspectRecordRepository: InspectRecordRepository
+
+    private val _accessibilityInspectSuccess = MutableLiveData<Long>()
+    val accessibilityInspectSuccess: LiveData<Long> = _accessibilityInspectSuccess
 
     private var _fileId: String = "none"
     val fileId: String
@@ -69,7 +74,7 @@ class AccessibilityInspectRepository @Inject constructor() {
                         ), zipFile
                     )
                     MyToast.show(R.string.toast_save_success)
-                    inspectRecordRepository.changeZipFileCount()
+                    _accessibilityInspectSuccess.postValue(System.currentTimeMillis())
                 } else {
                     if (index == repeatTimes - 1) {
                         MyToast.show(R.string.toast_save_fail)

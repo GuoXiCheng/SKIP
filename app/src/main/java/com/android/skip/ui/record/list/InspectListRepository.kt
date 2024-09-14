@@ -5,8 +5,8 @@ import com.android.skip.R
 import com.android.skip.dataclass.InspectRecordItem
 import com.android.skip.dataclass.NodeRootSchema
 import com.android.skip.ui.inspect.record.InspectRecordRepository
-import com.android.skip.util.AppBasicInfoUtils
 import com.android.skip.util.MyToast
+import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.FileUtils
 import com.google.gson.Gson
 import java.io.BufferedReader
@@ -36,7 +36,7 @@ class InspectListRepository @Inject constructor() {
 
             val item = InspectRecordItem(
                 node.fileId,
-                AppBasicInfoUtils.getAppIcon(node.packageName),
+                AppUtils.getAppIcon(node.packageName)!!,
                 node.appName,
                 node.packageName,
                 node.activityName.split(".").last(),
@@ -70,5 +70,9 @@ class InspectListRepository @Inject constructor() {
         } else {
             MyToast.show(R.string.toast_del_fail)
         }
+    }
+
+    fun deleteAllFile() {
+        FileUtils.deleteFilesInDir("${MyApp.context.filesDir}/capture")
     }
 }

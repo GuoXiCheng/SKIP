@@ -19,8 +19,8 @@ import com.android.skip.ui.settings.strict.StrictRepository
 import com.android.skip.ui.settings.tip.TipRepository
 import com.android.skip.ui.whitelist.WhiteListRepository
 import com.android.skip.util.AccessibilityState
-import com.android.skip.util.AppBasicInfoUtils
 import com.android.skip.util.MyToast
+import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.ServiceUtils
@@ -230,7 +230,7 @@ class MyAccessibilityService : AccessibilityService() {
 
         val nodeRootSchema = NodeRootSchema(
             accessibilityInspectRepository.fileId,
-            AppBasicInfoUtils.getAppName(rootNode.packageName.toString()),
+            AppUtils.getAppName(rootNode.packageName.toString()),
             rootNode.packageName.toString(),
             className,
             ScreenUtils.getScreenHeight(),
