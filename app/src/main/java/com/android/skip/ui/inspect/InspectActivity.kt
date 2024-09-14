@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.android.skip.MyApp
 import com.android.skip.R
+import com.android.skip.service.AccessibilityInspectViewModel
 import com.android.skip.service.InspectService
 import com.android.skip.ui.components.ScaffoldPage
 import com.android.skip.ui.inspect.record.InspectRecordButton
@@ -28,11 +29,13 @@ class InspectActivity : AppCompatActivity() {
 
     private val inspectRecordViewModel by viewModels<InspectRecordViewModel>()
 
+    private val accessibilityInspectViewModel by viewModels<AccessibilityInspectViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
-                ScaffoldPage(R.string.inspect, { finish() },{
+                ScaffoldPage(R.string.inspect, { finish() }, {
                     StartInspectButton(startInspectViewModel)
                     InspectRecordButton(inspectRecordViewModel) {
                         startActivity(Intent(MyApp.context, InspectRecordActivity::class.java))
@@ -72,6 +75,10 @@ class InspectActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+
+        accessibilityInspectViewModel.accessibilityInspectSuccess.observe(this) {
+            inspectRecordViewModel.changeZipFileCount()
         }
     }
 

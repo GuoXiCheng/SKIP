@@ -2,11 +2,13 @@ package com.android.skip.data.config
 
 import android.graphics.Rect
 import android.view.accessibility.AccessibilityNodeInfo
+import com.android.skip.R
 import com.android.skip.dataclass.ConfigLoadSchema
 import com.android.skip.dataclass.LoadSkipBound
 import com.android.skip.dataclass.LoadSkipId
 import com.android.skip.dataclass.LoadSkipText
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.StringUtils.getString
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -24,10 +26,24 @@ class ConfigLoadRepository @Inject constructor() {
         configLoadSchemaMap = config
     }
 
-    suspend fun getTargetRect(rootNode: AccessibilityNodeInfo, activityName: String?): Rect? {
-        val targetConfig = configLoadSchemaMap[rootNode.packageName]
+    suspend fun getTargetRect(
+        rootNode: AccessibilityNodeInfo, activityName: String?, isStrict: Boolean?
+    ): Rect? {
+        val targetAppPackage = rootNode.packageName.toString()
+        var targetConfig = configLoadSchemaMap[targetAppPackage]
 
-        return withContext(Dispatchers.Default) {
+        if (isStrict != true) {
+            val defaultSkipTexts = listOf(
+                LoadSkipText(text = getString(R.string.settings_strict_skip))
+            )
+            if (targetConfig == null) {
+                targetConfig = ConfigLoadSchema(targetAppPackage, defaultSkipTexts)
+            } else if (targetConfig.skipTexts == null) {
+                targetConfig.skipTexts = defaultSkipTexts
+            }
+        }
+
+        return withContext(Dispatchers.Main) {
             try {
                 val skipByTextTasks =
                     createSkipByTextTasks(this, rootNode, targetConfig?.skipTexts, activityName)
@@ -45,8 +61,7 @@ class ConfigLoadRepository @Inject constructor() {
     }
 
     private suspend fun <T> awaitFirstNonNullOrComplete(
-        scope: CoroutineScope,
-        tasks: List<Deferred<T?>>
+        scope: CoroutineScope, tasks: List<Deferred<T?>>
     ): T? {
         val deferredResults = mutableListOf<Deferred<T?>>()
 
@@ -167,8 +182,7 @@ class ConfigLoadRepository @Inject constructor() {
     }
 
     private fun traverseNode(
-        rootNode: AccessibilityNodeInfo,
-        targetRect: Rect
+        rootNode: AccessibilityNodeInfo, targetRect: Rect
     ): Rect? {
         val queue: MutableList<AccessibilityNodeInfo> = mutableListOf(rootNode)
 
@@ -176,10 +190,9 @@ class ConfigLoadRepository @Inject constructor() {
             val node = queue.removeAt(0)
             val nodeRect = Rect()
             node.getBoundsInScreen(nodeRect)
-            if (abs(nodeRect.left - targetRect.left) <= 1
-                && abs(nodeRect.top - targetRect.top) <= 1
-                && abs(nodeRect.right - targetRect.right) <= 1
-                && abs(nodeRect.bottom - targetRect.bottom) <= 1
+            if (abs(nodeRect.left - targetRect.left) <= 1 && abs(nodeRect.top - targetRect.top) <= 1 && abs(
+                    nodeRect.right - targetRect.right
+                ) <= 1 && abs(nodeRect.bottom - targetRect.bottom) <= 1
             ) {
                 return nodeRect
             }

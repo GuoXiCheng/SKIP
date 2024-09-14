@@ -15,9 +15,12 @@ import com.android.skip.dataclass.NodeChildSchema
 import com.android.skip.dataclass.NodeRootSchema
 import com.android.skip.ui.alive.notificationbar.NotificationBarRepository
 import com.android.skip.ui.main.start.StartAccessibilityRepository
+import com.android.skip.ui.settings.strict.StrictRepository
+import com.android.skip.ui.settings.tip.TipRepository
+import com.android.skip.ui.whitelist.WhiteListRepository
 import com.android.skip.util.AccessibilityState
-import com.android.skip.util.AppBasicInfoUtils
 import com.android.skip.util.MyToast
+import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.ServiceUtils
@@ -36,11 +39,14 @@ import javax.inject.Inject
 class MyAccessibilityService : AccessibilityService() {
     private var appActivityName: String? = null
     private var appPackageName: String? = null
+    private var isShowTip: Boolean = false
+    private var isStrict: Boolean = false
+
     private val clickedRect: MutableSet<String> = mutableSetOf()
     private val serviceScope = CoroutineScope(Dispatchers.Main + Job())
 
     @Inject
-    lateinit var repository: StartAccessibilityRepository
+    lateinit var startAccessibilityRepository: StartAccessibilityRepository
 
     @Inject
     lateinit var accessibilityInspectRepository: AccessibilityInspectRepository
@@ -51,13 +57,26 @@ class MyAccessibilityService : AccessibilityService() {
     @Inject
     lateinit var notificationBarRepository: NotificationBarRepository
 
-    private val observer = Observer<Boolean> { enabled ->
+    @Inject
+    lateinit var tipRepository: TipRepository
+
+    @Inject
+    lateinit var strictRepository: StrictRepository
+
+    @Inject
+    lateinit var whiteListRepository: WhiteListRepository
+
+    private val notificationBarObserver = Observer<Boolean> { enabled ->
         if (enabled) {
             ServiceUtils.startService(MyForegroundService::class.java)
         } else {
             ServiceUtils.stopService(MyForegroundService::class.java)
         }
     }
+
+    private val tipObserver = Observer<Boolean> { isShowTip = it }
+
+    private val strictObserver = Observer<Boolean> { isStrict = it }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         try {
@@ -69,15 +88,18 @@ class MyAccessibilityService : AccessibilityService() {
                 appPackageName = rootNodePackageName
             }
 
-            val that = this
-            serviceScope.launch {
-                val targetRect = configLoadRepository.getTargetRect(rootNode, appActivityName)
-                targetRect?.let { rect ->
-                    val rectStr = rect.toString()
-                    if (!clickedRect.contains(rectStr)) {
-                        click(that, rect)
-                        clickedRect.add(rectStr)
-                        LogUtils.d("clicked: packageName is $rootNodePackageName rect is $rectStr")
+            if (!whiteListRepository.isAppInWhiteList(rootNodePackageName)) {
+                val that = this
+                serviceScope.launch {
+                    val targetRect =
+                        configLoadRepository.getTargetRect(rootNode, appActivityName, isStrict)
+                    targetRect?.let { rect ->
+                        val rectStr = rect.toString()
+                        if (!clickedRect.contains(rectStr)) {
+                            click(that, rect)
+                            clickedRect.add(rectStr)
+                            LogUtils.d("clicked: packageName is $rootNodePackageName rect is $rectStr")
+                        }
                     }
                 }
             }
@@ -111,7 +133,9 @@ class MyAccessibilityService : AccessibilityService() {
             object : GestureResultCallback() {
                 override fun onCompleted(gestureDescription: GestureDescription) {
                     super.onCompleted(gestureDescription)
-                    MyToast.show(R.string.toast_skip_tip)
+                    if (isShowTip) {
+                        MyToast.show(R.string.toast_skip_tip)
+                    }
                 }
             },
             null
@@ -124,16 +148,21 @@ class MyAccessibilityService : AccessibilityService() {
 
     override fun onServiceConnected() {
         super.onServiceConnected()
-        repository.changeAccessibilityState(AccessibilityState.STARTED)
+        startAccessibilityRepository.changeAccessibilityState(AccessibilityState.STARTED)
 
-        notificationBarRepository.enable.observeForever(observer)
+        notificationBarRepository.enable.observeForever(notificationBarObserver)
+        tipRepository.enable.observeForever(tipObserver)
+        strictRepository.enable.observeForever(strictObserver)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         serviceScope.cancel()
-        repository.changeAccessibilityState(AccessibilityState.STOPPED)
-        notificationBarRepository.enable.removeObserver(observer)
+        startAccessibilityRepository.changeAccessibilityState(AccessibilityState.STOPPED)
+
+        notificationBarRepository.enable.removeObserver(notificationBarObserver)
+        tipRepository.enable.removeObserver(tipObserver)
+        strictRepository.enable.removeObserver(strictObserver)
 
         if (ServiceUtils.isServiceRunning(MyForegroundService::class.java)) {
             ServiceUtils.stopService(MyForegroundService::class.java)
@@ -201,7 +230,7 @@ class MyAccessibilityService : AccessibilityService() {
 
         val nodeRootSchema = NodeRootSchema(
             accessibilityInspectRepository.fileId,
-            AppBasicInfoUtils.getAppName(rootNode.packageName.toString()),
+            AppUtils.getAppName(rootNode.packageName.toString()),
             rootNode.packageName.toString(),
             className,
             ScreenUtils.getScreenHeight(),

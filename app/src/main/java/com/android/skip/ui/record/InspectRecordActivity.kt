@@ -5,10 +5,18 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.ui.res.stringResource
 import androidx.core.content.FileProvider
 import com.android.skip.MyApp
 import com.android.skip.R
+import com.android.skip.service.AccessibilityInspectViewModel
 import com.android.skip.ui.components.ScaffoldPage
+import com.android.skip.ui.inspect.record.InspectRecordViewModel
 import com.android.skip.ui.record.dialog.JpegDialog
 import com.android.skip.ui.record.dialog.JpegDialogViewModel
 import com.android.skip.ui.record.list.InspectListColumn
@@ -22,6 +30,10 @@ class InspectRecordActivity : AppCompatActivity() {
     private val inspectListViewModel by viewModels<InspectListViewModel>()
 
     private val jpegDialogViewModel by viewModels<JpegDialogViewModel>()
+
+    private val accessibilityInspectViewModel by viewModels<AccessibilityInspectViewModel>()
+
+    private val inspectRecordViewModel by viewModels<InspectRecordViewModel> ()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,12 +74,25 @@ class InspectRecordActivity : AppCompatActivity() {
                             )
                         }
                     }
+                }, {
+                    DropdownMenuItem(
+                        leadingIcon = { Icon(Icons.Outlined.Delete, contentDescription = null) },
+                        text = { Text(stringResource(id = R.string.record_delete_all)) },
+                        onClick = {
+                            inspectListViewModel.deleteAllFile()
+                            inspectListViewModel.reloadData()
+                            inspectRecordViewModel.changeZipFileCount()
+                        })
                 })
             }
         }
 
         inspectListViewModel.delFileId.observe(this) {
             inspectListViewModel.deleteByFileId(it)
+            inspectListViewModel.reloadData()
+        }
+
+        accessibilityInspectViewModel.accessibilityInspectSuccess.observe(this) {
             inspectListViewModel.reloadData()
         }
     }

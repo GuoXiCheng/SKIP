@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
 
     <application
         android:name=".MyApp"
@@ -19,9 +20,14 @@
         android:theme="@style/Theme.SKIP"
         tools:targetApi="31">
         <activity
+            android:name=".ui.whitelist.WhiteListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.settings.SettingsActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.alive.AliveActivity"
             android:exported="false" />
-        <!-- 配置 FileProvider -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -46,10 +52,11 @@
             android:name=".service.InspectService"
             android:enabled="true"
             android:foregroundServiceType="mediaProjection" />
-
         <service
             android:name=".service.MyForegroundService"
-            android:enabled="true" />
+            android:foregroundServiceType="specialUse"
+            android:enabled="true"
+            tools:ignore="ForegroundServicePermission" />
 
         <activity
             android:name=".ui.inspect.InspectActivity"
