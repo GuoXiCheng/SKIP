@@ -138,3 +138,10 @@
   skipIds:
   # fileId=812b304e-63fd-42da-b200-7497a2e635c4&nodeId=21
     - id: com.zhihu.android:id/btn_skip
+
+# 汽水音乐
+- packageName: com.luna.music
+  skipBounds:
+  # fileId=ab69a19e-56e8-4983-9656-cdbab1b09682&nodeId=13
+    - bound: 1244,176,1384,316
+      resolution: 1440x3200
