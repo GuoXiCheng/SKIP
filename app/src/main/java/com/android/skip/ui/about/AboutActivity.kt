@@ -3,22 +3,30 @@ package com.android.skip.ui.about
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import com.android.skip.MyApp
 import com.android.skip.R
+import com.android.skip.data.config.ConfigViewModel
+import com.android.skip.ui.about.config.ConfigVersionButton
 import com.android.skip.ui.components.FlatButton
 import com.android.skip.ui.components.RowContent
 import com.android.skip.ui.components.ScaffoldPage
 import com.android.skip.ui.theme.AppTheme
 import com.android.skip.ui.webview.WebViewActivity
+import com.blankj.utilcode.util.AppUtils
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AboutActivity : AppCompatActivity() {
+    private val configViewModel by viewModels<ConfigViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
-                ScaffoldPage(R.string.about, { finish() },{
+                ScaffoldPage(R.string.about, { finish() }, {
                     AboutGithub {
                         val intent = Intent(MyApp.context, WebViewActivity::class.java).apply {
                             putExtra("url", R.string.about_github_subtitle)
@@ -32,6 +40,8 @@ class AboutActivity : AppCompatActivity() {
                         }
                         startActivity(intent)
                     }
+                    AboutAppVersion(AppUtils.getAppVersionName())
+                    ConfigVersionButton(configViewModel)
                 })
             }
         }
@@ -56,4 +66,14 @@ fun AboutDocs(onClick: () -> Unit) {
             subTitle = R.string.about_docs_subtitle
         )
     }, onClick = onClick)
+}
+
+@Composable
+fun AboutAppVersion(version: String) {
+    FlatButton(content = {
+        RowContent(
+            title = R.string.about_app_version,
+            subTitle = version
+        )
+    })
 }

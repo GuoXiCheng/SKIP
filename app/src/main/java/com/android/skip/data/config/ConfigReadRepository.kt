@@ -14,13 +14,14 @@ import com.blankj.utilcode.util.ScreenUtils
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.yaml.snakeyaml.Yaml
+import java.security.MessageDigest
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ConfigReadRepository @Inject constructor() {
-    private val _configHashCode = MutableLiveData<Int>()
-    val configHashCode: LiveData<Int> = _configHashCode
+    private val _configHashCode = MutableLiveData<String>()
+    val configHashCode: LiveData<String> = _configHashCode
 
     private lateinit var configReadSchemaList: List<ConfigReadSchema>
 
@@ -35,7 +36,7 @@ class ConfigReadRepository @Inject constructor() {
         val type = object : TypeToken<List<ConfigReadSchema>>() {}.type
         configReadSchemaList = gson.fromJson(jsonStr, type)
 
-        _configHashCode.postValue(jsonStr.hashCode())
+        _configHashCode.postValue(md5(jsonStr))
     }
 
     fun handleConfig(): Map<String, ConfigLoadSchema> {
@@ -109,5 +110,10 @@ class ConfigReadRepository @Inject constructor() {
             screenWidth,
             screenHeight
         )
+    }
+
+    private fun md5(input: String): String {
+        val bytes = MessageDigest.getInstance("MD5").digest(input.toByteArray())
+        return bytes.joinToString("") { "%02x".format(it) }
     }
 }
