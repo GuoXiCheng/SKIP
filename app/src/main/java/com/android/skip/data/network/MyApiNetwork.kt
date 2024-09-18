@@ -16,6 +16,15 @@ class MyApiNetwork @Inject constructor() {
 
     suspend fun fetchSkipConfigV3() = myApiService.getSkipConfigV3().await()
 
+    suspend fun fetchConfigFromUrl(url: String): String {
+        val response = myApiService.getConfigFromUrl(url)
+        if (response.isSuccessful) {
+            return response.body() ?: throw RuntimeException("Response body is null")
+        } else {
+            throw RuntimeException("Failed with error code: ${response.code()}")
+        }
+    }
+
     private suspend fun <T> Call<T>.await(): T{
         return suspendCoroutine { continuation->
             enqueue(object: Callback<T> {
