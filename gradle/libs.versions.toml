@@ -2,6 +2,7 @@
 accompanistDrawablepainter = "0.34.0"
 activityCompose = "1.9.0"
 agp = "8.5.1"
+converterScalars = "2.5.0"
 gson = "2.10.1"
 hiltAndroidCompiler = "2.51.1"
 hiltAndroid = "2.51.1"
@@ -13,7 +14,9 @@ espressoCore = "3.6.1"
 appcompat = "1.7.0"
 material = "1.10.0"
 activity = "1.9.0"
+okhttpVersion = "4.12.0"
 pagingRuntime = "3.3.0"
+retrofit = "2.9.0"
 runtimeAndroid = "1.6.8"
 foundationAndroid = "1.6.8"
 material3Android = "1.2.1"
@@ -30,6 +33,7 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pagingRuntime" }
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "pagingRuntime" }
 androidx-ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
+converter-scalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "converterScalars" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
@@ -42,6 +46,9 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-runtime-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "runtimeAndroid" }
 androidx-foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "foundationAndroid" }
 androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
+okhttp3-okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttpVersion" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+retrofit2-converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 snakeyaml = { module = "org.yaml:snakeyaml", version.ref = "snakeyaml" }
 utilcodex = { module = "com.blankj:utilcodex", version.ref = "utilcodex" }
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }

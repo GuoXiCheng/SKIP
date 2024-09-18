@@ -16,5 +16,7 @@ fun ConfigVersionButton(configViewModel: ConfigViewModel) {
             title = R.string.about_config_version,
             subTitle = configVersion.value
         )
+    }, onClick = {
+        configViewModel.readConfig()
     })
 }
