@@ -29,7 +29,7 @@ class ConfigReadRepository @Inject constructor(
 
     private lateinit var configReadSchemaList: List<ConfigReadSchema>
 
-    suspend fun readConfig() = withContext(Dispatchers.IO) {
+    suspend fun readConfig(): String = withContext(Dispatchers.IO) {
         val configV3 = myApiNetwork.fetchSkipConfigV3()
         val yamlContent = Yaml().load<List<ConfigReadSchema>>(configV3)
 
@@ -38,7 +38,11 @@ class ConfigReadRepository @Inject constructor(
         val type = object : TypeToken<List<ConfigReadSchema>>() {}.type
         configReadSchemaList = gson.fromJson(jsonStr, type)
 
-        _configHashCode.postValue(md5(jsonStr))
+        return@withContext jsonStr
+    }
+
+    fun changeConfigHashCode(jsonStrOrNull: String?) {
+        _configHashCode.postValue(jsonStrOrNull?.let { md5(it) })
     }
 
 //    fun readConfig(context: Context) {

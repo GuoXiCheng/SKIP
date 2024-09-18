@@ -3,9 +3,9 @@ package com.android.skip.data.config
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import androidx.lifecycle.viewModelScope
 import javax.inject.Inject
 
 @HiltViewModel
@@ -15,9 +15,11 @@ class ConfigViewModel @Inject constructor(
 ) : ViewModel() {
     var configHashCode: LiveData<String> = configReadRepository.configHashCode
 
-    private val observer = Observer<String> {
-        val configMap = configReadRepository.handleConfig()
-        configLoadRepository.loadConfig(configMap)
+    private val observer = Observer<String?> {
+        if (it != null) {
+            val configMap = configReadRepository.handleConfig()
+            configLoadRepository.loadConfig(configMap)
+        }
     }
 
     init {
@@ -27,9 +29,13 @@ class ConfigViewModel @Inject constructor(
     //    fun readConfig(context: Context) = configReadRepository.readConfig(context)
     fun readConfig() {
         viewModelScope.launch {
-            configReadRepository.readConfig()
+            val jsonStr = configReadRepository.readConfig()
+            configReadRepository.changeConfigHashCode(jsonStr)
         }
     }
+
+    fun changeConfigHashCode(jsonStrOrNull: String?) =
+        configReadRepository.changeConfigHashCode(jsonStrOrNull)
 
     override fun onCleared() {
         super.onCleared()

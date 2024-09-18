@@ -14,9 +14,10 @@ fun ConfigVersionButton(configViewModel: ConfigViewModel) {
     FlatButton(content = {
         RowContent(
             title = R.string.about_config_version,
-            subTitle = configVersion.value
+            subTitle =  if (configVersion.value == null) R.string.checking else configVersion.value
         )
     }, onClick = {
+        configViewModel.changeConfigHashCode(null)
         configViewModel.readConfig()
     })
 }

@@ -43,6 +43,7 @@
     <string name="about_docs_url">https://skip.guoxicheng.top/guide/intro/what-is-skip</string>
     <string name="about_app_version">应用版本号</string>
     <string name="about_config_version">配置版本号</string>
+    <string name="checking">检查中…</string>
 
     <string name="toast_start_accessibility_first">请先开启无障碍服务</string>
     <string name="toast_save_success">保存成功</string>
