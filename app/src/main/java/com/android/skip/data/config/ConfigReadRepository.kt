@@ -1,9 +1,9 @@
 package com.android.skip.data.config
 
-import android.content.Context
 import android.graphics.Rect
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.android.skip.data.network.MyApiNetwork
 import com.android.skip.dataclass.ConfigLoadSchema
 import com.android.skip.dataclass.ConfigReadSchema
 import com.android.skip.dataclass.LoadSkipBound
@@ -13,30 +13,47 @@ import com.android.skip.dataclass.ReadClick
 import com.blankj.utilcode.util.ScreenUtils
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.yaml.snakeyaml.Yaml
+import java.security.MessageDigest
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ConfigReadRepository @Inject constructor() {
-    private val _configHashCode = MutableLiveData<Int>()
-    val configHashCode: LiveData<Int> = _configHashCode
+class ConfigReadRepository @Inject constructor(
+    private val myApiNetwork: MyApiNetwork
+) {
+    private val _configHashCode = MutableLiveData<String>()
+    val configHashCode: LiveData<String> = _configHashCode
 
     private lateinit var configReadSchemaList: List<ConfigReadSchema>
 
-    fun readConfig(context: Context) {
-        val yamlContent = context.assets.open("skip_config_v3.yaml").use { input ->
-            val yaml = Yaml().load<List<ConfigReadSchema>>(input)
-            yaml
-        }
+    suspend fun readConfig() = withContext(Dispatchers.IO) {
+        val configV3 = myApiNetwork.fetchSkipConfigV3()
+        val yamlContent = Yaml().load<List<ConfigReadSchema>>(configV3)
 
         val gson = Gson()
         val jsonStr = gson.toJson(yamlContent)
         val type = object : TypeToken<List<ConfigReadSchema>>() {}.type
         configReadSchemaList = gson.fromJson(jsonStr, type)
 
-        _configHashCode.postValue(jsonStr.hashCode())
+        _configHashCode.postValue(md5(jsonStr))
     }
+
+//    fun readConfig(context: Context) {
+//        val yamlContent = context.assets.open("skip_config_v3.yaml").use { input ->
+//            val yaml = Yaml().load<List<ConfigReadSchema>>(input)
+//            yaml
+//        }
+//
+//        val gson = Gson()
+//        val jsonStr = gson.toJson(yamlContent)
+//        val type = object : TypeToken<List<ConfigReadSchema>>() {}.type
+//        configReadSchemaList = gson.fromJson(jsonStr, type)
+//
+//        _configHashCode.postValue(md5(jsonStr))
+//    }
 
     fun handleConfig(): Map<String, ConfigLoadSchema> {
         val screenWidth = ScreenUtils.getScreenWidth()
@@ -109,5 +126,10 @@ class ConfigReadRepository @Inject constructor() {
             screenWidth,
             screenHeight
         )
+    }
+
+    private fun md5(input: String): String {
+        val bytes = MessageDigest.getInstance("MD5").digest(input.toByteArray())
+        return bytes.joinToString("") { "%02x".format(it) }
     }
 }

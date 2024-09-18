@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        configViewModel.readConfig(this)
+        configViewModel.readConfig()
     }
 
     override fun onResume() {

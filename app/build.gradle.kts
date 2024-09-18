@@ -42,6 +42,10 @@ android {
 }
 
 dependencies {
+    implementation(libs.converter.scalars)
+    implementation(libs.retrofit2.converter.gson)
+    implementation(libs.retrofit)
+    implementation(libs.okhttp3.okhttp)
     implementation(libs.snakeyaml)
     implementation(libs.accompanist.drawablepainter)
     implementation(libs.androidx.paging.compose)

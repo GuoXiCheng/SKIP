@@ -1,11 +1,8 @@
 package com.android.skip.ui.whitelist.list
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import com.android.skip.dataclass.AppListItem
 import com.android.skip.ui.whitelist.WhiteListRepository
 import com.blankj.utilcode.util.AppUtils
-import com.blankj.utilcode.util.LogUtils
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -26,7 +23,6 @@ class AppListRepository @Inject constructor() {
             } else {
                 appInfos.filterNot { it.isSystem }
             }
-            LogUtils.d(isShowSystem)
             val fromIndex = currentPage * pageSize
             val toIndex = minOf(fromIndex + pageSize, apps.size)
 
