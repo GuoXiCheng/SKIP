@@ -3,6 +3,7 @@ package com.android.skip
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import com.android.skip.util.DataStoreUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.Utils
 import dagger.hilt.android.HiltAndroidApp
@@ -12,6 +13,8 @@ class MyApp : Application() {
     override fun onCreate() {
         super.onCreate()
         context = this
+
+        DataStoreUtils.init(this)
 
         Utils.init(this)
         LogUtils.getConfig()

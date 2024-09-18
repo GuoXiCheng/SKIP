@@ -3,6 +3,7 @@ accompanistDrawablepainter = "0.34.0"
 activityCompose = "1.9.0"
 agp = "8.5.1"
 converterScalars = "2.5.0"
+datastorePreferences = "1.0.0"
 gson = "2.10.1"
 hiltAndroidCompiler = "2.51.1"
 hiltAndroid = "2.51.1"
@@ -24,12 +25,14 @@ snakeyaml = "1.29"
 ui = "1.6.8"
 utilcodex = "1.31.1"
 runtimeLivedata = "1.6.8"
+datastoreCoreAndroid = "1.1.1"
 
 
 [libraries]
 accompanist-drawablepainter = { module = "com.google.accompanist:accompanist-drawablepainter", version.ref = "accompanistDrawablepainter" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pagingRuntime" }
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "pagingRuntime" }
 androidx-ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
@@ -52,6 +55,7 @@ retrofit2-converter-gson = { module = "com.squareup.retrofit2:converter-gson", v
 snakeyaml = { module = "org.yaml:snakeyaml", version.ref = "snakeyaml" }
 utilcodex = { module = "com.blankj:utilcodex", version.ref = "utilcodex" }
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
+androidx-datastore-core-android = { group = "androidx.datastore", name = "datastore-core-android", version.ref = "datastoreCoreAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

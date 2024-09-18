@@ -24,7 +24,7 @@ fun StrictButton(
             RowContent(
                 R.string.settings_strict,
                 stringResource(id = strictText),
-                { ResourceIcon(iconResource = R.drawable.notifications) },
+                { ResourceIcon(iconResource = R.drawable.point_scan) },
                 enable.value, {
                     strictViewModel.changeEnable(it)
                 })

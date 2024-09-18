@@ -34,6 +34,8 @@
     <string name="settings_strict_yes">完全遵循配置规则</string>
     <string name="settings_strict_no">默认匹配「跳过」关键字</string>
     <string name="settings_strict_skip">跳过</string>
+    <string name="settings_custom">自定义配置</string>
+    <string name="settings_custom_subtitle">URL链接 / YAML文本 / JSON文本</string>
 
     <string name="about">关于</string>
     <string name="about_github_title">源代码</string>
@@ -59,4 +61,10 @@
     <string name="record_delete_all">全部删除</string>
 
     <string name="dialog_close">关闭</string>
+    <string name="dialog_confirm">确认</string>
+    <string name="dialog_dismiss">取消</string>
+    <string name="dialog_edit_custom_config">编辑自定义配置</string>
+
+    <string name="store_custom_config">CUSTOM_CONFIG</string>
+    <string name="store_default_config">https://skip.guoxicheng.top/skip_config_v3.yaml</string>
 </resources>

@@ -3,6 +3,7 @@ package com.android.skip.data.config
 import android.graphics.Rect
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.android.skip.R
 import com.android.skip.data.network.MyApiNetwork
 import com.android.skip.dataclass.ConfigLoadSchema
 import com.android.skip.dataclass.ConfigReadSchema
@@ -10,7 +11,9 @@ import com.android.skip.dataclass.LoadSkipBound
 import com.android.skip.dataclass.LoadSkipId
 import com.android.skip.dataclass.LoadSkipText
 import com.android.skip.dataclass.ReadClick
+import com.android.skip.util.DataStoreUtils
 import com.blankj.utilcode.util.ScreenUtils
+import com.blankj.utilcode.util.StringUtils.getString
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +33,12 @@ class ConfigReadRepository @Inject constructor(
     private lateinit var configReadSchemaList: List<ConfigReadSchema>
 
     suspend fun readConfig(): String = withContext(Dispatchers.IO) {
-        val configV3 = myApiNetwork.fetchSkipConfigV3()
+//        val configV3 = myApiNetwork.fetchSkipConfigV3()
+        val url = DataStoreUtils.getSyncData(
+            getString(R.string.store_custom_config),
+            getString(R.string.store_default_config)
+        )
+        val configV3 = myApiNetwork.fetchConfigFromUrl(url)
         val yamlContent = Yaml().load<List<ConfigReadSchema>>(configV3)
 
         val gson = Gson()
