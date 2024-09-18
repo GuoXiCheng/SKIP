@@ -79,6 +79,10 @@
 
 # 小时工记账
 - packageName: com.julangling.xsgjz
+  skipTexts:
+  # fileId=28b730a3-5ac7-44c7-8f8a-9daf1b8effbe&nodeId=27
+    - text: 跳过
+      length: 4
   skipBounds:
   # fileId=43bcef4b-4b5b-4b63-a7f2-ad28e4f5f690&nodeId=30
     - bound: 1244,176,1384,316
