@@ -67,10 +67,9 @@ fun CustomButton(configViewModel: ConfigViewModel, onClick: () -> Unit) {
             Surface(shape = RoundedCornerShape(12.dp)) {
                 Box(
                     modifier = Modifier
-                        .padding(16.dp)
                         .background(MaterialTheme.colorScheme.background)
                 ) {
-                    Column {
+                    Column(modifier=Modifier.padding(12.dp)) {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -98,7 +97,7 @@ fun CustomButton(configViewModel: ConfigViewModel, onClick: () -> Unit) {
                                     text = it
                                 },
                                 minLines = 6,
-                                textStyle = TextStyle(color = Color.Gray, fontSize = 14.sp)
+                                textStyle = TextStyle(color = Color.Gray, fontSize = 14.sp),
                             )
                         }
 
