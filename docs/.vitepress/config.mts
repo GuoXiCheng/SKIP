@@ -17,7 +17,7 @@ export default defineConfig(
       nav: [
         { text: "首页", link: "/" },
         { text: "指南", link: "/guide/intro/what-is-skip" },
-        { text: "进阶", link: "/advance/layout-inspect/index" },
+        { text: "进阶", link: "/advance/layout-inspect/intro" },
         // { text: "布局检查", link: "/inspect/index", target: "_blank" },
       ],
       sidebar: {
@@ -70,7 +70,7 @@ export default defineConfig(
             items: [
               {
                 text: "功能介绍",
-                link: "/guide/keep-alive/index",
+                link: "/guide/keep-alive/intro",
               },
             ],
           },
@@ -79,7 +79,7 @@ export default defineConfig(
             items: [
               {
                 text: "功能介绍",
-                link: "/guide/white-list/index",
+                link: "/guide/white-list/intro",
               },
             ],
           },
@@ -88,7 +88,7 @@ export default defineConfig(
             items: [
               {
                 text: "功能介绍",
-                link: "/guide/settings/index",
+                link: "/guide/settings/intro",
               },
             ],
           },
@@ -97,7 +97,7 @@ export default defineConfig(
             items: [
               {
                 text: "功能介绍",
-                link: "/guide/about/index",
+                link: "/guide/about/intro",
               },
             ],
           },
@@ -108,7 +108,7 @@ export default defineConfig(
             items: [
               {
                 text: "功能介绍",
-                link: "/advance/layout-inspect/index",
+                link: "/advance/layout-inspect/intro",
               },
             ],
           },
@@ -117,7 +117,7 @@ export default defineConfig(
             items: [
               {
                 text: "功能介绍",
-                link: "/advance/custom-config/index",
+                link: "/advance/custom-config/intro",
               },
             ],
           },
