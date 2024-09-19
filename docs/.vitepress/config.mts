@@ -17,6 +17,7 @@ export default defineConfig(
       nav: [
         { text: "首页", link: "/" },
         { text: "指南", link: "/guide/intro/what-is-skip" },
+        { text: "进阶", link: "/advance/layout-inspect/index" },
         // { text: "布局检查", link: "/inspect/index", target: "_blank" },
       ],
       sidebar: {
@@ -64,14 +65,59 @@ export default defineConfig(
               },
             ],
           },
-        ],
-        "/download/": [
           {
-            text: "下载 APP",
+            text: "应用保活",
             items: [
               {
-                text: "下载方式",
-                link: "/download/app-download/index",
+                text: "功能介绍",
+                link: "/guide/keep-alive/index",
+              },
+            ],
+          },
+          {
+            text: "应用白名单",
+            items: [
+              {
+                text: "功能介绍",
+                link: "/guide/white-list/index",
+              },
+            ],
+          },
+          {
+            text: "设置",
+            items: [
+              {
+                text: "功能介绍",
+                link: "/guide/settings/index",
+              },
+            ],
+          },
+          {
+            text: "关于",
+            items: [
+              {
+                text: "功能介绍",
+                link: "/guide/about/index",
+              },
+            ],
+          },
+        ],
+        "/advance/": [
+          {
+            text: "布局检查",
+            items: [
+              {
+                text: "功能介绍",
+                link: "/advance/layout-inspect/index",
+              },
+            ],
+          },
+          {
+            text: "自定义配置",
+            items: [
+              {
+                text: "功能介绍",
+                link: "/advance/custom-config/index",
               },
             ],
           },
