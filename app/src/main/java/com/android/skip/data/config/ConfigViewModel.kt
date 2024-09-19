@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.android.skip.dataclass.ConfigPostSchema
+import com.android.skip.dataclass.ConfigState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -13,32 +15,33 @@ class ConfigViewModel @Inject constructor(
     private val configReadRepository: ConfigReadRepository,
     private val configLoadRepository: ConfigLoadRepository
 ) : ViewModel() {
-    var configHashCode: LiveData<String> = configReadRepository.configHashCode
+    var configPostState: LiveData<ConfigPostSchema> = configReadRepository.configPostState
 
-    private val observer = Observer<String?> {
-        if (it != null) {
-            val configMap = configReadRepository.handleConfig()
-            configLoadRepository.loadConfig(configMap)
+    private val observer = Observer<ConfigPostSchema> {
+        if (it.status == ConfigState.SUCCESS) {
+            val configMap = configReadRepository.handleConfig(it)
+            if (configMap != null) {
+                configLoadRepository.loadConfig(configMap)
+            }
         }
     }
 
     init {
-        configReadRepository.configHashCode.observeForever(observer)
+        configReadRepository.configPostState.observeForever(observer)
     }
 
-    //    fun readConfig(context: Context) = configReadRepository.readConfig(context)
     fun readConfig() {
         viewModelScope.launch {
-            val jsonStr = configReadRepository.readConfig()
-            configReadRepository.changeConfigHashCode(jsonStr)
+            val configPostSchema = configReadRepository.readConfig()
+            configReadRepository.changeConfigPostState(configPostSchema)
         }
     }
 
-    fun changeConfigHashCode(jsonStrOrNull: String?) =
-        configReadRepository.changeConfigHashCode(jsonStrOrNull)
+    fun changeConfigHashCode(configPostSchema: ConfigPostSchema) =
+        configReadRepository.changeConfigPostState(configPostSchema)
 
     override fun onCleared() {
         super.onCleared()
-        configReadRepository.configHashCode.removeObserver(observer)
+        configReadRepository.configPostState.removeObserver(observer)
     }
 }

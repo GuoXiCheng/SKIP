@@ -6,7 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import com.android.skip.R
 import com.android.skip.data.network.MyApiNetwork
 import com.android.skip.dataclass.ConfigLoadSchema
+import com.android.skip.dataclass.ConfigPostSchema
 import com.android.skip.dataclass.ConfigReadSchema
+import com.android.skip.dataclass.ConfigState
 import com.android.skip.dataclass.LoadSkipBound
 import com.android.skip.dataclass.LoadSkipId
 import com.android.skip.dataclass.LoadSkipText
@@ -19,6 +21,7 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.yaml.snakeyaml.Yaml
+import java.net.URL
 import java.security.MessageDigest
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,51 +30,61 @@ import javax.inject.Singleton
 class ConfigReadRepository @Inject constructor(
     private val myApiNetwork: MyApiNetwork
 ) {
-    private val _configHashCode = MutableLiveData<String>()
-    val configHashCode: LiveData<String> = _configHashCode
+    private val _configPostState = MutableLiveData<ConfigPostSchema>()
+    val configPostState: LiveData<ConfigPostSchema> = _configPostState
 
-    private lateinit var configReadSchemaList: List<ConfigReadSchema>
-
-    suspend fun readConfig(): String = withContext(Dispatchers.IO) {
-//        val configV3 = myApiNetwork.fetchSkipConfigV3()
-        val url = DataStoreUtils.getSyncData(
+    suspend fun readConfig() = withContext(Dispatchers.IO) {
+        val customContent = DataStoreUtils.getSyncData(
             getString(R.string.store_custom_config),
             getString(R.string.store_default_config)
         )
-        val configV3 = myApiNetwork.fetchConfigFromUrl(url)
-        val yamlContent = Yaml().load<List<ConfigReadSchema>>(configV3)
-
-        val gson = Gson()
-        val jsonStr = gson.toJson(yamlContent)
-        val type = object : TypeToken<List<ConfigReadSchema>>() {}.type
-        configReadSchemaList = gson.fromJson(jsonStr, type)
-
-        return@withContext jsonStr
+        getFromJson(getFromYaml(getFromUrl(customContent)))
     }
 
-    fun changeConfigHashCode(jsonStrOrNull: String?) {
-        _configHashCode.postValue(jsonStrOrNull?.let { md5(it) })
+    private suspend fun getFromUrl(customContent: String): String {
+        return try {
+            val parsedUrl = URL(customContent)
+            if (parsedUrl.protocol == "http" || parsedUrl.protocol == "https") {
+                return myApiNetwork.fetchConfigFromUrl(customContent)
+            }
+            customContent
+        } catch (e: Exception) {
+            customContent
+        }
     }
 
-//    fun readConfig(context: Context) {
-//        val yamlContent = context.assets.open("skip_config_v3.yaml").use { input ->
-//            val yaml = Yaml().load<List<ConfigReadSchema>>(input)
-//            yaml
-//        }
-//
-//        val gson = Gson()
-//        val jsonStr = gson.toJson(yamlContent)
-//        val type = object : TypeToken<List<ConfigReadSchema>>() {}.type
-//        configReadSchemaList = gson.fromJson(jsonStr, type)
-//
-//        _configHashCode.postValue(md5(jsonStr))
-//    }
+    private fun getFromYaml(customContent: String): String {
+        return try {
+            val yamlContent = Yaml().load<List<ConfigReadSchema>>(customContent)
+            val gson = Gson()
+            gson.toJson(yamlContent)
+        } catch (e: Exception) {
+            customContent
+        }
+    }
 
-    fun handleConfig(): Map<String, ConfigLoadSchema> {
+    private fun getFromJson(customContent: String): ConfigPostSchema {
+        return try {
+            val gson = Gson()
+            val type = object : TypeToken<List<ConfigReadSchema>>() {}.type
+
+            val configReadSchemaList = gson.fromJson<List<ConfigReadSchema>>(customContent, type)
+
+            ConfigPostSchema(ConfigState.SUCCESS, md5(customContent), configReadSchemaList)
+        } catch (e: Exception) {
+            ConfigPostSchema(ConfigState.FAIL, "无效的配置", null)
+        }
+    }
+
+    fun changeConfigPostState(configPostSchema: ConfigPostSchema) {
+        _configPostState.postValue(configPostSchema)
+    }
+
+    fun handleConfig(configPostSchema: ConfigPostSchema): Map<String, ConfigLoadSchema>? {
         val screenWidth = ScreenUtils.getScreenWidth()
         val screenHeight = ScreenUtils.getScreenHeight()
 
-        return configReadSchemaList.associate { config ->
+        return configPostSchema.configReadSchemaList?.associate { config ->
             val newSkipTexts = config.skipTexts?.map { skipText ->
                 val clickRect = skipText.click?.let { c ->
                     convertClick(c, screenWidth, screenHeight)

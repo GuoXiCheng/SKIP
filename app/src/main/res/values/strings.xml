@@ -36,6 +36,7 @@
     <string name="settings_strict_skip">跳过</string>
     <string name="settings_custom">自定义配置</string>
     <string name="settings_custom_subtitle">URL链接 / YAML文本 / JSON文本</string>
+    <string name="settings_custom_config_url">https://skip.guoxicheng.top/advance/custom-config/intro</string>
 
     <string name="about">关于</string>
     <string name="about_github_title">源代码</string>
@@ -67,4 +68,7 @@
 
     <string name="store_custom_config">CUSTOM_CONFIG</string>
     <string name="store_default_config">https://skip.guoxicheng.top/skip_config_v3.yaml</string>
+    <string name="store_strict_mode">STRICT_MODE</string>
+    <string name="store_skip_tip">SKIP_TIP</string>
+    <string name="store_resident_notification_bar">RESIDENT_NOTIFICATION_BAR</string>
 </resources>
