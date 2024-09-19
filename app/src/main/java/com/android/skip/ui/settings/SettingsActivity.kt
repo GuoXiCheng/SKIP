@@ -1,5 +1,6 @@
 package com.android.skip.ui.settings
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -13,6 +14,7 @@ import com.android.skip.ui.settings.strict.StrictViewModel
 import com.android.skip.ui.settings.tip.TipButton
 import com.android.skip.ui.settings.tip.TipViewModel
 import com.android.skip.ui.theme.AppTheme
+import com.android.skip.ui.webview.WebViewActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -32,7 +34,12 @@ class SettingsActivity : AppCompatActivity() {
                 ScaffoldPage(R.string.settings, { finish() }, {
                     TipButton(tipViewModel)
                     StrictButton(strictViewModel)
-                    CustomButton(configViewModel)
+                    CustomButton(configViewModel) {
+                        val intent = Intent(this, WebViewActivity::class.java).apply {
+                            putExtra("url", R.string.settings_custom_config_url)
+                        }
+                        startActivity(intent)
+                    }
                 })
             }
         }
