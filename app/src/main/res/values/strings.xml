@@ -68,4 +68,7 @@
 
     <string name="store_custom_config">CUSTOM_CONFIG</string>
     <string name="store_default_config">https://skip.guoxicheng.top/skip_config_v3.yaml</string>
+    <string name="store_strict_mode">STRICT_MODE</string>
+    <string name="store_skip_tip">SKIP_TIP</string>
+    <string name="store_resident_notification_bar">RESIDENT_NOTIFICATION_BAR</string>
 </resources>
