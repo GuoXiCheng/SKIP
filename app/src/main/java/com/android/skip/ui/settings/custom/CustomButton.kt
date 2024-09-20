@@ -6,8 +6,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -49,6 +52,8 @@ fun CustomButton(configViewModel: ConfigViewModel, onClick: () -> Unit) {
         )
     }
 
+    val scrollState = rememberScrollState()
+
     FlatButton(content = {
         RowContent(
             title = R.string.settings_custom,
@@ -88,7 +93,7 @@ fun CustomButton(configViewModel: ConfigViewModel, onClick: () -> Unit) {
                         }
 
                         Row(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth().verticalScroll(scrollState).heightIn(max=520.dp),
                             horizontalArrangement = Arrangement.Center
                         ) {
                             OutlinedTextField(

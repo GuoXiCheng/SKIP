@@ -1,28 +1,22 @@
 package com.android.skip.dataclass
 
-data class ReadClick(
-    val position: String,
-    val resolution: String
-)
-
 data class ReadSkipText(
     val text: String,
     val length: Int? = null,
     val activityName: String? = null,
-    val click: ReadClick? = null
+    val click: String? = null
 )
 
 data class ReadSkipId(
     val id: String,
     val activityName: String? = null,
-    val click: ReadClick? = null
+    val click: String? = null
 )
 
 data class ReadSkipBound(
     val bound: String,
-    val resolution: String,
     val activityName: String? = null,
-    val click: ReadClick? = null
+    val click: String? = null
 )
 
 data class ConfigReadSchema(
