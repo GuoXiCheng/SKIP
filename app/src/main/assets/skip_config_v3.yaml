@@ -140,3 +140,8 @@
   skipBounds:
     - bound: 1244,176,1384,316
       fileUrl: ab69a19e-56e8-4983-9656-cdbab1b09682&nodeId=13
+
+- appName: 爱奇艺
+  packageName: com.qiyi.video
+  skipTexts:
+    - text: 关闭

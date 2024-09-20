@@ -24,7 +24,6 @@ import androidx.work.WorkManager
 import com.android.skip.MyApp
 import com.android.skip.R
 import com.android.skip.data.SyncWorker
-import com.android.skip.data.config.ConfigViewModel
 import com.android.skip.ui.about.AboutActivity
 import com.android.skip.ui.alive.AliveActivity
 import com.android.skip.ui.components.FlatButton
@@ -36,15 +35,12 @@ import com.android.skip.ui.main.start.StartButton
 import com.android.skip.ui.settings.SettingsActivity
 import com.android.skip.ui.theme.AppTheme
 import com.android.skip.ui.whitelist.WhiteListActivity
-import com.blankj.utilcode.util.LogUtils
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val startAccessibilityViewModel by viewModels<StartAccessibilityViewModel>()
-
-    private val configViewModel by viewModels<ConfigViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,22 +76,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-//        configViewModel.readConfig()
-
-        LogUtils.d("MainActivity")
         val workRequest =
-            PeriodicWorkRequestBuilder<SyncWorker>(15, TimeUnit.MINUTES).setInitialDelay(
-                1,
+            PeriodicWorkRequestBuilder<SyncWorker>(12, TimeUnit.HOURS).setInitialDelay(
+                5,
                 TimeUnit.SECONDS
             ).build()
         WorkManager.getInstance(this).enqueue(workRequest)
-        WorkManager.getInstance(this)
-            .getWorkInfoByIdLiveData(workRequest.id)
-            .observe(this) { workInfo ->
-                if (workInfo != null) {
-                    LogUtils.d("WorkManager", "State: ${workInfo.state}")
-                }
-            }
     }
 
     override fun onResume() {
