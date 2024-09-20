@@ -37,7 +37,7 @@ class ConfigViewModel @Inject constructor(
         }
     }
 
-    fun changeConfigHashCode(configPostSchema: ConfigPostSchema) =
+    fun changeConfigPostState(configPostSchema: ConfigPostSchema) =
         configReadRepository.changeConfigPostState(configPostSchema)
 
     override fun onCleared() {

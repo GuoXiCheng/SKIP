@@ -3,13 +3,19 @@ package com.android.skip
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
 import com.android.skip.util.DataStoreUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.Utils
 import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
 @HiltAndroidApp
-class MyApp : Application() {
+class MyApp : Application(), Configuration.Provider {
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
+
     override fun onCreate() {
         super.onCreate()
         context = this
@@ -35,4 +41,9 @@ class MyApp : Application() {
         @SuppressLint("StaticFieldLeak")
         lateinit var context: Context
     }
+
+    override fun getWorkManagerConfiguration() =
+        Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
 }

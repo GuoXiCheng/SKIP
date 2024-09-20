@@ -19,8 +19,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.android.skip.MyApp
 import com.android.skip.R
+import com.android.skip.data.SyncWorker
 import com.android.skip.data.config.ConfigViewModel
 import com.android.skip.ui.about.AboutActivity
 import com.android.skip.ui.alive.AliveActivity
@@ -33,7 +36,9 @@ import com.android.skip.ui.main.start.StartButton
 import com.android.skip.ui.settings.SettingsActivity
 import com.android.skip.ui.theme.AppTheme
 import com.android.skip.ui.whitelist.WhiteListActivity
+import com.blankj.utilcode.util.LogUtils
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -75,7 +80,22 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        configViewModel.readConfig()
+//        configViewModel.readConfig()
+
+        LogUtils.d("MainActivity")
+        val workRequest =
+            PeriodicWorkRequestBuilder<SyncWorker>(15, TimeUnit.MINUTES).setInitialDelay(
+                1,
+                TimeUnit.SECONDS
+            ).build()
+        WorkManager.getInstance(this).enqueue(workRequest)
+        WorkManager.getInstance(this)
+            .getWorkInfoByIdLiveData(workRequest.id)
+            .observe(this) { workInfo ->
+                if (workInfo != null) {
+                    LogUtils.d("WorkManager", "State: ${workInfo.state}")
+                }
+            }
     }
 
     override fun onResume() {

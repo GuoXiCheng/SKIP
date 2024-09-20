@@ -43,7 +43,7 @@ class MyAccessibilityService : AccessibilityService() {
     private var isStrict: Boolean = false
 
     private val clickedRect: MutableSet<String> = mutableSetOf()
-    private val serviceScope = CoroutineScope(Dispatchers.Main + Job())
+    private val serviceScope = CoroutineScope(Dispatchers.Default + Job())
 
     @Inject
     lateinit var startAccessibilityRepository: StartAccessibilityRepository
