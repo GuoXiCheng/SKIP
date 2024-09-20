@@ -8,12 +8,15 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.android.skip.MyApp
 import com.android.skip.R
 import com.android.skip.service.AccessibilityInspectViewModel
 import com.android.skip.service.InspectService
 import com.android.skip.ui.components.ScaffoldPage
+import com.android.skip.ui.components.notification.NotificationDialog
+import com.android.skip.ui.components.notification.NotificationDialogViewModel
 import com.android.skip.ui.inspect.record.InspectRecordButton
 import com.android.skip.ui.inspect.record.InspectRecordViewModel
 import com.android.skip.ui.inspect.start.StartInspectButton
@@ -31,6 +34,8 @@ class InspectActivity : AppCompatActivity() {
 
     private val accessibilityInspectViewModel by viewModels<AccessibilityInspectViewModel>()
 
+    private val notificationDialogViewModel by viewModels<NotificationDialogViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -39,6 +44,10 @@ class InspectActivity : AppCompatActivity() {
                     StartInspectButton(startInspectViewModel)
                     InspectRecordButton(inspectRecordViewModel) {
                         startActivity(Intent(MyApp.context, InspectRecordActivity::class.java))
+                    }
+                    NotificationDialog(notificationDialogViewModel) {
+                        notificationDialogViewModel.changeDialogState(false)
+                        startInspectViewModel.changeInspectState(false)
                     }
                 })
             }
@@ -61,11 +70,16 @@ class InspectActivity : AppCompatActivity() {
             when (value) {
                 true -> {
                     if (!ServiceUtils.isServiceRunning(InspectService::class.java)) {
-                        // TODO(通知权限检查)
-                        val mediaProjectionManager =
-                            getSystemService(MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
-                        val screenCaptureIntent = mediaProjectionManager.createScreenCaptureIntent()
-                        screenshotPermissionLauncher.launch(screenCaptureIntent)
+
+                        if (!NotificationManagerCompat.from(MyApp.context).areNotificationsEnabled()) {
+                            notificationDialogViewModel.changeDialogState(true)
+                        } else {
+                            val mediaProjectionManager =
+                                getSystemService(MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
+                            val screenCaptureIntent =
+                                mediaProjectionManager.createScreenCaptureIntent()
+                            screenshotPermissionLauncher.launch(screenCaptureIntent)
+                        }
                     }
                 }
 
@@ -84,5 +98,8 @@ class InspectActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        if (!ServiceUtils.isServiceRunning(InspectService::class.java)) {
+            startInspectViewModel.changeInspectState(false)
+        }
     }
 }

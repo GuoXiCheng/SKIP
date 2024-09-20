@@ -47,7 +47,7 @@
     <string name="about_app_version">应用版本号</string>
     <string name="about_config_version">配置版本号</string>
     <string name="checking">检查中…</string>
-    <string name="invalid_config">无效的配置</string>
+    <string name="invalid_config">未检测到有效的配置</string>
 
     <string name="toast_start_accessibility_first">请先开启无障碍服务</string>
     <string name="toast_save_success">保存成功</string>
@@ -66,6 +66,8 @@
     <string name="dialog_confirm">确认</string>
     <string name="dialog_dismiss">取消</string>
     <string name="dialog_edit_custom_config">编辑自定义配置</string>
+    <string name="dialog_notification_title">通知权限请求</string>
+    <string name="dialog_notification_content">请开启「允许通知」以便获取通知访问权限</string>
 
     <string name="store_custom_config">CUSTOM_CONFIG</string>
     <string name="store_default_config">https://skip.guoxicheng.top/skip_config_v3.yaml</string>
