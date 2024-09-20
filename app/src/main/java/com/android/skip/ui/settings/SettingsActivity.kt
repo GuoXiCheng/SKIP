@@ -5,9 +5,13 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationManagerCompat
+import com.android.skip.MyApp
 import com.android.skip.R
 import com.android.skip.data.config.ConfigViewModel
 import com.android.skip.ui.components.ScaffoldPage
+import com.android.skip.ui.components.notification.NotificationDialog
+import com.android.skip.ui.components.notification.NotificationDialogViewModel
 import com.android.skip.ui.settings.custom.CustomButton
 import com.android.skip.ui.settings.strict.StrictButton
 import com.android.skip.ui.settings.strict.StrictViewModel
@@ -26,6 +30,8 @@ class SettingsActivity : AppCompatActivity() {
 
     private val configViewModel by viewModels<ConfigViewModel>()
 
+    private val notificationDialogViewModel by viewModels<NotificationDialogViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -40,8 +46,25 @@ class SettingsActivity : AppCompatActivity() {
                         }
                         startActivity(intent)
                     }
+                    NotificationDialog(notificationDialogViewModel) {
+                        notificationDialogViewModel.changeDialogState(false)
+                        tipViewModel.changeEnable(false)
+                    }
                 })
             }
+        }
+
+        tipViewModel.enable.observe(this) {
+            if (it && !NotificationManagerCompat.from(MyApp.context).areNotificationsEnabled()) {
+                notificationDialogViewModel.changeDialogState(true)
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!NotificationManagerCompat.from(MyApp.context).areNotificationsEnabled()) {
+            tipViewModel.changeEnable(false)
         }
     }
 }

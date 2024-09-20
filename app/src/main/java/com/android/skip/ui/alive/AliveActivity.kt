@@ -10,6 +10,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
+import androidx.core.app.NotificationManagerCompat
 import com.android.skip.MyApp
 import com.android.skip.R
 import com.android.skip.ui.alive.backstage.BackstageButton
@@ -20,6 +21,8 @@ import com.android.skip.ui.components.FlatButton
 import com.android.skip.ui.components.ResourceIcon
 import com.android.skip.ui.components.RowContent
 import com.android.skip.ui.components.ScaffoldPage
+import com.android.skip.ui.components.notification.NotificationDialog
+import com.android.skip.ui.components.notification.NotificationDialogViewModel
 import com.android.skip.ui.theme.AppTheme
 import com.android.skip.ui.webview.WebViewActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,6 +33,8 @@ class AliveActivity : AppCompatActivity() {
     private val backstageViewModel by viewModels<BackstageViewModel>()
 
     private val notificationBarViewModel by viewModels<NotificationBarViewModel>()
+
+    private val notificationDialogViewModel by viewModels<NotificationDialogViewModel> ()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,8 +65,25 @@ class AliveActivity : AppCompatActivity() {
                         }
                         startActivity(intent)
                     }
+                    NotificationDialog(notificationDialogViewModel) {
+                        notificationBarViewModel.changeEnable(false)
+                        notificationDialogViewModel.changeDialogState(false)
+                    }
                 })
             }
+        }
+
+        notificationBarViewModel.enable.observe(this) {
+            if (it && !NotificationManagerCompat.from(MyApp.context).areNotificationsEnabled()) {
+                notificationDialogViewModel.changeDialogState(true)
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!NotificationManagerCompat.from(MyApp.context).areNotificationsEnabled()) {
+            notificationBarViewModel.changeEnable(false)
         }
     }
 }
