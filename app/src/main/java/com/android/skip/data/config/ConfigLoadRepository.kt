@@ -20,7 +20,7 @@ import kotlin.math.abs
 
 @Singleton
 class ConfigLoadRepository @Inject constructor() {
-    private lateinit var configLoadSchemaMap: Map<String, ConfigLoadSchema>
+    private var configLoadSchemaMap: Map<String, ConfigLoadSchema> = mutableMapOf()
 
     fun loadConfig(config: Map<String, ConfigLoadSchema>) {
         configLoadSchemaMap = config

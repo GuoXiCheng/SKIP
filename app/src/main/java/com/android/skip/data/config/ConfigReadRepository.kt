@@ -12,9 +12,7 @@ import com.android.skip.dataclass.ConfigState
 import com.android.skip.dataclass.LoadSkipBound
 import com.android.skip.dataclass.LoadSkipId
 import com.android.skip.dataclass.LoadSkipText
-import com.android.skip.dataclass.ReadClick
 import com.android.skip.util.DataStoreUtils
-import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.StringUtils.getString
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -72,7 +70,7 @@ class ConfigReadRepository @Inject constructor(
 
             ConfigPostSchema(ConfigState.SUCCESS, md5(customContent), configReadSchemaList)
         } catch (e: Exception) {
-            ConfigPostSchema(ConfigState.FAIL, "无效的配置", null)
+            ConfigPostSchema(ConfigState.FAIL, getString(R.string.invalid_config), null)
         }
     }
 
@@ -81,13 +79,10 @@ class ConfigReadRepository @Inject constructor(
     }
 
     fun handleConfig(configPostSchema: ConfigPostSchema): Map<String, ConfigLoadSchema>? {
-        val screenWidth = ScreenUtils.getScreenWidth()
-        val screenHeight = ScreenUtils.getScreenHeight()
-
         return configPostSchema.configReadSchemaList?.associate { config ->
             val newSkipTexts = config.skipTexts?.map { skipText ->
                 val clickRect = skipText.click?.let { c ->
-                    convertClick(c, screenWidth, screenHeight)
+                    convertClick(c)
                 }
                 LoadSkipText(
                     text = skipText.text,
@@ -99,24 +94,17 @@ class ConfigReadRepository @Inject constructor(
 
             val newSkipIds = config.skipIds?.map { skipId ->
                 val clickRect = skipId.click?.let { c ->
-                    convertClick(c, screenWidth, screenHeight)
+                    convertClick(c)
                 }
                 LoadSkipId(id = skipId.id, activityName = skipId.activityName, click = clickRect)
             }
 
             val newSkipBounds = config.skipBounds?.map { skipBound ->
-                val (left, top, right, bottom) = skipBound.bound.split(",").map { it.toInt() }
-                val clickBound = convertRect(
-                    Rect(left, top, right, bottom),
-                    skipBound.resolution,
-                    screenWidth,
-                    screenHeight
-                )
                 val clickRect = skipBound.click?.let { c ->
-                    convertClick(c, screenWidth, screenHeight)
+                    convertClick(c)
                 }
                 LoadSkipBound(
-                    bound = clickBound,
+                    bound = convertBound(skipBound.bound),
                     activityName = skipBound.activityName,
                     click = clickRect
                 )
@@ -131,26 +119,14 @@ class ConfigReadRepository @Inject constructor(
         }
     }
 
-    private fun convertRect(rect: Rect, resolution: String, widthA: Int, heightA: Int): Rect {
-        val (widthB, heightB) = resolution.split("x").map { it.toFloat() }
-        val ratioWidth = widthA / widthB
-        val ratioHeight = heightA / heightB
-        return Rect(
-            (rect.left * ratioWidth).toInt(),
-            (rect.top * ratioHeight).toInt(),
-            (rect.right * ratioWidth).toInt(),
-            (rect.bottom * ratioHeight).toInt()
-        )
+    private fun convertClick(click: String): Rect {
+        val (x, y) = click.split(",").map { it.toInt() }
+        return Rect(x, y, x + 1, y + 1)
     }
 
-    private fun convertClick(readClick: ReadClick, screenWidth: Int, screenHeight: Int): Rect {
-        val (x, y) = readClick.position.split(",").map { it.toInt() }
-        return convertRect(
-            Rect(x, y, x + 1, y + 1),
-            readClick.resolution,
-            screenWidth,
-            screenHeight
-        )
+    private fun convertBound(bound: String): Rect {
+        val (left, top, right, bottom) = bound.split(",").map { it.toInt() }
+        return Rect(left, top, right, bottom)
     }
 
     private fun md5(input: String): String {
