@@ -20,7 +20,7 @@ fun ConfigVersionButton(configViewModel: ConfigViewModel) {
             subTitle = configState.value?.value
         )
     }, onClick = {
-        configViewModel.changeConfigHashCode(
+        configViewModel.changeConfigPostState(
             ConfigPostSchema(
                 ConfigState.PENDING,
                 getString(R.string.checking)

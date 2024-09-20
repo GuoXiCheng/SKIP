@@ -41,9 +41,10 @@ class MyAccessibilityService : AccessibilityService() {
     private var appPackageName: String? = null
     private var isShowTip: Boolean = false
     private var isStrict: Boolean = false
+    private var scanTimes: Int = 0
 
     private val clickedRect: MutableSet<String> = mutableSetOf()
-    private val serviceScope = CoroutineScope(Dispatchers.Main + Job())
+    private val serviceScope = CoroutineScope(Dispatchers.Default + Job())
 
     @Inject
     lateinit var startAccessibilityRepository: StartAccessibilityRepository
@@ -84,11 +85,12 @@ class MyAccessibilityService : AccessibilityService() {
 
             val rootNodePackageName = rootNode.packageName.toString()
             if (rootNodePackageName != appPackageName) {
+                scanTimes = 0
                 clickedRect.clear()
                 appPackageName = rootNodePackageName
             }
 
-            if (!whiteListRepository.isAppInWhiteList(rootNodePackageName)) {
+            if (!whiteListRepository.isAppInWhiteList(rootNodePackageName) && scanTimes < 30) {
                 val that = this
                 serviceScope.launch {
                     val targetRect =
@@ -115,6 +117,7 @@ class MyAccessibilityService : AccessibilityService() {
                 }
             }
 
+            scanTimes++
         } catch (e: Exception) {
 //            LogUtils.e(e)
         }

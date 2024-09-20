@@ -19,9 +19,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.android.skip.MyApp
 import com.android.skip.R
-import com.android.skip.data.config.ConfigViewModel
+import com.android.skip.data.SyncWorker
 import com.android.skip.ui.about.AboutActivity
 import com.android.skip.ui.alive.AliveActivity
 import com.android.skip.ui.components.FlatButton
@@ -34,12 +36,11 @@ import com.android.skip.ui.settings.SettingsActivity
 import com.android.skip.ui.theme.AppTheme
 import com.android.skip.ui.whitelist.WhiteListActivity
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val startAccessibilityViewModel by viewModels<StartAccessibilityViewModel>()
-
-    private val configViewModel by viewModels<ConfigViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +76,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        configViewModel.readConfig()
+        val workRequest =
+            PeriodicWorkRequestBuilder<SyncWorker>(12, TimeUnit.HOURS).setInitialDelay(
+                5,
+                TimeUnit.SECONDS
+            ).build()
+        WorkManager.getInstance(this).enqueue(workRequest)
     }
 
     override fun onResume() {
