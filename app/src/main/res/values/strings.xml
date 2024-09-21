@@ -37,6 +37,8 @@
     <string name="settings_custom">自定义配置</string>
     <string name="settings_custom_subtitle">URL链接 / YAML文本 / JSON文本</string>
     <string name="settings_custom_config_url">https://skip.guoxicheng.top/advance/custom-config/intro</string>
+    <string name="settings_background_task">后台任务隐藏</string>
+    <string name="settings_background_task_subtitle">在「最近任务」列表隐藏应用</string>
 
     <string name="about">关于</string>
     <string name="about_github_title">源代码</string>
@@ -74,4 +76,5 @@
     <string name="store_strict_mode">STRICT_MODE</string>
     <string name="store_skip_tip">SKIP_TIP</string>
     <string name="store_resident_notification_bar">RESIDENT_NOTIFICATION_BAR</string>
+    <string name="store_exclude_from_recent">EXCLUDE_FROM_RECENT</string>
 </resources>

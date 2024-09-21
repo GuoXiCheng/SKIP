@@ -19,6 +19,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.work.Constraints
+import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.android.skip.MyApp
@@ -69,19 +71,24 @@ class MainActivity : AppCompatActivity() {
                     SettingsButton {
                         startActivity(Intent(MyApp.context, SettingsActivity::class.java))
                     }
-                    AboutButton() {
+                    AboutButton {
                         startActivity(Intent(MyApp.context, AboutActivity::class.java))
                     }
                 }
             }
         }
 
-        val workRequest =
-            PeriodicWorkRequestBuilder<SyncWorker>(12, TimeUnit.HOURS).setInitialDelay(
-                5,
-                TimeUnit.SECONDS
-            ).build()
-        WorkManager.getInstance(this).enqueue(workRequest)
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val periodicWorkRequest =
+            PeriodicWorkRequestBuilder<SyncWorker>(12, TimeUnit.HOURS)
+                .setInitialDelay(5, TimeUnit.SECONDS)
+                .setConstraints(constraints)
+                .build()
+
+        WorkManager.getInstance(this).enqueue(periodicWorkRequest)
     }
 
     override fun onResume() {

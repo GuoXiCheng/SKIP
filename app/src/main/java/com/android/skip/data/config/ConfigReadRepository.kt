@@ -28,7 +28,8 @@ import javax.inject.Singleton
 class ConfigReadRepository @Inject constructor(
     private val myApiNetwork: MyApiNetwork
 ) {
-    private val _configPostState = MutableLiveData<ConfigPostSchema>()
+    private val _configPostState =
+        MutableLiveData(ConfigPostSchema(ConfigState.FAIL, getString(R.string.invalid_config)))
     val configPostState: LiveData<ConfigPostSchema> = _configPostState
 
     suspend fun readConfig() = withContext(Dispatchers.IO) {

@@ -1,5 +1,7 @@
 package com.android.skip.ui.settings
 
+import android.app.ActivityManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -13,6 +15,8 @@ import com.android.skip.ui.components.ScaffoldPage
 import com.android.skip.ui.components.notification.NotificationDialog
 import com.android.skip.ui.components.notification.NotificationDialogViewModel
 import com.android.skip.ui.settings.custom.CustomButton
+import com.android.skip.ui.settings.recent.RecentButton
+import com.android.skip.ui.settings.recent.RecentViewModel
 import com.android.skip.ui.settings.strict.StrictButton
 import com.android.skip.ui.settings.strict.StrictViewModel
 import com.android.skip.ui.settings.tip.TipButton
@@ -32,12 +36,15 @@ class SettingsActivity : AppCompatActivity() {
 
     private val notificationDialogViewModel by viewModels<NotificationDialogViewModel>()
 
+    private val recentViewModel by viewModels<RecentViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
             AppTheme {
                 ScaffoldPage(R.string.settings, { finish() }, {
+                    RecentButton(recentViewModel)
                     TipButton(tipViewModel)
                     StrictButton(strictViewModel)
                     CustomButton(configViewModel) {
@@ -57,6 +64,14 @@ class SettingsActivity : AppCompatActivity() {
         tipViewModel.enable.observe(this) {
             if (it && !NotificationManagerCompat.from(MyApp.context).areNotificationsEnabled()) {
                 notificationDialogViewModel.changeDialogState(true)
+            }
+        }
+
+        recentViewModel.excludeFromRecent.observe(this) { exclude->
+            (getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager).let { manager->
+                manager.appTasks.forEach { task->
+                    task?.setExcludeFromRecents(exclude)
+                }
             }
         }
     }

@@ -20,7 +20,6 @@ import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.android.skip.R
 import com.android.skip.ui.inspect.start.StartInspectRepository
@@ -70,6 +69,7 @@ class InspectService : Service() {
             .setSmallIcon(R.drawable.info)
             .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.info))
             .setContentIntent(pendingIntent)
+            .setOngoing(true)
             .build()
         startForeground(1, notification)
     }
