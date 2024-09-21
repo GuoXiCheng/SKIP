@@ -35,6 +35,7 @@ import com.android.skip.ui.inspect.InspectActivity
 import com.android.skip.ui.main.start.StartAccessibilityViewModel
 import com.android.skip.ui.main.start.StartButton
 import com.android.skip.ui.settings.SettingsActivity
+import com.android.skip.ui.settings.theme.SwitchThemeViewModel
 import com.android.skip.ui.theme.AppTheme
 import com.android.skip.ui.whitelist.WhiteListActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,10 +45,12 @@ import java.util.concurrent.TimeUnit
 class MainActivity : AppCompatActivity() {
     private val startAccessibilityViewModel by viewModels<StartAccessibilityViewModel>()
 
+    private val switchThemeViewModel by viewModels<SwitchThemeViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AppTheme {
+            AppTheme(switchThemeViewModel) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()

@@ -19,6 +19,7 @@ import com.android.skip.ui.about.config.ConfigVersionButton
 import com.android.skip.ui.components.FlatButton
 import com.android.skip.ui.components.RowContent
 import com.android.skip.ui.components.ScaffoldPage
+import com.android.skip.ui.settings.theme.SwitchThemeViewModel
 import com.android.skip.ui.theme.AppTheme
 import com.android.skip.ui.webview.WebViewActivity
 import com.blankj.utilcode.util.AppUtils
@@ -28,10 +29,12 @@ import dagger.hilt.android.AndroidEntryPoint
 class AboutActivity : AppCompatActivity() {
     private val configViewModel by viewModels<ConfigViewModel>()
 
+    private val switchThemeViewModel by viewModels<SwitchThemeViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AppTheme {
+            AppTheme(switchThemeViewModel) {
                 ScaffoldPage(R.string.about, { finish() }, {
                     AboutGithub {
                         val intent = Intent(MyApp.context, WebViewActivity::class.java).apply {

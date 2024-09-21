@@ -29,6 +29,7 @@ import com.android.skip.ui.components.RowContent
 import com.android.skip.ui.components.ScaffoldPage
 import com.android.skip.ui.components.notification.NotificationDialog
 import com.android.skip.ui.components.notification.NotificationDialogViewModel
+import com.android.skip.ui.settings.theme.SwitchThemeViewModel
 import com.android.skip.ui.theme.AppTheme
 import com.android.skip.ui.webview.WebViewActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,10 +43,12 @@ class AliveActivity : AppCompatActivity() {
 
     private val notificationDialogViewModel by viewModels<NotificationDialogViewModel> ()
 
+    private val switchThemeViewModel by viewModels<SwitchThemeViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AppTheme {
+            AppTheme(switchThemeViewModel) {
                 ScaffoldPage(R.string.alive, { finish() }, {
                     PowerSavingStrategyButton {
                         val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)

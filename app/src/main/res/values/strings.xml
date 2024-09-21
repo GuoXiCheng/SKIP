@@ -47,6 +47,10 @@
     <string name="settings_background_task_subtitle">在「最近任务」列表隐藏应用</string>
     <string name="settings_function_intro">功能介绍</string>
     <string name="settings_function_intro_url">https://skip.guoxicheng.top/guide/settings/intro</string>
+    <string name="settings_switch_theme">切换主题</string>
+    <string name="settings_theme_light">浅色模式</string>
+    <string name="settings_theme_dark">深色模式</string>
+    <string name="settings_theme_auto">跟随系统</string>
 
     <string name="about">关于</string>
     <string name="about_github_title">源代码</string>

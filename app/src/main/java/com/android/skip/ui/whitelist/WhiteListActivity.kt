@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import com.android.skip.MyApp
 import com.android.skip.R
 import com.android.skip.ui.components.ScaffoldPage
+import com.android.skip.ui.settings.theme.SwitchThemeViewModel
 import com.android.skip.ui.theme.AppTheme
 import com.android.skip.ui.webview.WebViewActivity
 import com.android.skip.ui.whitelist.list.AppListColumn
@@ -30,10 +31,12 @@ class WhiteListActivity : AppCompatActivity() {
 
     private val whiteListViewModel by viewModels<WhiteListViewModel>()
 
+    private val switchThemeViewModel by viewModels<SwitchThemeViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AppTheme {
+            AppTheme(switchThemeViewModel) {
                 ScaffoldPage(R.string.whitelist, { finish() }, {
                     AppListColumn(appListViewModel, whiteListViewModel)
                 }, {

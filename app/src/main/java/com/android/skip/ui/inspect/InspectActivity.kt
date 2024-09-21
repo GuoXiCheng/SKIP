@@ -28,6 +28,7 @@ import com.android.skip.ui.inspect.record.InspectRecordViewModel
 import com.android.skip.ui.inspect.start.StartInspectButton
 import com.android.skip.ui.inspect.start.StartInspectViewModel
 import com.android.skip.ui.record.InspectRecordActivity
+import com.android.skip.ui.settings.theme.SwitchThemeViewModel
 import com.android.skip.ui.theme.AppTheme
 import com.android.skip.ui.webview.WebViewActivity
 import com.blankj.utilcode.util.ServiceUtils
@@ -43,10 +44,12 @@ class InspectActivity : AppCompatActivity() {
 
     private val notificationDialogViewModel by viewModels<NotificationDialogViewModel>()
 
+    private val switchThemeViewModel by viewModels<SwitchThemeViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AppTheme {
+            AppTheme(switchThemeViewModel) {
                 ScaffoldPage(R.string.inspect, { finish() }, {
                     StartInspectButton(startInspectViewModel)
                     InspectRecordButton(inspectRecordViewModel) {

@@ -7,9 +7,12 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import com.android.skip.dataclass.ThemeMode
+import com.android.skip.ui.settings.theme.SwitchThemeViewModel
 
 private val darkScheme = darkColorScheme(
     primary = Purple80,
@@ -29,9 +32,15 @@ private val lightScheme = lightColorScheme(
 
 @Composable
 fun AppTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    switchThemeViewModel: SwitchThemeViewModel,
     content: @Composable ()->Unit
 ) {
+    val currentTheme = switchThemeViewModel.currentTheme.observeAsState()
+    val darkTheme = when(currentTheme.value?.themeMode) {
+        ThemeMode.UI_LIGHT -> false
+        ThemeMode.UI_DARK -> true
+        else -> isSystemInDarkTheme()
+    }
     val colorScheme = when {
         darkTheme -> darkScheme
         else -> lightScheme

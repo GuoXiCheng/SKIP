@@ -25,6 +25,8 @@ import com.android.skip.ui.settings.recent.RecentButton
 import com.android.skip.ui.settings.recent.RecentViewModel
 import com.android.skip.ui.settings.strict.StrictButton
 import com.android.skip.ui.settings.strict.StrictViewModel
+import com.android.skip.ui.settings.theme.SwitchThemeButton
+import com.android.skip.ui.settings.theme.SwitchThemeViewModel
 import com.android.skip.ui.settings.tip.TipButton
 import com.android.skip.ui.settings.tip.TipViewModel
 import com.android.skip.ui.theme.AppTheme
@@ -44,11 +46,13 @@ class SettingsActivity : AppCompatActivity() {
 
     private val recentViewModel by viewModels<RecentViewModel>()
 
+    private val switchThemeViewModel by viewModels<SwitchThemeViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            AppTheme {
+            AppTheme(switchThemeViewModel) {
                 ScaffoldPage(R.string.settings, { finish() }, {
                     RecentButton(recentViewModel)
                     TipButton(tipViewModel)
@@ -59,6 +63,7 @@ class SettingsActivity : AppCompatActivity() {
                         }
                         startActivity(intent)
                     }
+                    SwitchThemeButton(switchThemeViewModel)
                     NotificationDialog(notificationDialogViewModel) {
                         notificationDialogViewModel.changeDialogState(false)
                         tipViewModel.changeEnable(false)
