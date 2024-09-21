@@ -21,6 +21,7 @@ import com.android.skip.ui.record.dialog.JpegDialog
 import com.android.skip.ui.record.dialog.JpegDialogViewModel
 import com.android.skip.ui.record.list.InspectListColumn
 import com.android.skip.ui.record.list.InspectListViewModel
+import com.android.skip.ui.settings.theme.SwitchThemeViewModel
 import com.android.skip.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
@@ -35,11 +36,13 @@ class InspectRecordActivity : AppCompatActivity() {
 
     private val inspectRecordViewModel by viewModels<InspectRecordViewModel> ()
 
+    private val switchThemeViewModel by viewModels<SwitchThemeViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            AppTheme {
+            AppTheme(switchThemeViewModel) {
                 ScaffoldPage(R.string.inspect_record_title, { finish() }, {
                     JpegDialog(jpegDialogViewModel)
                     InspectListColumn(inspectListViewModel) { fileId, menuType ->

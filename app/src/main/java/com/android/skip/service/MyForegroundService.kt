@@ -35,6 +35,7 @@ class MyForegroundService : Service() {
             .setSmallIcon(R.drawable.info)
             .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.info))
             .setContentIntent(pendingIntent)
+            .setOngoing(true)
             .build()
 
         startForeground(2, notification)

@@ -9,7 +9,13 @@ import android.provider.Settings
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.core.app.NotificationManagerCompat
 import com.android.skip.MyApp
 import com.android.skip.R
@@ -23,6 +29,7 @@ import com.android.skip.ui.components.RowContent
 import com.android.skip.ui.components.ScaffoldPage
 import com.android.skip.ui.components.notification.NotificationDialog
 import com.android.skip.ui.components.notification.NotificationDialogViewModel
+import com.android.skip.ui.settings.theme.SwitchThemeViewModel
 import com.android.skip.ui.theme.AppTheme
 import com.android.skip.ui.webview.WebViewActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,10 +43,12 @@ class AliveActivity : AppCompatActivity() {
 
     private val notificationDialogViewModel by viewModels<NotificationDialogViewModel> ()
 
+    private val switchThemeViewModel by viewModels<SwitchThemeViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AppTheme {
+            AppTheme(switchThemeViewModel) {
                 ScaffoldPage(R.string.alive, { finish() }, {
                     PowerSavingStrategyButton {
                         val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
@@ -69,6 +78,16 @@ class AliveActivity : AppCompatActivity() {
                         notificationBarViewModel.changeEnable(false)
                         notificationDialogViewModel.changeDialogState(false)
                     }
+                }, {
+                    DropdownMenuItem(
+                        leadingIcon = { Icon(Icons.Outlined.Info, contentDescription = null) },
+                        text = { Text(stringResource(id = R.string.alive_function_intro)) },
+                        onClick = {
+                            val intent = Intent(MyApp.context, WebViewActivity::class.java).apply {
+                                putExtra("url", R.string.alive_function_intro_url)
+                            }
+                            startActivity(intent)
+                        })
                 })
             }
         }

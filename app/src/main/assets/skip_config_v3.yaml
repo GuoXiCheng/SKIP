@@ -145,3 +145,8 @@
   packageName: com.qiyi.video
   skipTexts:
     - text: 关闭
+
+- appName: 爱奇艺极速版
+  packageName: com.qiyi.video.lite
+  skipTexts:
+    - text: 关闭
