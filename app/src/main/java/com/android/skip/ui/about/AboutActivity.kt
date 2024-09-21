@@ -5,7 +5,13 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import com.android.skip.MyApp
 import com.android.skip.R
 import com.android.skip.data.config.ConfigViewModel
@@ -42,6 +48,16 @@ class AboutActivity : AppCompatActivity() {
                     }
                     AboutAppVersion(AppUtils.getAppVersionName())
                     ConfigVersionButton(configViewModel)
+                }, {
+                    DropdownMenuItem(
+                        leadingIcon = { Icon(Icons.Outlined.Info, contentDescription = null) },
+                        text = { Text(stringResource(id = R.string.about_function_intro)) },
+                        onClick = {
+                            val intent = Intent(MyApp.context, WebViewActivity::class.java).apply {
+                                putExtra("url", R.string.about_function_intro_url)
+                            }
+                            startActivity(intent)
+                        })
                 })
             }
         }

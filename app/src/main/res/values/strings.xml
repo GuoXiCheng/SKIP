@@ -7,6 +7,8 @@
     <string name="inspect_start_subtitle">启用布局检查记录屏幕节点信息</string>
     <string name="inspect_record_title">布局检查记录</string>
     <string name="inspect_record_subtitle">当前存在 %1$s 条记录</string>
+    <string name="inspect_function_intro">功能介绍</string>
+    <string name="inspect_function_intro_url">https://skip.guoxicheng.top/advance/layout-inspect/intro</string>
 
 
     <string name="alive">应用保活</string>
@@ -21,9 +23,13 @@
     <string name="alive_warn">请注意</string>
     <string name="alive_warn_subtitle">以上操作方法可能仅适用于MIUI或HyperOS，其他系统手机请自行查询相应的应用保活方法</string>
     <string name="alive_warn_search_content">如何实现应用后台保活</string>
+    <string name="alive_function_intro">功能介绍</string>
+    <string name="alive_function_intro_url">https://skip.guoxicheng.top/guide/keep-alive/intro</string>
 
     <string name="whitelist">应用白名单</string>
     <string name="whitelist_show_system">显示系统应用</string>
+    <string name="whitelist_function_intro">功能介绍</string>
+    <string name="whitelist_function_intro_url">https://skip.guoxicheng.top/guide/white-list/intro</string>
 
     <string name="settings">设置</string>
     <string name="settings_tip">是否允许提示</string>
@@ -39,6 +45,8 @@
     <string name="settings_custom_config_url">https://skip.guoxicheng.top/advance/custom-config/intro</string>
     <string name="settings_background_task">后台任务隐藏</string>
     <string name="settings_background_task_subtitle">在「最近任务」列表隐藏应用</string>
+    <string name="settings_function_intro">功能介绍</string>
+    <string name="settings_function_intro_url">https://skip.guoxicheng.top/guide/settings/intro</string>
 
     <string name="about">关于</string>
     <string name="about_github_title">源代码</string>
@@ -50,6 +58,8 @@
     <string name="about_config_version">配置版本号</string>
     <string name="checking">检查中…</string>
     <string name="invalid_config">未检测到有效的配置</string>
+    <string name="about_function_intro">功能介绍</string>
+    <string name="about_function_intro_url">https://skip.guoxicheng.top/guide/about/intro</string>
 
     <string name="toast_start_accessibility_first">请先开启无障碍服务</string>
     <string name="toast_save_success">保存成功</string>

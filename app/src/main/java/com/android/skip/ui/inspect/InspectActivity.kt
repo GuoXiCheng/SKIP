@@ -8,6 +8,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.ui.res.stringResource
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.android.skip.MyApp
@@ -23,6 +29,7 @@ import com.android.skip.ui.inspect.start.StartInspectButton
 import com.android.skip.ui.inspect.start.StartInspectViewModel
 import com.android.skip.ui.record.InspectRecordActivity
 import com.android.skip.ui.theme.AppTheme
+import com.android.skip.ui.webview.WebViewActivity
 import com.blankj.utilcode.util.ServiceUtils
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -49,6 +56,16 @@ class InspectActivity : AppCompatActivity() {
                         notificationDialogViewModel.changeDialogState(false)
                         startInspectViewModel.changeInspectState(false)
                     }
+                },{
+                    DropdownMenuItem(
+                        leadingIcon = { Icon(Icons.Outlined.Info, contentDescription = null) },
+                        text = { Text(stringResource(id = R.string.inspect_function_intro)) },
+                        onClick = {
+                            val intent = Intent(MyApp.context, WebViewActivity::class.java).apply {
+                                putExtra("url", R.string.inspect_function_intro_url)
+                            }
+                            startActivity(intent)
+                        })
                 })
             }
         }
