@@ -18,6 +18,5 @@ class TipRepository @Inject constructor() {
 
     fun changeEnable(enable: Boolean) {
         _enable.postValue(enable)
-        DataStoreUtils.putSyncData(getString(R.string.store_skip_tip), enable)
     }
 }

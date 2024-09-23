@@ -7,10 +7,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.ui.res.stringResource
 import androidx.core.app.NotificationManagerCompat
@@ -21,6 +18,7 @@ import com.android.skip.MyApp
 import com.android.skip.R
 import com.android.skip.data.SyncWorker
 import com.android.skip.data.config.ConfigViewModel
+import com.android.skip.ui.components.ResourceIcon
 import com.android.skip.ui.components.ScaffoldPage
 import com.android.skip.ui.components.notification.NotificationDialog
 import com.android.skip.ui.components.notification.NotificationDialogViewModel
@@ -80,7 +78,7 @@ class SettingsActivity : AppCompatActivity() {
                     }
                 }, {
                     DropdownMenuItem(
-                        leadingIcon = { Icon(Icons.Outlined.Info, contentDescription = null) },
+                        leadingIcon = { ResourceIcon(iconResource = R.drawable.help) },
                         text = { Text(stringResource(id = R.string.settings_function_intro)) },
                         onClick = {
                             val intent = Intent(MyApp.context, WebViewActivity::class.java).apply {
@@ -107,9 +105,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         val periodicWorkRequest =
-            PeriodicWorkRequestBuilder<SyncWorker>(15, TimeUnit.MINUTES)
-                .setInitialDelay(5, TimeUnit.SECONDS)
-                .build()
+            PeriodicWorkRequestBuilder<SyncWorker>(12, TimeUnit.HOURS).build()
         val workManager = WorkManager.getInstance(this)
 
         autoUpdateViewModel.autoUpdate.observe(this) {

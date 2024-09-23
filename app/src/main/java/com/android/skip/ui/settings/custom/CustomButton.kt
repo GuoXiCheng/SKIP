@@ -88,7 +88,7 @@ fun CustomButton(configViewModel: ConfigViewModel, onClick: () -> Unit) {
                                 fontSize = 20.sp
                             )
                             IconButton(onClick = onClick) {
-                                ResourceIcon(iconResource = R.drawable.info)
+                                ResourceIcon(iconResource = R.drawable.help)
                             }
                         }
 

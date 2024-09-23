@@ -17,6 +17,7 @@ import com.android.skip.R
 import com.android.skip.data.config.ConfigViewModel
 import com.android.skip.ui.about.config.ConfigVersionButton
 import com.android.skip.ui.components.FlatButton
+import com.android.skip.ui.components.ResourceIcon
 import com.android.skip.ui.components.RowContent
 import com.android.skip.ui.components.ScaffoldPage
 import com.android.skip.ui.settings.theme.SwitchThemeViewModel
@@ -53,7 +54,7 @@ class AboutActivity : AppCompatActivity() {
                     ConfigVersionButton(configViewModel)
                 }, {
                     DropdownMenuItem(
-                        leadingIcon = { Icon(Icons.Outlined.Info, contentDescription = null) },
+                        leadingIcon = { ResourceIcon(iconResource = R.drawable.help) },
                         text = { Text(stringResource(id = R.string.about_function_intro)) },
                         onClick = {
                             val intent = Intent(MyApp.context, WebViewActivity::class.java).apply {
