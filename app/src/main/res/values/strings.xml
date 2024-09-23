@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">SKIP</string>
     <string name="accessibility_description">SKIP 可以帮您自动跳过应用开屏广告</string>
+    <string name="worker_sync">MySyncWorker</string>
 
     <string name="inspect">布局检查</string>
     <string name="inspect_start_title">是否启用布局检查</string>
@@ -25,6 +26,7 @@
     <string name="alive_warn_search_content">如何实现应用后台保活</string>
     <string name="alive_function_intro">功能介绍</string>
     <string name="alive_function_intro_url">https://skip.guoxicheng.top/guide/keep-alive/intro</string>
+    <string name="alive_device_not_applicable">当前设备不适用</string>
 
     <string name="whitelist">应用白名单</string>
     <string name="whitelist_show_system">显示系统应用</string>
@@ -51,6 +53,8 @@
     <string name="settings_theme_light">浅色模式</string>
     <string name="settings_theme_dark">深色模式</string>
     <string name="settings_theme_auto">跟随系统</string>
+    <string name="settings_auto_update">自动更新</string>
+    <string name="settings_auto_update_subtitle">定期自动检查更新版本</string>
 
     <string name="about">关于</string>
     <string name="about_github_title">源代码</string>
@@ -91,4 +95,7 @@
     <string name="store_skip_tip">SKIP_TIP</string>
     <string name="store_resident_notification_bar">RESIDENT_NOTIFICATION_BAR</string>
     <string name="store_exclude_from_recent">EXCLUDE_FROM_RECENT</string>
+    <string name="store_auto_update">AUTO_UPDATE</string>
+
+    <string name="notification_accessibility_service_running">无障碍服务运行中</string>
 </resources>

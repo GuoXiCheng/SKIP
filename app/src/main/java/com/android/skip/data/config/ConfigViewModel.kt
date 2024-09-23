@@ -1,7 +1,6 @@
 package com.android.skip.data.config
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.skip.dataclass.ConfigPostSchema
@@ -17,19 +16,6 @@ class ConfigViewModel @Inject constructor(
 ) : ViewModel() {
     var configPostState: LiveData<ConfigPostSchema> = configReadRepository.configPostState
 
-    private val observer = Observer<ConfigPostSchema> {
-        if (it.status == ConfigState.SUCCESS) {
-            val configMap = configReadRepository.handleConfig(it)
-            if (configMap != null) {
-                configLoadRepository.loadConfig(configMap)
-            }
-        }
-    }
-
-    init {
-        configReadRepository.configPostState.observeForever(observer)
-    }
-
     fun readConfig() {
         viewModelScope.launch {
             val configPostSchema = configReadRepository.readConfig()
@@ -37,11 +23,15 @@ class ConfigViewModel @Inject constructor(
         }
     }
 
+    fun loadConfig(configPostSchema: ConfigPostSchema) {
+        if (configPostSchema.status == ConfigState.SUCCESS) {
+            val configMap = configReadRepository.handleConfig(configPostSchema)
+            if (configMap != null) {
+                configLoadRepository.loadConfig(configMap)
+            }
+        }
+    }
+
     fun changeConfigPostState(configPostSchema: ConfigPostSchema) =
         configReadRepository.changeConfigPostState(configPostSchema)
-
-    override fun onCleared() {
-        super.onCleared()
-        configReadRepository.configPostState.removeObserver(observer)
-    }
 }

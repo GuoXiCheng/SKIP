@@ -9,8 +9,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import com.blankj.utilcode.util.ScreenUtils
 
 @Composable
 fun FlatButtonMenu(
@@ -27,7 +29,7 @@ fun FlatButtonMenu(
             expanded = expanded.value,
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.background),
-            offset = DpOffset(130.dp, 0.dp),
+            offset = DpOffset(Dp(ScreenUtils.getScreenXDpi() / 3), (-30).dp),
             onDismissRequest = { expanded.value = false },
         ) {
             menuItems()

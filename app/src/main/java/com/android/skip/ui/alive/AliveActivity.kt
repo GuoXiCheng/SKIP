@@ -32,6 +32,8 @@ import com.android.skip.ui.components.notification.NotificationDialogViewModel
 import com.android.skip.ui.settings.theme.SwitchThemeViewModel
 import com.android.skip.ui.theme.AppTheme
 import com.android.skip.ui.webview.WebViewActivity
+import com.android.skip.util.MyToast
+import com.blankj.utilcode.util.RomUtils
 import dagger.hilt.android.AndroidEntryPoint
 import java.net.URLEncoder
 
@@ -51,17 +53,25 @@ class AliveActivity : AppCompatActivity() {
             AppTheme(switchThemeViewModel) {
                 ScaffoldPage(R.string.alive, { finish() }, {
                     PowerSavingStrategyButton {
-                        val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
-                        intent.data = Uri.parse("package:${packageName}")
-                        startActivity(intent)
+                        if (RomUtils.isXiaomi()) {
+                            val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+                            intent.data = Uri.parse("package:${packageName}")
+                            startActivity(intent)
+                        } else {
+                            MyToast.show(R.string.alive_device_not_applicable)
+                        }
                     }
                     SelfStartButton {
-                        val intent = Intent()
-                        intent.component = ComponentName(
-                            "com.miui.securitycenter",
-                            "com.miui.permcenter.autostart.AutoStartManagementActivity"
-                        )
-                        startActivity(intent)
+                        if (RomUtils.isXiaomi()) {
+                            val intent = Intent()
+                            intent.component = ComponentName(
+                                "com.miui.securitycenter",
+                                "com.miui.permcenter.autostart.AutoStartManagementActivity"
+                            )
+                            startActivity(intent)
+                        } else {
+                            MyToast.show(R.string.alive_device_not_applicable)
+                        }
                     }
                     BackstageButton(backstageViewModel) {
                         backstageViewModel.changeDialogState(true)
