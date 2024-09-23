@@ -9,7 +9,6 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.PixelFormat
 import android.hardware.display.DisplayManager
 import android.hardware.display.VirtualDisplay
@@ -65,9 +64,10 @@ class InspectService : Service() {
         val intent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
         val notification = NotificationCompat.Builder(this, "INSPECT_SERVICE")
-            .setContentTitle("SKIP 布局检查服务运行中")
-            .setSmallIcon(R.drawable.info)
-            .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.info))
+            .setContentTitle(getString(R.string.app_name))
+            .setContentText(getString(R.string.notification_accessibility_service_running))
+            .setSmallIcon(R.drawable.favicon32)
+//            .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.favicon32))
             .setContentIntent(pendingIntent)
             .setOngoing(true)
             .build()

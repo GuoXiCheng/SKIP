@@ -2,7 +2,7 @@ package com.android.skip.ui.components
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -18,7 +18,7 @@ fun FlatButton(content: ButtonContent, onClick: () -> Unit = {}) {
     ExtendedFloatingActionButton(
         modifier = Modifier
             .fillMaxWidth()
-            .height(60.dp),
+            .heightIn(min=60.dp),
         onClick = onClick,
         content = content,
         elevation = FloatingActionButtonDefaults.elevation(

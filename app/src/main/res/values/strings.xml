@@ -91,4 +91,6 @@
     <string name="store_skip_tip">SKIP_TIP</string>
     <string name="store_resident_notification_bar">RESIDENT_NOTIFICATION_BAR</string>
     <string name="store_exclude_from_recent">EXCLUDE_FROM_RECENT</string>
+
+    <string name="notification_accessibility_service_running">无障碍服务运行中</string>
 </resources>
