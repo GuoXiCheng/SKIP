@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import com.android.skip.MyApp
 import com.android.skip.R
 import com.android.skip.data.config.ConfigViewModel
+import com.android.skip.data.version.ApkVersionViewModel
 import com.android.skip.ui.about.AboutActivity
 import com.android.skip.ui.alive.AliveActivity
 import com.android.skip.ui.components.FlatButton
@@ -43,6 +44,8 @@ class MainActivity : AppCompatActivity() {
     private val switchThemeViewModel by viewModels<SwitchThemeViewModel>()
 
     private val configViewModel by viewModels<ConfigViewModel>()
+
+    private val apkVersionViewModel by viewModels<ApkVersionViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,6 +85,8 @@ class MainActivity : AppCompatActivity() {
         configViewModel.configPostState.observe(this) {
             configViewModel.loadConfig(it)
         }
+
+        apkVersionViewModel.checkVersion()
     }
 
     override fun onResume() {

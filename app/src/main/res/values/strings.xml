@@ -68,6 +68,7 @@
     <string name="invalid_config">未检测到有效的配置</string>
     <string name="about_function_intro">功能介绍</string>
     <string name="about_function_intro_url">https://skip.guoxicheng.top/guide/about/intro</string>
+    <string name="about_discover_latest">发现新版本</string>
 
     <string name="toast_start_accessibility_first">请先开启无障碍服务</string>
     <string name="toast_save_success">保存成功</string>
