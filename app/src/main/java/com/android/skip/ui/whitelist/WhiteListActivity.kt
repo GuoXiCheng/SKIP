@@ -5,14 +5,12 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.ui.res.stringResource
 import com.android.skip.MyApp
 import com.android.skip.R
+import com.android.skip.ui.components.ResourceIcon
 import com.android.skip.ui.components.ScaffoldPage
 import com.android.skip.ui.settings.theme.SwitchThemeViewModel
 import com.android.skip.ui.theme.AppTheme
@@ -41,7 +39,7 @@ class WhiteListActivity : AppCompatActivity() {
                     AppListColumn(appListViewModel, whiteListViewModel)
                 }, {
                     DropdownMenuItem(
-                        leadingIcon = { Icon(Icons.Outlined.Info, contentDescription = null) },
+                        leadingIcon = { ResourceIcon(iconResource = R.drawable.help) },
                         text = { Text(stringResource(id = R.string.whitelist_function_intro)) },
                         onClick = {
                             val intent = Intent(MyApp.context, WebViewActivity::class.java).apply {

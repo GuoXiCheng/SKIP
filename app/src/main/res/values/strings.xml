@@ -96,6 +96,7 @@
     <string name="store_resident_notification_bar">RESIDENT_NOTIFICATION_BAR</string>
     <string name="store_exclude_from_recent">EXCLUDE_FROM_RECENT</string>
     <string name="store_auto_update">AUTO_UPDATE</string>
+    <string name="store_current_theme">CURRENT_THEME</string>
 
     <string name="notification_accessibility_service_running">无障碍服务运行中</string>
 </resources>

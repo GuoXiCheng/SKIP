@@ -8,10 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.ui.res.stringResource
 import androidx.core.app.NotificationManagerCompat
@@ -20,6 +17,7 @@ import com.android.skip.MyApp
 import com.android.skip.R
 import com.android.skip.service.AccessibilityInspectViewModel
 import com.android.skip.service.InspectService
+import com.android.skip.ui.components.ResourceIcon
 import com.android.skip.ui.components.ScaffoldPage
 import com.android.skip.ui.components.notification.NotificationDialog
 import com.android.skip.ui.components.notification.NotificationDialogViewModel
@@ -61,7 +59,7 @@ class InspectActivity : AppCompatActivity() {
                     }
                 },{
                     DropdownMenuItem(
-                        leadingIcon = { Icon(Icons.Outlined.Info, contentDescription = null) },
+                        leadingIcon = { ResourceIcon(iconResource = R.drawable.help) },
                         text = { Text(stringResource(id = R.string.inspect_function_intro)) },
                         onClick = {
                             val intent = Intent(MyApp.context, WebViewActivity::class.java).apply {

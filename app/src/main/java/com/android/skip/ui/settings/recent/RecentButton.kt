@@ -14,7 +14,7 @@ fun RecentButton(recentViewModel: RecentViewModel) {
         RowContent(
             title = R.string.settings_background_task,
             subTitle = R.string.settings_background_task_subtitle,
-            icon = { ResourceIcon(iconResource = R.drawable.info)},
+            icon = { ResourceIcon(iconResource = R.drawable.hide_image)},
             checked =excludeFromRecent.value,
             onCheckedChange = {
                 recentViewModel.changeExcludeFromRecent(it)
