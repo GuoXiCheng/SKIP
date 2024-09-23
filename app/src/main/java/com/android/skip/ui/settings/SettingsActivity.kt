@@ -14,8 +14,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.ui.res.stringResource
 import androidx.core.app.NotificationManagerCompat
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.android.skip.MyApp
 import com.android.skip.R
+import com.android.skip.data.SyncWorker
 import com.android.skip.data.config.ConfigViewModel
 import com.android.skip.ui.components.ScaffoldPage
 import com.android.skip.ui.components.notification.NotificationDialog
@@ -29,9 +33,12 @@ import com.android.skip.ui.settings.theme.SwitchThemeButton
 import com.android.skip.ui.settings.theme.SwitchThemeViewModel
 import com.android.skip.ui.settings.tip.TipButton
 import com.android.skip.ui.settings.tip.TipViewModel
+import com.android.skip.ui.settings.update.AutoUpdateButton
+import com.android.skip.ui.settings.update.AutoUpdateViewModel
 import com.android.skip.ui.theme.AppTheme
 import com.android.skip.ui.webview.WebViewActivity
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class SettingsActivity : AppCompatActivity() {
@@ -48,12 +55,15 @@ class SettingsActivity : AppCompatActivity() {
 
     private val switchThemeViewModel by viewModels<SwitchThemeViewModel>()
 
+    private val autoUpdateViewModel by viewModels<AutoUpdateViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
             AppTheme(switchThemeViewModel) {
                 ScaffoldPage(R.string.settings, { finish() }, {
+                    AutoUpdateButton(autoUpdateViewModel)
                     RecentButton(recentViewModel)
                     TipButton(tipViewModel)
                     StrictButton(strictViewModel)
@@ -73,11 +83,11 @@ class SettingsActivity : AppCompatActivity() {
                         leadingIcon = { Icon(Icons.Outlined.Info, contentDescription = null) },
                         text = { Text(stringResource(id = R.string.settings_function_intro)) },
                         onClick = {
-                        val intent = Intent(MyApp.context, WebViewActivity::class.java).apply {
-                            putExtra("url", R.string.settings_function_intro_url)
-                        }
-                        startActivity(intent)
-                    })
+                            val intent = Intent(MyApp.context, WebViewActivity::class.java).apply {
+                                putExtra("url", R.string.settings_function_intro_url)
+                            }
+                            startActivity(intent)
+                        })
                 })
             }
         }
@@ -88,11 +98,29 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-        recentViewModel.excludeFromRecent.observe(this) { exclude->
-            (getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager).let { manager->
-                manager.appTasks.forEach { task->
+        recentViewModel.excludeFromRecent.observe(this) { exclude ->
+            (getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager).let { manager ->
+                manager.appTasks.forEach { task ->
                     task?.setExcludeFromRecents(exclude)
                 }
+            }
+        }
+
+        val periodicWorkRequest =
+            PeriodicWorkRequestBuilder<SyncWorker>(15, TimeUnit.MINUTES)
+                .setInitialDelay(5, TimeUnit.SECONDS)
+                .build()
+        val workManager = WorkManager.getInstance(this)
+
+        autoUpdateViewModel.autoUpdate.observe(this) {
+            when (it) {
+                true -> workManager.enqueueUniquePeriodicWork(
+                    getString(R.string.worker_sync),
+                    ExistingPeriodicWorkPolicy.UPDATE,
+                    periodicWorkRequest
+                )
+
+                false -> workManager.cancelUniqueWork(getString(R.string.worker_sync))
             }
         }
     }
