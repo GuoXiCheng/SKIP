@@ -26,6 +26,7 @@
     <string name="alive_warn_search_content">如何实现应用后台保活</string>
     <string name="alive_function_intro">功能介绍</string>
     <string name="alive_function_intro_url">https://skip.guoxicheng.top/guide/keep-alive/intro</string>
+    <string name="alive_device_not_applicable">当前设备不适用</string>
 
     <string name="whitelist">应用白名单</string>
     <string name="whitelist_show_system">显示系统应用</string>
