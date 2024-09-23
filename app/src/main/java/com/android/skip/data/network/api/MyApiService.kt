@@ -7,4 +7,7 @@ import retrofit2.http.Url
 interface MyApiService {
     @GET
     suspend fun getConfigFromUrl(@Url url: String): Response<String>
+
+    @GET("/latest_version.txt")
+    suspend fun getLatestVersion(): Response<String>
 }
