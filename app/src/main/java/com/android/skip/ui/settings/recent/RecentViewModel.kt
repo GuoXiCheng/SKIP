@@ -8,7 +8,9 @@ import com.android.skip.R
 import com.android.skip.util.DataStoreUtils
 import com.blankj.utilcode.util.StringUtils.getString
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,7 +27,9 @@ class RecentViewModel @Inject constructor() : ViewModel() {
         _excludeFromRecent.postValue(excludeFromRecent)
 
         viewModelScope.launch {
-            DataStoreUtils.putData(getString(R.string.store_exclude_from_recent), excludeFromRecent)
+            withContext(Dispatchers.IO) {
+                DataStoreUtils.putData(getString(R.string.store_exclude_from_recent), excludeFromRecent)
+            }
         }
     }
 }

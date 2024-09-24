@@ -89,6 +89,11 @@
     <string name="dialog_edit_custom_config">编辑自定义配置</string>
     <string name="dialog_notification_title">通知权限请求</string>
     <string name="dialog_notification_content">请开启「允许通知」以便获取通知访问权限</string>
+    <string name="dialog_update_now">立即更新</string>
+    <string name="dialog_not_update">暂不更新</string>
+    <string name="dialog_new_version_released">新版本已发布</string>
+    <string name="dialog_update_version">更新版本: v%1$s 至 v%2$s</string>
+    <string name="dialog_downloading">下载中： %1$s%%</string>
 
     <string name="store_custom_config">CUSTOM_CONFIG</string>
     <string name="store_default_config">https://skip.guoxicheng.top/skip_config_v3.yaml</string>

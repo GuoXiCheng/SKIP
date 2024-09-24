@@ -4,6 +4,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,60 +28,54 @@ fun SwitchThemeButton(switchThemeViewModel: SwitchThemeViewModel) {
             icon = { currentTheme.value?.themeIcon?.let { ResourceIcon(iconResource = it) } }
         )
     }, menuItems = {
-        DropdownMenuItem(
-            leadingIcon = { ResourceIcon(iconResource = R.drawable.theme_light) },
-            text = {
-                Text(
-                    text = stringResource(id = R.string.settings_theme_light),
-                    color = if (currentTheme.value?.themeMode == ThemeMode.UI_LIGHT) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
-                )
-            },
-            onClick = {
-                expandedState.value = false
-                switchThemeViewModel.changeCurrentTheme(
-                    SwitchThemeCarrier(
-                        themeMode = ThemeMode.UI_LIGHT,
-                        themeName = R.string.settings_theme_light,
-                        themeIcon = R.drawable.theme_light
-                    )
-                )
-            })
-        DropdownMenuItem(
-            leadingIcon = { ResourceIcon(iconResource = R.drawable.theme_dark) },
-            text = {
-                Text(
-                    text = stringResource(id = R.string.settings_theme_dark),
-                    color = if (currentTheme.value?.themeMode == ThemeMode.UI_DARK) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
-                )
-            },
-            onClick = {
-                expandedState.value = false
-                switchThemeViewModel.changeCurrentTheme(
-                    SwitchThemeCarrier(
-                        themeMode = ThemeMode.UI_DARK,
-                        themeName = R.string.settings_theme_dark,
-                        themeIcon = R.drawable.theme_dark
-                    )
-                )
-            })
-        DropdownMenuItem(
-            leadingIcon = { ResourceIcon(iconResource = R.drawable.theme_auto) },
-            text = {
-                Text(
-                    text = stringResource(id = R.string.settings_theme_auto),
-                    color = if (currentTheme.value?.themeMode == ThemeMode.UI_AUTO) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
-                )
-            },
-            onClick = {
-                expandedState.value = false
+        ThemeDropdownMenuItem(
+            iconRes = R.drawable.theme_light,
+            textRes = R.string.settings_theme_light,
+            currentTheme = currentTheme,
+            themeMode = ThemeMode.UI_LIGHT
+        ) {
+            expandedState.value = false
+            switchThemeViewModel.changeCurrentTheme(ThemeMode.UI_LIGHT.name)
+        }
 
-                switchThemeViewModel.changeCurrentTheme(
-                    SwitchThemeCarrier(
-                        themeMode = ThemeMode.UI_AUTO,
-                        themeName = R.string.settings_theme_auto,
-                        themeIcon = R.drawable.theme_auto
-                    )
-                )
-            })
+        ThemeDropdownMenuItem(
+            iconRes = R.drawable.theme_dark,
+            textRes = R.string.settings_theme_dark,
+            currentTheme = currentTheme,
+            themeMode = ThemeMode.UI_DARK
+        ) {
+            expandedState.value = false
+            switchThemeViewModel.changeCurrentTheme(ThemeMode.UI_DARK.name)
+        }
+
+        ThemeDropdownMenuItem(
+            iconRes = R.drawable.theme_auto,
+            textRes = R.string.settings_theme_auto,
+            currentTheme = currentTheme,
+            themeMode = ThemeMode.UI_AUTO
+        ) {
+            expandedState.value = false
+            switchThemeViewModel.changeCurrentTheme(ThemeMode.UI_AUTO.name)
+        }
     }, expanded = expandedState)
+}
+
+@Composable
+private fun ThemeDropdownMenuItem(
+    iconRes: Int,
+    textRes: Int,
+    currentTheme: State<SwitchThemeCarrier?>,
+    themeMode: ThemeMode,
+    onClick: () -> Unit
+) {
+    DropdownMenuItem(
+        leadingIcon = { ResourceIcon(iconResource = iconRes) },
+        text = {
+            Text(
+                text = stringResource(id = textRes),
+                color = if (currentTheme.value?.themeMode == themeMode) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
+            )
+        },
+        onClick = onClick
+    )
 }

@@ -13,7 +13,10 @@ import com.android.skip.MyApp
 import com.android.skip.R
 import com.android.skip.data.config.ConfigViewModel
 import com.android.skip.data.version.ApkVersionViewModel
+import com.android.skip.dataclass.VersionState
 import com.android.skip.ui.about.config.ConfigVersionButton
+import com.android.skip.ui.about.download.ApkDownloadDialog
+import com.android.skip.data.download.ApkDownloadViewModel
 import com.android.skip.ui.about.version.ApkVersionButton
 import com.android.skip.ui.components.FlatButton
 import com.android.skip.ui.components.ResourceIcon
@@ -31,6 +34,8 @@ class AboutActivity : AppCompatActivity() {
     private val switchThemeViewModel by viewModels<SwitchThemeViewModel>()
 
     private val apkVersionViewModel by viewModels<ApkVersionViewModel>()
+
+    private val apkDownloadViewModel by viewModels<ApkDownloadViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +57,7 @@ class AboutActivity : AppCompatActivity() {
                     }
                     ApkVersionButton(apkVersionViewModel)
                     ConfigVersionButton(configViewModel)
+                    ApkDownloadDialog(apkDownloadViewModel, apkVersionViewModel)
                 }, {
                     DropdownMenuItem(
                         leadingIcon = { ResourceIcon(iconResource = R.drawable.help) },
@@ -63,6 +69,12 @@ class AboutActivity : AppCompatActivity() {
                             startActivity(intent)
                         })
                 })
+            }
+        }
+
+        apkVersionViewModel.versionPostState.observe(this) {
+            if (it.status == VersionState.DISCOVER_LATEST) {
+                apkDownloadViewModel.changeDialogState(true)
             }
         }
     }
