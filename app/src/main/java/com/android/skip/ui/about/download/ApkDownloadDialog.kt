@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import com.android.skip.R
 import com.android.skip.data.download.ApkDownloadViewModel
 import com.android.skip.data.version.ApkVersionViewModel
+import com.android.skip.util.DataStoreUtils
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.StringUtils.getString
 
@@ -57,9 +58,7 @@ fun ApkDownloadDialog(
                 }
 
             },
-            onDismissRequest = {
-                apkDownloadViewModel.changeDialogState(false)
-            },
+            onDismissRequest = {},
             confirmButton = {
                 Button(onClick = {
                     versionPostState.value?.latestVersion?.let {
@@ -74,6 +73,7 @@ fun ApkDownloadDialog(
             dismissButton = {
                 TextButton(onClick = { apkDownloadViewModel.changeDialogState(false) }) {
                     Text(text = stringResource(id = R.string.dialog_not_update))
+                    DataStoreUtils.putSyncData(getString(R.string.store_not_update), true)
                 }
             }
         )
