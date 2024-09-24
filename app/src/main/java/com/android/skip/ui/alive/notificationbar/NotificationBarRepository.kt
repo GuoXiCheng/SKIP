@@ -17,6 +17,5 @@ class NotificationBarRepository @Inject constructor() {
 
     fun changeEnable(enable: Boolean) {
         _enable.postValue(enable)
-        DataStoreUtils.putSyncData(getString(R.string.store_resident_notification_bar), enable)
     }
 }
