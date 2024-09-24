@@ -9,14 +9,15 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import androidx.core.content.FileProvider
 import com.android.skip.MyApp
 import com.android.skip.R
 import com.android.skip.data.config.ConfigViewModel
+import com.android.skip.data.download.ApkDownloadViewModel
 import com.android.skip.data.version.ApkVersionViewModel
 import com.android.skip.dataclass.VersionState
 import com.android.skip.ui.about.config.ConfigVersionButton
 import com.android.skip.ui.about.download.ApkDownloadDialog
-import com.android.skip.data.download.ApkDownloadViewModel
 import com.android.skip.ui.about.version.ApkVersionButton
 import com.android.skip.ui.components.FlatButton
 import com.android.skip.ui.components.ResourceIcon
@@ -25,7 +26,9 @@ import com.android.skip.ui.components.ScaffoldPage
 import com.android.skip.ui.settings.theme.SwitchThemeViewModel
 import com.android.skip.ui.theme.AppTheme
 import com.android.skip.ui.webview.WebViewActivity
+import com.android.skip.util.DataStoreUtils
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
 
 @AndroidEntryPoint
 class AboutActivity : AppCompatActivity() {
@@ -72,9 +75,36 @@ class AboutActivity : AppCompatActivity() {
             }
         }
 
+        var latestVersion = ""
         apkVersionViewModel.versionPostState.observe(this) {
             if (it.status == VersionState.DISCOVER_LATEST) {
-                apkDownloadViewModel.changeDialogState(true)
+                val isNotUpdate =
+                    DataStoreUtils.getSyncData(getString(R.string.store_not_update), false)
+                if (!isNotUpdate) {
+                    apkDownloadViewModel.changeDialogState(true)
+                    latestVersion = it.latestVersion
+                }
+            }
+        }
+
+        apkDownloadViewModel.apkDownloadProcess.observe(this) {
+            if (it == 100) {
+                apkDownloadViewModel.changeDialogState(false)
+
+                val filename = "SKIP-v$latestVersion.apk"
+                val path = "${MyApp.context.filesDir}/apk"
+                val apkFile = File(path, filename)
+                val apkUri = FileProvider.getUriForFile(
+                    this,
+                    "${packageName}.fileprovider",
+                    apkFile
+                )
+
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.setDataAndType(apkUri, "application/vnd.android.package-archive")
+                intent.flags =
+                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
+                startActivity(intent)
             }
         }
     }

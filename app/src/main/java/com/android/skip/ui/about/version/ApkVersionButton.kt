@@ -6,6 +6,8 @@ import com.android.skip.R
 import com.android.skip.data.version.ApkVersionViewModel
 import com.android.skip.ui.components.FlatButton
 import com.android.skip.ui.components.RowContent
+import com.android.skip.util.DataStoreUtils
+import com.blankj.utilcode.util.StringUtils.getString
 
 @Composable
 fun ApkVersionButton(apkVersionViewModel: ApkVersionViewModel) {
@@ -17,6 +19,7 @@ fun ApkVersionButton(apkVersionViewModel: ApkVersionViewModel) {
             subTitle = versionPostState.value?.value
         )
     }, {
+        DataStoreUtils.removeSync(getString(R.string.store_not_update))
         apkVersionViewModel.checkVersion()
     })
 }

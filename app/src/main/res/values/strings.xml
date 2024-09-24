@@ -92,7 +92,7 @@
     <string name="dialog_update_now">立即更新</string>
     <string name="dialog_not_update">暂不更新</string>
     <string name="dialog_new_version_released">新版本已发布</string>
-    <string name="dialog_update_version">更新版本: v%1$s 至 v%2$s</string>
+    <string name="dialog_update_version">更新应用: v%1$s 至 v%2$s</string>
     <string name="dialog_downloading">下载中： %1$s%%</string>
 
     <string name="store_custom_config">CUSTOM_CONFIG</string>
@@ -103,6 +103,7 @@
     <string name="store_exclude_from_recent">EXCLUDE_FROM_RECENT</string>
     <string name="store_auto_update">AUTO_UPDATE</string>
     <string name="store_current_theme">CURRENT_THEME</string>
+    <string name="store_not_update">NOT_UPDATE</string>
 
     <string name="notification_accessibility_service_running">无障碍服务运行中</string>
 </resources>
