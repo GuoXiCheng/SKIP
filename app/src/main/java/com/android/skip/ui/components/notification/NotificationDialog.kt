@@ -3,6 +3,7 @@ package com.android.skip.ui.components.notification
 import android.content.Intent
 import android.provider.Settings
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -31,7 +32,7 @@ fun NotificationDialog(
             },
             onDismissRequest = onDismiss,
             confirmButton = {
-                TextButton(
+                Button(
                     onClick = {
                         val intent = Intent().apply {
                             action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
