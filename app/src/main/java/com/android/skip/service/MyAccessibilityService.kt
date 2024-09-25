@@ -32,6 +32,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import javax.inject.Inject
 
@@ -99,7 +100,9 @@ class MyAccessibilityService : AccessibilityService() {
                     targetRect?.let { rect ->
                         val rectStr = rect.toString()
                         if (!clickedRect.contains(rectStr)) {
-                            click(that, rect)
+                            withContext(Dispatchers.Main) {
+                                click(that, rect)
+                            }
                             clickedRect.add(rectStr)
                             LogUtils.d("clicked: packageName is $rootNodePackageName rect is $rectStr")
                         }
@@ -120,7 +123,7 @@ class MyAccessibilityService : AccessibilityService() {
 
             scanTimes++
         } catch (e: Exception) {
-//            LogUtils.e(e)
+            LogUtils.e(e)
         }
     }
 
