@@ -32,6 +32,7 @@
     <string name="whitelist_show_system">显示系统应用</string>
     <string name="whitelist_function_intro">功能介绍</string>
     <string name="whitelist_function_intro_url">https://skip.guoxicheng.top/guide/white-list/intro</string>
+    <string name="whitelist_dot">WHITELIST_DOT</string>
 
     <string name="settings">设置</string>
     <string name="settings_tip">是否允许提示</string>
@@ -106,4 +107,6 @@
     <string name="store_not_update">NOT_UPDATE</string>
 
     <string name="notification_accessibility_service_running">无障碍服务运行中</string>
+
+    <string name="loading">加载中…</string>
 </resources>

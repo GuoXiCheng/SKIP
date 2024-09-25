@@ -42,6 +42,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.coil.compose)
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.androidx.work.runtime)
     implementation(libs.converter.scalars)
