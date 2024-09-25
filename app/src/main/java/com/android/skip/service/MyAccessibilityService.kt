@@ -8,6 +8,7 @@ import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import androidx.lifecycle.Observer
+import com.android.skip.MyApp
 import com.android.skip.R
 import com.android.skip.data.config.ConfigLoadRepository
 import com.android.skip.dataclass.AccessibilityNodeInfoCarrier
@@ -239,6 +240,7 @@ class MyAccessibilityService : AccessibilityService() {
             ScreenUtils.getScreenHeight(),
             ScreenUtils.getScreenWidth(),
             System.currentTimeMillis(),
+            MyApp.deviceName,
             nodeChildSchemaList
         )
 

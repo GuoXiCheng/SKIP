@@ -11,6 +11,7 @@ export interface AccessibilityWindow {
   screenHeight: number;
   screenWidth: number;
   createTime: number;
+  deviceName: string;
   nodes: AccessibilityNode[];
 }
 
@@ -44,7 +45,7 @@ export interface FileTableData {
   createTime: number;
   appName: string;
   packageName: string;
-  activityName: string;
+  deviceName: string;
 }
 
 export interface FileItemData {

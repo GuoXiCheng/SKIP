@@ -8,5 +8,6 @@ data class NodeRootSchema(
     val screenHeight: Int,
     val screenWidth: Int,
     val createTime: Long,
+    val deviceName: String,
     val nodes: MutableList<NodeChildSchema>
 )

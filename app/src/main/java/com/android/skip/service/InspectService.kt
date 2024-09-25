@@ -65,7 +65,7 @@ class InspectService : Service() {
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
         val notification = NotificationCompat.Builder(this, "INSPECT_SERVICE")
             .setContentTitle(getString(R.string.app_name))
-            .setContentText(getString(R.string.notification_accessibility_service_running))
+            .setContentText(getString(R.string.notification_inspect_service_running))
             .setSmallIcon(R.drawable.favicon32)
 //            .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.favicon32))
             .setContentIntent(pendingIntent)
