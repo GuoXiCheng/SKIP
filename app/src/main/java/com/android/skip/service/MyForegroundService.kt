@@ -1,5 +1,6 @@
 package com.android.skip.service
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -12,6 +13,8 @@ import com.android.skip.R
 import com.android.skip.ui.main.MainActivity
 
 class MyForegroundService : Service() {
+    private lateinit var notification: Notification
+
     override fun onBind(p0: Intent?): IBinder? {
         TODO("Not yet implemented")
     }
@@ -28,8 +31,8 @@ class MyForegroundService : Service() {
         manager.createNotificationChannel(channel)
 
         val intent = Intent(this, MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(this, 0 , intent, PendingIntent.FLAG_IMMUTABLE)
-        val notification = NotificationCompat.Builder(this, "SKIP_FOREGROUND_SERVICE")
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        notification = NotificationCompat.Builder(this, "SKIP_FOREGROUND_SERVICE")
             .setContentTitle(getString(R.string.app_name))
             .setContentText(getString(R.string.notification_accessibility_service_running))
             .setSmallIcon(R.drawable.favicon32)
@@ -39,5 +42,11 @@ class MyForegroundService : Service() {
             .build()
 
         startForeground(2, notification)
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        super.onStartCommand(intent, flags, startId)
+        startForeground(2, notification)
+        return START_STICKY
     }
 }
