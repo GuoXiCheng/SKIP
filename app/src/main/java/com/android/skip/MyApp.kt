@@ -3,6 +3,7 @@ package com.android.skip
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import android.os.Build
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import com.android.skip.util.DataStoreUtils
@@ -19,6 +20,7 @@ class MyApp : Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
         context = this
+        deviceName = "${Build.MANUFACTURER} ${Build.MODEL}"
 
         DataStoreUtils.init(this)
 
@@ -40,6 +42,8 @@ class MyApp : Application(), Configuration.Provider {
     companion object {
         @SuppressLint("StaticFieldLeak")
         lateinit var context: Context
+
+        lateinit var deviceName: String
     }
 
     override fun getWorkManagerConfiguration() =
