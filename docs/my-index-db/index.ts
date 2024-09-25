@@ -43,7 +43,7 @@ export class MyIndexDB {
       createTime: fileData.createTime,
       appName: fileData.appName,
       packageName: fileData.packageName,
-      activityName: fileData.activityName,
+      deviceName: fileData.deviceName,
     });
     fileItemStore.add({ fileId: fileData.fileId, pic: fileData.pic, raw: fileData.raw });
     tx.commit();

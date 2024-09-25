@@ -15,7 +15,7 @@
     <el-table-column prop="createTime" label="创建时间" sortable="custom" width="200" :formatter="formatter" />
     <el-table-column prop="appName" label="应用名称" :filters="appFilters" width="150" />
     <el-table-column prop="packageName" label="应用包名" />
-    <el-table-column prop="activityName" label="Activity 名称" />
+    <el-table-column prop="deviceName" label="设备名称" />
   </el-table>
 </template>
 

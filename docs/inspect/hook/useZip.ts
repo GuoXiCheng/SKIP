@@ -24,7 +24,7 @@ export function useZip(arrayBuffer: ArrayBuffer) {
     raw.value = jsonObj;
     pic.value = blobFile;
 
-    const { fileId, appName, packageName, activityName, createTime } = jsonObj;
+    const { fileId, appName, packageName, deviceName, createTime } = jsonObj;
     const targetFileTable = await FileTable.findFileTableByFileId(fileId);
     if (targetFileTable == null) {
       MyIndexDB.addFileData({
@@ -34,7 +34,7 @@ export function useZip(arrayBuffer: ArrayBuffer) {
         createTime,
         appName,
         packageName,
-        activityName,
+        deviceName,
       });
       added.value = true;
     }

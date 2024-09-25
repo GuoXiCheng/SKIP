@@ -25,6 +25,10 @@ function buildWindowTableData(data: AccessibilityWindow | null) {
   if (!data) return [];
   return [
     {
+      key: "设备名称",
+      value: data.deviceName,
+    },
+    {
       key: "应用名称",
       value: data.appName,
     },
