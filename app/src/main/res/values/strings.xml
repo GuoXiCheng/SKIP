@@ -107,6 +107,7 @@
     <string name="store_not_update">NOT_UPDATE</string>
 
     <string name="notification_accessibility_service_running">无障碍服务运行中</string>
+    <string name="notification_inspect_service_running">布局检查服务运行中</string>
 
     <string name="loading">加载中…</string>
 </resources>
