@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.android.skip.R
 import com.android.skip.data.network.MyApiNetwork
+import com.android.skip.dataclass.SemanticVersion
 import com.android.skip.dataclass.VersionPostSchema
 import com.android.skip.dataclass.VersionState
 import com.blankj.utilcode.util.AppUtils
@@ -23,21 +24,22 @@ class ApkVersionRepository @Inject constructor(
     private suspend fun changeVersionState(versionPostState: VersionPostSchema) =
         withContext(Dispatchers.IO) {
             _versionPostState.postValue(versionPostState)
-            val version = myApiNetwork.fetchLatestVersion()
-            if (version == AppUtils.getAppVersionName()) {
+            val version1 = myApiNetwork.fetchLatestVersion()
+            val version2 = AppUtils.getAppVersionName()
+            if (isVersionGreater(version1, version2)) {
                 _versionPostState.postValue(
                     VersionPostSchema(
-                        VersionState.CURRENT_LATEST,
-                        version,
-                        version
+                        VersionState.DISCOVER_LATEST,
+                        getString(R.string.about_discover_latest),
+                        version1
                     )
                 )
             } else {
                 _versionPostState.postValue(
                     VersionPostSchema(
-                        VersionState.DISCOVER_LATEST,
-                        getString(R.string.about_discover_latest),
-                        version
+                        VersionState.CURRENT_LATEST,
+                        version2,
+                        version2
                     )
                 )
             }
@@ -47,5 +49,26 @@ class ApkVersionRepository @Inject constructor(
         changeVersionState(
             VersionPostSchema(VersionState.PENDING, getString(R.string.checking), String())
         )
+    }
+
+    private fun parseVersion(version: String): SemanticVersion {
+        val parts = version.split(".")
+        val major = parts.getOrNull(0)?.toIntOrNull() ?: 0
+        val minor = parts.getOrNull(1)?.toIntOrNull() ?: 0
+        val patch = parts.getOrNull(2)?.toIntOrNull() ?: 0
+        return SemanticVersion(major, minor, patch)
+    }
+
+    private fun isVersionGreater(version1: String, version2: String): Boolean {
+        val v1 = parseVersion(version1)
+        val v2 = parseVersion(version2)
+        return when {
+            v1.major > v2.major -> true
+            v1.major < v2.major -> false
+            v1.minor > v2.minor -> true
+            v1.minor < v2.minor -> false
+            v1.patch > v2.patch -> true
+            else -> false
+        }
     }
 }

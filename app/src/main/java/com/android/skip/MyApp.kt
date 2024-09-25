@@ -24,7 +24,7 @@ class MyApp : Application(), Configuration.Provider {
 
         Utils.init(this)
         LogUtils.getConfig()
-            .setLogSwitch(true)                    // 是否输出日志开关
+            .setLogSwitch(false)                    // 是否输出日志开关
             .setConsoleSwitch(true)                // 是否在控制台输出日志开关
             .setGlobalTag("SKIP_APP")              // 全局标签
             .setLog2FileSwitch(true)               // 是否写入日志文件开关
