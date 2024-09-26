@@ -18,7 +18,7 @@ export default defineConfig(
         { text: "首页", link: "/" },
         { text: "指南", link: "/guide/intro/what-is-skip" },
         { text: "进阶", link: "/advance/layout-inspect/intro" },
-        // { text: "布局检查", link: "/inspect/index", target: "_blank" },
+        { text: "布局检查", link: "/inspect/index", target: "_blank" },
       ],
       sidebar: {
         "/guide/": [

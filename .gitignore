@@ -97,3 +97,4 @@ scripts/__tests__/examples/dist
 !scripts/__tests__/examples/dist/.gitkeep
 *.zip
 !capture/*.zip
+!5f686585-c5d0-4057-93b2-c54832ffb393.zip
