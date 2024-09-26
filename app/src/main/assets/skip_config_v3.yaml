@@ -161,6 +161,7 @@
     - id: cn.com.cmbc.newmbank:id/view_count_down
 
 - appName: 虎扑
+  packageName: com.hupu.games
   skipIds:
     - id: com.byted.pangle:id/tt_splash_skip_btn
     - id: com.hupu.games:id/tv_time
