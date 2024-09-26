@@ -33,6 +33,10 @@ export default defineConfig(
                 text: "下载 APP",
                 link: "/guide/intro/download-app",
               },
+              {
+                text: "开始使用",
+                link: "/guide/intro/getting-started",
+              },
             ],
           },
           {
