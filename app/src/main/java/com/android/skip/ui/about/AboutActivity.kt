@@ -107,6 +107,10 @@ class AboutActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
+
+        configViewModel.configPostState.observe(this) {
+            configViewModel.loadConfig(it)
+        }
     }
 }
 

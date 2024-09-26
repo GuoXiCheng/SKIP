@@ -3,8 +3,10 @@ package com.android.skip.data.config
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.android.skip.R
 import com.android.skip.dataclass.ConfigPostSchema
 import com.android.skip.dataclass.ConfigState
+import com.blankj.utilcode.util.StringUtils.getString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,6 +30,8 @@ class ConfigViewModel @Inject constructor(
             val configMap = configReadRepository.handleConfig(configPostSchema)
             if (configMap != null) {
                 configLoadRepository.loadConfig(configMap)
+            } else {
+                changeConfigPostState(ConfigPostSchema(ConfigState.FAIL, getString(R.string.invalid_config)))
             }
         }
     }

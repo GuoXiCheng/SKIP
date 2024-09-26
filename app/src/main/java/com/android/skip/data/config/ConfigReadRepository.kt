@@ -13,6 +13,7 @@ import com.android.skip.dataclass.LoadSkipBound
 import com.android.skip.dataclass.LoadSkipId
 import com.android.skip.dataclass.LoadSkipText
 import com.android.skip.util.DataStoreUtils
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.StringUtils.getString
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -80,43 +81,52 @@ class ConfigReadRepository @Inject constructor(
     }
 
     fun handleConfig(configPostSchema: ConfigPostSchema): Map<String, ConfigLoadSchema>? {
-        return configPostSchema.configReadSchemaList?.associate { config ->
-            val newSkipTexts = config.skipTexts?.map { skipText ->
-                val clickRect = skipText.click?.let { c ->
-                    convertClick(c)
+        return try {
+            configPostSchema.configReadSchemaList?.associate { config ->
+                val newSkipTexts = config.skipTexts?.map { skipText ->
+                    val clickRect = skipText.click?.let { c ->
+                        convertClick(c)
+                    }
+                    LoadSkipText(
+                        text = skipText.text,
+                        activityName = skipText.activityName,
+                        length = skipText.length,
+                        click = clickRect
+                    )
                 }
-                LoadSkipText(
-                    text = skipText.text,
-                    activityName = skipText.activityName,
-                    length = skipText.length,
-                    click = clickRect
+
+                val newSkipIds = config.skipIds?.map { skipId ->
+                    val clickRect = skipId.click?.let { c ->
+                        convertClick(c)
+                    }
+                    LoadSkipId(
+                        id = skipId.id,
+                        activityName = skipId.activityName,
+                        click = clickRect
+                    )
+                }
+
+                val newSkipBounds = config.skipBounds?.map { skipBound ->
+                    val clickRect = skipBound.click?.let { c ->
+                        convertClick(c)
+                    }
+                    LoadSkipBound(
+                        bound = convertBound(skipBound.bound),
+                        activityName = skipBound.activityName,
+                        click = clickRect
+                    )
+                }
+
+                config.packageName to ConfigLoadSchema(
+                    config.packageName,
+                    skipTexts = newSkipTexts,
+                    skipIds = newSkipIds,
+                    skipBounds = newSkipBounds
                 )
             }
-
-            val newSkipIds = config.skipIds?.map { skipId ->
-                val clickRect = skipId.click?.let { c ->
-                    convertClick(c)
-                }
-                LoadSkipId(id = skipId.id, activityName = skipId.activityName, click = clickRect)
-            }
-
-            val newSkipBounds = config.skipBounds?.map { skipBound ->
-                val clickRect = skipBound.click?.let { c ->
-                    convertClick(c)
-                }
-                LoadSkipBound(
-                    bound = convertBound(skipBound.bound),
-                    activityName = skipBound.activityName,
-                    click = clickRect
-                )
-            }
-
-            config.packageName to ConfigLoadSchema(
-                config.packageName,
-                skipTexts = newSkipTexts,
-                skipIds = newSkipIds,
-                skipBounds = newSkipBounds
-            )
+        } catch (e: Exception) {
+            LogUtils.e(e)
+            null
         }
     }
 
