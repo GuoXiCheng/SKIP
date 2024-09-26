@@ -19,7 +19,10 @@
         :style="{ width: `${nodeTreeWidth}px` }"
       />
       <div class="bg-gray-400 w-2 cursor-col-resize hover:bg-blue-700 transition duration-300" ref="colResize"></div>
-      <NodeTable :node-data="nodeData" :raw-data="rawData" v-if="rawData" :style="{ width: `${nodeTableWidth}px` }" />
+      <div class="flex flex-col">
+        <NodeTable :node-data="nodeData" :raw-data="rawData" v-if="rawData" :style="{ width: `${nodeTableWidth}px` }" />
+        <NodeCode :node-data="nodeData" :raw-data="rawData" :current-node-key="currentNodeKey" />
+      </div>
     </el-col>
   </el-row>
 </template>
@@ -28,6 +31,7 @@
 import NodeTree from "./NodeTree.vue";
 import NodeTable from "./NodeTable.vue";
 import NodePic from "./NodePic.vue";
+import NodeCode from "./inspect-node-container/NodeCode.vue";
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { AccessibilityNode, AccessibilityNodeTree, AccessibilityWindow } from "./types";
 

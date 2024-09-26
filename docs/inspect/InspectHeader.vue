@@ -4,6 +4,7 @@
       <el-button v-loading.fullscreen.lock="fullscreenLoading">批量上传</el-button>
     </el-upload>
     <el-button @click="emits('onDelete')">批量删除</el-button>
+    <el-button @click="handleGetExample">获取示例</el-button>
   </div>
 </template>
 
@@ -48,6 +49,26 @@ const handleOnChange = async () => {
     type: "success",
     duration: 0,
   });
+};
+
+const handleGetExample = async () => {
+  const response = await fetch("/5f686585-c5d0-4057-93b2-c54832ffb393.zip");
+  const arrayBuffer = await response.arrayBuffer();
+  const { added, extractZip } = useZip(arrayBuffer);
+  await extractZip();
+  if (added.value === true) {
+    emits("uploadSuccess");
+    ElNotification({
+      title: "示例文件添加成功",
+      message: "示例文件添加成功",
+      type: "success",
+    });
+  } else
+    ElNotification({
+      title: "示例文件已存在",
+      message: "示例文件已存在，无需重复添加",
+      type: "warning",
+    });
 };
 
 onMounted(() => {
