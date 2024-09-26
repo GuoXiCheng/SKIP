@@ -2,6 +2,7 @@
     <string name="app_name">SKIP</string>
     <string name="accessibility_description">SKIP 可以帮您自动跳过应用开屏广告</string>
     <string name="worker_sync">MySyncWorker</string>
+    <string name="tutorial_url">https://skip.guoxicheng.top/guide/intro/getting-started</string>
 
     <string name="inspect">布局检查</string>
     <string name="inspect_start_title">是否启用布局检查</string>
@@ -65,7 +66,6 @@
     <string name="about_docs_url">https://skip.guoxicheng.top/guide/intro/what-is-skip</string>
     <string name="about_app_version">应用版本号</string>
     <string name="about_config_version">配置版本号</string>
-    <string name="checking">检查中…</string>
     <string name="invalid_config">未检测到有效的配置</string>
     <string name="about_function_intro">功能介绍</string>
     <string name="about_function_intro_url">https://skip.guoxicheng.top/guide/about/intro</string>
@@ -95,6 +95,10 @@
     <string name="dialog_new_version_released">新版本已发布</string>
     <string name="dialog_update_version">更新应用: v%1$s 至 v%2$s</string>
     <string name="dialog_downloading">下载中： %1$s%%</string>
+    <string name="dialog_get_started">提示</string>
+    <string name="dialog_get_started_content">是否需要前往查看「开始使用」教程</string>
+    <string name="dialog_go_at_once">立即前往</string>
+    <string name="dialog_no_more_reminders">不再提醒</string>
 
     <string name="store_custom_config">CUSTOM_CONFIG</string>
     <string name="store_default_config">https://skip.guoxicheng.top/skip_config_v3.yaml</string>
@@ -105,9 +109,11 @@
     <string name="store_auto_update">AUTO_UPDATE</string>
     <string name="store_current_theme">CURRENT_THEME</string>
     <string name="store_not_update">NOT_UPDATE</string>
+    <string name="store_show_tutorial">SHOW_TUTORIAL</string>
 
     <string name="notification_accessibility_service_running">无障碍服务运行中</string>
     <string name="notification_inspect_service_running">布局检查服务运行中</string>
 
     <string name="loading">加载中…</string>
+    <string name="checking">检查中…</string>
 </resources>

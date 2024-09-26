@@ -6,4 +6,4 @@ SKIP 是一款免费开源的安卓应用，旨在利用 Android 无障碍服务
 
 ## 主界面预览
 
-![主界面预览](/main-interface-dark.png)
+![主界面预览](/images/main-interface-light.png)

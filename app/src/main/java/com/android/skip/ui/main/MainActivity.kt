@@ -31,10 +31,14 @@ import com.android.skip.ui.components.RowContent
 import com.android.skip.ui.inspect.InspectActivity
 import com.android.skip.ui.main.start.StartAccessibilityViewModel
 import com.android.skip.ui.main.start.StartButton
+import com.android.skip.ui.main.tutorial.TutorialDialog
+import com.android.skip.ui.main.tutorial.TutorialViewModel
 import com.android.skip.ui.settings.SettingsActivity
 import com.android.skip.ui.settings.theme.SwitchThemeViewModel
 import com.android.skip.ui.theme.AppTheme
+import com.android.skip.ui.webview.WebViewActivity
 import com.android.skip.ui.whitelist.WhiteListActivity
+import com.android.skip.util.DataStoreUtils
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -46,6 +50,8 @@ class MainActivity : AppCompatActivity() {
     private val configViewModel by viewModels<ConfigViewModel>()
 
     private val apkVersionViewModel by viewModels<ApkVersionViewModel>()
+
+    private val tutorialViewModel by viewModels<TutorialViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +66,15 @@ class MainActivity : AppCompatActivity() {
                 ) {
                     AppTitle()
                     StartButton(startAccessibilityViewModel = startAccessibilityViewModel) {
-                        startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                        if (DataStoreUtils.getSyncData(
+                                getString(R.string.store_show_tutorial),
+                                true
+                            )
+                        ) {
+                            tutorialViewModel.changeDialogState(true)
+                        } else {
+                            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                        }
                     }
                     KeepAliveButton {
                         startActivity(Intent(MyApp.context, AliveActivity::class.java))
@@ -78,6 +92,17 @@ class MainActivity : AppCompatActivity() {
                         startActivity(Intent(MyApp.context, AboutActivity::class.java))
                     }
                 }
+                TutorialDialog(tutorialViewModel, {
+                    tutorialViewModel.changeDialogState(false)
+                    DataStoreUtils.putSyncData(getString(R.string.store_show_tutorial), false)
+                    startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                }, {
+                    tutorialViewModel.changeDialogState(false)
+                    val intent = Intent(MyApp.context, WebViewActivity::class.java).apply {
+                        putExtra("url", R.string.tutorial_url)
+                    }
+                    startActivity(intent)
+                })
             }
         }
 
