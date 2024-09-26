@@ -1,5 +1,5 @@
 <template>
-  <div class="w-1/6 flex flex-row justify-around">
+  <div class="w-1/4 flex flex-row justify-between">
     <el-upload v-model:file-list="fileList" accept=".zip" multiple :show-file-list="false" :auto-upload="false">
       <el-button v-loading.fullscreen.lock="fullscreenLoading">批量上传</el-button>
     </el-upload>
