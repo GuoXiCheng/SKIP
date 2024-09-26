@@ -4,7 +4,7 @@
       <el-button size="small" @click="handleClickCopy" class="absolute top-2 right-2 z-50">{{
         copyButtonText
       }}</el-button>
-      <codemirror v-model="code" :extensions="extensions" class="z-0" />
+      <code-mirror v-model="code" :extensions="extensions" class="z-0" />
     </div>
   </div>
 </template>
@@ -12,7 +12,7 @@
 <script lang="ts" setup>
 import { oneDark } from "@codemirror/theme-one-dark";
 import { yaml } from "@codemirror/lang-yaml";
-import { Codemirror } from "vue-codemirror";
+import CodeMirror from "vue-codemirror6";
 import { watch, ref } from "vue";
 import { AccessibilityNode, AccessibilityWindow } from "../types";
 import jsyaml from "js-yaml";
