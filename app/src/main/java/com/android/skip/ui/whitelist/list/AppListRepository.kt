@@ -1,27 +1,29 @@
 package com.android.skip.ui.whitelist.list
 
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
+import com.android.skip.MyApp
 import com.android.skip.dataclass.AppListItem
 import com.android.skip.ui.whitelist.WhiteListRepository
-import com.blankj.utilcode.util.AppUtils
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class AppListRepository @Inject constructor() {
 
     @Inject
     lateinit var whiteListRepository: WhiteListRepository
 
-    private var appInfos: MutableList<AppUtils.AppInfo> = mutableListOf()
+    private val appInfos: MutableList<ApplicationInfo> by lazy {
+        MyApp.context.packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+    }
 
     fun getData(currentPage: Int, pageSize: Int, isShowSystem: Boolean): List<AppListItem> {
         try {
-            if (appInfos.isEmpty()) appInfos = AppUtils.getAppsInfo()
+            val pkgManager = MyApp.context.packageManager
 
             val apps = if (isShowSystem) {
                 appInfos
             } else {
-                appInfos.filterNot { it.isSystem }
+                appInfos.filter { (it.flags and ApplicationInfo.FLAG_SYSTEM) == 0 }
             }
             val fromIndex = currentPage * pageSize
             val toIndex = minOf(fromIndex + pageSize, apps.size)
@@ -29,9 +31,9 @@ class AppListRepository @Inject constructor() {
             return apps.subList(fromIndex, toIndex)
                 .map {
                     AppListItem(
-                        it.name,
+                        it.loadLabel(pkgManager).toString(),
                         it.packageName,
-                        it.icon,
+                        it.loadIcon(pkgManager),
                         whiteListRepository.isAppInWhiteList(it.packageName)
                     )
                 }

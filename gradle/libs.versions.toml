@@ -2,6 +2,7 @@
 accompanistDrawablepainter = "0.34.0"
 activityCompose = "1.9.0"
 agp = "8.5.1"
+coilCompose = "1.3.2"
 converterScalars = "2.5.0"
 datastorePreferences = "1.0.0"
 gson = "2.10.1"
@@ -42,6 +43,7 @@ androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.r
 androidx-ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
 androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "workRuntime" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntime" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 converter-scalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "converterScalars" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }

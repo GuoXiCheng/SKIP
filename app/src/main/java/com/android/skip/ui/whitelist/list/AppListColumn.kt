@@ -1,8 +1,10 @@
 package com.android.skip.ui.whitelist.list
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -10,14 +12,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
+import com.android.skip.R
 import com.android.skip.ui.components.FlatButton
 import com.android.skip.ui.components.RowContent
 import com.android.skip.ui.whitelist.WhiteListViewModel
-import com.google.accompanist.drawablepainter.rememberDrawablePainter
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun AppListColumn(
     appListViewModel: AppListViewModel,
@@ -36,10 +43,10 @@ fun AppListColumn(
                         title = item.appName,
                         subTitle = item.packageName,
                         {
-                            Icon(
-                                painter = rememberDrawablePainter(drawable = item.appIcon),
+                            Image(
+                                painter = rememberImagePainter(data = item.appIcon),
                                 contentDescription = null,
-                                tint = Color.Unspecified
+                                modifier = Modifier.size(40.dp)
                             )
                         }, checked.value, {
                             checked.value = it
@@ -54,8 +61,11 @@ fun AppListColumn(
             when {
                 loadState.refresh is LoadState.Loading -> {
                     item {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(text = "加载中...")
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(text = stringResource(id = R.string.loading))
                         }
                     }
                 }
