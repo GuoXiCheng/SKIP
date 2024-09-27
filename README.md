@@ -18,7 +18,7 @@ SKIP 是一款免费开源的安卓应用，旨在利用 Android 无障碍服务
 
 ## 补充说明
 
-[免责声明](https://github.com/GuoXiCheng/SKIP/blob/main/DISCLAIMER)
+[免责声明](https://github.com/GuoXiCheng/SKIP/blob/main/DISCLAIMER.md)
 
 ## Star History
 
