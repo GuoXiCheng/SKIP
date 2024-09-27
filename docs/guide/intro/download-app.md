@@ -2,7 +2,7 @@
 
 ## 直接下载
 
-[SKIP-v2.1.1.apk](https://skip.guoxicheng.top/SKIP-v2.1.1.apk)
+[SKIP-v3.0.0.apk](https://skip.guoxicheng.top/SKIP-v3.0.0.apk)
 
 ## Github Release
 
