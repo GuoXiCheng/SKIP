@@ -29,6 +29,8 @@ import com.android.skip.ui.components.FlatButton
 import com.android.skip.ui.components.ResourceIcon
 import com.android.skip.ui.components.RowContent
 import com.android.skip.ui.inspect.InspectActivity
+import com.android.skip.ui.main.disclaimer.DisclaimerDialog
+import com.android.skip.ui.main.disclaimer.DisclaimerViewModel
 import com.android.skip.ui.main.start.StartAccessibilityViewModel
 import com.android.skip.ui.main.start.StartButton
 import com.android.skip.ui.main.tutorial.TutorialDialog
@@ -52,6 +54,8 @@ class MainActivity : AppCompatActivity() {
     private val apkVersionViewModel by viewModels<ApkVersionViewModel>()
 
     private val tutorialViewModel by viewModels<TutorialViewModel>()
+
+    private val disclaimerViewModel by viewModels<DisclaimerViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,6 +106,13 @@ class MainActivity : AppCompatActivity() {
                         putExtra("url", R.string.tutorial_url)
                     }
                     startActivity(intent)
+                })
+                DisclaimerDialog(disclaimerViewModel, {
+                    disclaimerViewModel.changeDialogState(false)
+                    DataStoreUtils.putSyncData(getString(R.string.store_show_disclaimer), false)
+                }, {
+                    disclaimerViewModel.changeDialogState(false)
+                    finish()
                 })
             }
         }
