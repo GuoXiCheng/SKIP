@@ -1,9 +1,21 @@
 # 开始使用
 
-## 1. 点击屏幕中央按钮
+## 步骤一: 点击“启动”按钮
 
-![](/click-button-on-the-screen-dark.png)
+![](/images/getting-started-step-1.png)
 
-## 2. 点击「使用“SKIP”」
+## 步骤二: 点击“已下载的应用”
 
-![](/use-accessibility-dark.png)
+![](/images/getting-started-step-2.png)
+
+## 步骤三: 点击“SKIP”
+
+![](/images/getting-started-step-3.png)
+
+## 步骤四: 开启“无障碍服务”
+
+![](/images/getting-started-step-4.png)
+
+## 步骤五: 勾选“同意”并点击“确定”
+
+![](/images/getting-started-step-5.png)
