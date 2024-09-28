@@ -140,8 +140,10 @@ class ConfigReadRepository @Inject constructor(
         return Rect(left, top, right, bottom)
     }
 
+    // #region MD5
     private fun md5(input: String): String {
         val bytes = MessageDigest.getInstance("MD5").digest(input.toByteArray())
         return bytes.joinToString("") { "%02x".format(it) }
     }
+    // #endregion MD5
 }
