@@ -96,7 +96,7 @@ export default defineConfig(
             text: "布局检查",
             items: [
               {
-                text: "功能介绍",
+                text: "布局检查功能",
                 link: "/advance/layout-inspect/intro",
               },
             ],
@@ -105,8 +105,12 @@ export default defineConfig(
             text: "自定义配置",
             items: [
               {
-                text: "功能介绍",
+                text: "自定义配置功能",
                 link: "/advance/custom-config/intro",
+              },
+              {
+                text: "可配置字段",
+                link: "/advance/custom-config/fields",
               },
             ],
           },
