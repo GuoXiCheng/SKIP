@@ -40,78 +40,63 @@ export default defineConfig(
             ],
           },
           {
-            text: "使用方法",
+            text: "主要功能",
             items: [
               {
-                text: "启用无障碍服务",
-                link: "/guide/usage/enable-accessibility-service",
-              },
-              {
-                text: "后台进程保活",
-                link: "/guide/usage/background-process-keep-alive",
-              },
-            ],
-          },
-          {
-            text: "贡献指南",
-            items: [
-              {
-                text: "核心逻辑",
-                link: "/guide/contributing/core-logic",
-              },
-              {
-                text: "配置文件",
-                link: "/guide/contributing/config-file",
-              },
-              {
-                text: "布局查看",
-                link: "/guide/contributing/layout-view",
-              },
-            ],
-          },
-          {
-            text: "应用保活",
-            items: [
-              {
-                text: "应用保活功能",
+                text: "应用保活",
                 link: "/guide/keep-alive/intro",
               },
-            ],
-          },
-          {
-            text: "应用白名单",
-            items: [
               {
-                text: "应用白名单功能",
+                text: "应用白名单",
                 link: "/guide/white-list/intro",
               },
-            ],
-          },
-          {
-            text: "设置",
-            items: [
               {
-                text: "功能介绍",
+                text: "设置",
                 link: "/guide/settings/intro",
               },
-            ],
-          },
-          {
-            text: "关于",
-            items: [
               {
-                text: "关于功能页",
+                text: "关于",
                 link: "/guide/about/intro",
               },
             ],
           },
+          // {
+          //   text: "使用方法",
+          //   items: [
+          //     {
+          //       text: "启用无障碍服务",
+          //       link: "/guide/usage/enable-accessibility-service",
+          //     },
+          //     {
+          //       text: "后台进程保活",
+          //       link: "/guide/usage/background-process-keep-alive",
+          //     },
+          //   ],
+          // },
+          // {
+          //   text: "贡献指南",
+          //   items: [
+          //     {
+          //       text: "核心逻辑",
+          //       link: "/guide/contributing/core-logic",
+          //     },
+          //     {
+          //       text: "配置文件",
+          //       link: "/guide/contributing/config-file",
+          //     },
+          //     {
+          //       text: "布局查看",
+          //       link: "/guide/contributing/layout-view",
+          //     },
+          //   ],
+          // },
         ],
         "/advance/": [
           {
             text: "布局检查",
             items: [
               {
-                text: "功能介绍",
+                text: "布局检查功能",
                 link: "/advance/layout-inspect/intro",
               },
             ],
@@ -120,8 +105,12 @@ export default defineConfig(
             text: "自定义配置",
             items: [
               {
-                text: "功能介绍",
+                text: "自定义配置功能",
                 link: "/advance/custom-config/intro",
+              },
+              {
+                text: "可配置字段",
+                link: "/advance/custom-config/fields",
               },
             ],
           },
