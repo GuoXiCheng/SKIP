@@ -73,7 +73,7 @@ export default defineConfig(
             text: "应用保活",
             items: [
               {
-                text: "功能介绍",
+                text: "应用保活功能",
                 link: "/guide/keep-alive/intro",
               },
             ],
@@ -82,7 +82,7 @@ export default defineConfig(
             text: "应用白名单",
             items: [
               {
-                text: "功能介绍",
+                text: "应用白名单功能",
                 link: "/guide/white-list/intro",
               },
             ],
@@ -100,7 +100,7 @@ export default defineConfig(
             text: "关于",
             items: [
               {
-                text: "功能介绍",
+                text: "关于功能页",
                 link: "/guide/about/intro",
               },
             ],
