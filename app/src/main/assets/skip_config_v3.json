@@ -1,0 +1,352 @@
+[
+    {
+        "appName": "京东读书",
+        "packageName": "com.jd.app.reader",
+        "skipBounds": [
+            {
+                "bound": "1243,176,1383,316",
+                "activityName": "com.jingdong.app.reader.logo.JdLogoActivity",
+                "file": "fileId=20f3db03-af60-4dc3-885a-b954b985931f&nodeId=14",
+                "desc": "1440x3200分辨率下圆形开屏广告按钮"
+            }
+        ],
+        "skipIds": [
+            {
+                "id": "com.jd.app.reader:id/mJumpBtn",
+                "activityName": "com.jingdong.app.reader.logo.JdLogoActivity",
+                "file": "fileId=7ba85f98-5b07-4947-95e0-dca6431b1fc6&nodeId=10",
+                "desc": "开屏广告跳过按钮"
+            }
+        ]
+    },
+    {
+        "appName": "小时工记账",
+        "packageName": "com.julangling.xsgjz",
+        "skipBounds": [
+            {
+                "bound": "1244,176,1384,316",
+                "activityName": "com.julangling.xsgmain.ui.splash.SplashActivity",
+                "file": "fileId=43bcef4b-4b5b-4b63-a7f2-ad28e4f5f690&nodeId=30",
+                "desc": "1440x3200分辨率下圆形开屏广告按钮"
+            }
+        ]
+    },
+    {
+        "appName": "什么值得买",
+        "packageName": "com.smzdm.client.android",
+        "skipIds": [
+            {
+                "id": "com.smzdm.client.android:id/tv_skip",
+                "activityName": "com.smzdm.client.android.app.WelComeActivity",
+                "file": "fileId=2adae253-623d-4fd3-ad75-b5b32b667dcd&nodeId=18",
+                "desc": "开屏广告"
+            }
+        ]
+    },
+    {
+        "appName": "哔哩哔哩",
+        "packageName": "tv.danmaku.bili",
+        "skipIds": [
+            {
+                "id": "tv.danmaku.bili:id/count_down",
+                "activityName": "tv.danmaku.bili.MainActivityV2",
+                "file": "fileId=368caf09-c152-4f6b-b8dd-3ee4718df65d&nodeId=26",
+                "desc": "开屏广告"
+            }
+        ]
+    },
+    {
+        "appName": "CSDN",
+        "packageName": "net.csdn.csdnplus",
+        "skipIds": [
+            {
+                "id": "com.byted.pangle.m:id/tt_splash_skip_btn"
+            },
+            {
+                "id": "net.csdn.csdnplus:id/vlion_ad_closed",
+                "activityName": "net.csdn.csdnplus.activity.SplashActivity",
+                "file": "fileId=7d45a0ad-f0ce-4856-b38b-dd545bfadeb5&nodeId=17",
+                "desc": "开屏广告"
+            }
+        ],
+        "skipBounds": [
+            {
+                "bound": "1244,176,1384,316",
+                "activityName": "net.csdn.csdnplus.activity.SplashActivity",
+                "file": "fileId=e2c456c9-2db5-4ff9-9f79-f42acf557358&nodeId=13",
+                "desc": "1440x3200分辨率下圆形开屏广告按钮"
+            }
+        ]
+    },
+    {
+        "appName": "菜鸟",
+        "packageName": "com.cainiao.wireless",
+        "skipIds": [
+            {
+                "id": "com.cainiao.wireless:id/homesplash_close_fullscreen",
+                "activityName": "com.cainiao.wireless.homepage.view.activity.AdsActivity",
+                "file": "fileId=5656e116-5a93-44da-8687-1a1dec170984&nodeId=11",
+                "desc": "开屏广告"
+            },
+            {
+                "id": "com.cainiao.wireless:id/tt_splash_skip_btn"
+            }
+        ]
+    },
+    {
+        "appName": "豆瓣",
+        "packageName": "com.douban.frodo",
+        "skipIds": [
+            {
+                "id": "com.douban.frodo:id/ad_mark",
+                "activityName": "com.douban.frodo.activity.SplashActivity",
+                "file": "fileId=cfe9660a-1d45-4904-a8a7-8d846faa1a49&nodeId=14",
+                "desc": "1440x3200分辨率下无法选中的跳过按钮",
+                "click": "1280,180"
+            }
+        ]
+    },
+    {
+        "appName": "知乎",
+        "packageName": "com.zhihu.android",
+        "skipIds": [
+            {
+                "id": "com.zhihu.android:id/btn_skip",
+                "activityName": "com.zhihu.android.app.ui.activity.LauncherActivity",
+                "file": "fileId=812b304e-63fd-42da-b200-7497a2e635c4&nodeId=21",
+                "desc": "开屏广告"
+            }
+        ]
+    },
+    {
+        "appName": "帆书",
+        "packageName": "io.dushu.fandengreader",
+        "skipIds": [
+            {
+                "id": "io.dushu.fandengreader:id/layout_skip",
+                "activityName": "io.dushu.fandengreader.ad.LoadingAdActivity",
+                "file": "fileId=88ad5f6b-e65b-4424-be8e-ab57e0eb613b&nodeId=9",
+                "desc": "开屏广告"
+            }
+        ]
+    },
+    {
+        "appName": "酷安",
+        "packageName": "com.coolapk.market",
+        "skipBounds": [
+            {
+                "bound": "1244,176,1384,316",
+                "activityName": "com.coolapk.market.view.main.MainActivity",
+                "file": "fileId=92e729ea-dd19-4384-93af-ec7581f306cf&nodeId=66",
+                "desc": "1440x3200分辨率下圆形开屏广告按钮"
+            }
+        ],
+        "skipIds": [
+            {
+                "id": "com.byted.pangle.m:id/tt_splash_skip_btn"
+            }
+        ]
+    },
+    {
+        "appName": "腾讯微云",
+        "packageName": "com.qq.qcloud",
+        "skipBounds": [
+            {
+                "bound": "1223,177,1384,289",
+                "activityName": "com.qq.qcloud.activity.WeiyunRootActivity",
+                "file": "fileId=a310356a-4841-40fd-8a4f-314e77318230&nodeId=10",
+                "desc": "1440x3200分辨率下开屏广告"
+            }
+        ],
+        "skipIds": [
+            {
+                "id": "com.qq.qcloud:id/gdt_ad_text"
+            }
+        ]
+    },
+    {
+        "appName": "汽水音乐",
+        "packageName": "com.luna.music",
+        "skipBounds": [
+            {
+                "bound": "1244,176,1384,316",
+                "activityName": "com.luna.biz.ad.view.container.AdActivity",
+                "file": "fileId=ab69a19e-56e8-4983-9656-cdbab1b09682&nodeId=13",
+                "desc": "1440x3200分辨率下开屏广告"
+            }
+        ]
+    },
+    {
+        "appName": "铁路12306",
+        "packageName": "com.MobileTicket",
+        "skipIds": [
+            {
+                "id": "com.MobileTicket:id/tv_skip",
+                "activityName": "com.MobileTicket.ui.dialog.SplashAdDialog",
+                "file": "fileId=b8592c72-1a8a-42ea-8022-2ba15bc83444&nodeId=9",
+                "desc": "开屏广告"
+            }
+        ]
+    },
+    {
+        "appName": "前程无忧51Job",
+        "packageName": "com.job.android",
+        "skipIds": [
+            {
+                "id": "com.job.android:id/skipBtn",
+                "activityName": "com.job.android.pages.launcher.LauncherActivity",
+                "file": "fileId=ee283a25-cbbf-43b0-84dd-aaf9ccf24c83&nodeId=10",
+                "desc": "开屏广告"
+            }
+        ]
+    },
+    {
+        "appName": "爱奇艺",
+        "packageName": "com.qiyi.video",
+        "skipTexts": [
+            {
+                "text": "关闭"
+            }
+        ]
+    },
+    {
+        "appName": "爱奇艺极速版",
+        "packageName": "com.qiyi.video.lite",
+        "skipTexts": [
+            {
+                "text": "关闭"
+            }
+        ]
+    },
+    {
+        "appName": "CCD复古胶片相机",
+        "packageName": "com.tetlbm.rhcnq",
+        "skipBounds": [
+            {
+                "bound": "912,144,1032,264"
+            }
+        ]
+    },
+    {
+        "appName": "小度",
+        "packageName": "com.baidu.duer.superapp",
+        "skipIds": [
+            {
+                "id": "com.byted.pangle:id/tt_splash_skip_btn"
+            }
+        ]
+    },
+    {
+        "appName": "VIVO 应用商店",
+        "packageName": "com.bbk.appstore",
+        "skipTexts": [
+            {
+                "text": "进入首页",
+                "length": 5
+            }
+        ],
+        "skipIds": [
+            {
+                "id": "com.bbk.appstore:id/vbutton_title"
+            }
+        ]
+    },
+    {
+        "appName": "民生银行",
+        "packageName": "cn.com.cmbc.newmbank",
+        "skipIds": [
+            {
+                "id": "cn.com.cmbc.newmbank:id/view_count_down"
+            }
+        ]
+    },
+    {
+        "appName": "虎扑",
+        "packageName": "com.hupu.games",
+        "skipIds": [
+            {
+                "id": "com.byted.pangle:id/tt_splash_skip_btn"
+            },
+            {
+                "id": "com.hupu.games:id/tv_time"
+            }
+        ]
+    },
+    {
+        "appName": "华为时钟",
+        "packageName": "com.android.deskclock",
+        "skipTexts": [
+            {
+                "length": 0,
+                "text": "跳过"
+            }
+        ]
+    },
+    {
+        "appName": "小米音乐",
+        "packageName": "com.miui.player",
+        "skipTexts": [
+            {
+                "text": "跳过",
+                "length": 4
+            }
+        ]
+    },
+    {
+        "appName": "华尔街见闻",
+        "packageName": "com.wallstreetcn.news",
+        "skipIds": [
+            {
+                "id": "com.wallstreetcn.news:id/iv_jump"
+            }
+        ]
+    },
+    {
+        "appName": "荣耀自带时钟",
+        "packageName": "com.hihonor.deskclock",
+        "skipTexts": [
+            {
+                "length": 0,
+                "text": "跳过"
+            }
+        ]
+    },
+    {
+        "appName": "今日头条",
+        "packageName": "com.ss.android.article.news",
+        "skipTexts": [
+            {
+                "text": "跳过",
+                "length": 4
+            }
+        ]
+    },
+    {
+        "appName": "嘀嗒出行",
+        "packageName": "com.didapinche.booking",
+        "skipTexts": [
+            {
+                "text": "跳过",
+                "length": 2
+            }
+        ]
+    },
+    {
+        "appName": "大麦",
+        "packageName": "cn.damai",
+        "skipIds": [
+            {
+                "id": "cn.damai:id/homepage_advert_pb"
+            }
+        ]
+    },
+    {
+        "appName": "生日助手",
+        "packageName": "cn.sleepycoder.birthday",
+        "skipIds": [
+            {
+                "id": "com.byted.pangle.m:id/tt_splash_skip_btn"
+            }
+        ]
+    }
+]

@@ -1,9 +1,5 @@
 # 可配置字段
 
-::: details 配置文件数据结构定义
-<<< @/../app/src/main/java/com/android/skip/dataclass/ConfigReadSchema.kt
-:::
-
 ## packageName `必填`
 
 ### skipTexts `可选`
@@ -76,9 +72,3 @@
       activityName: com.android.skip.ui.inspect.InspectActivity
       click: 123,456
 ```
-
-## 完整配置参考
-
-::: details 默认配置文件
-<<< @/../app/src/main/assets/skip_config_v3.yaml
-:::
