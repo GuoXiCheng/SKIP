@@ -99,6 +99,10 @@ export default defineConfig(
                 text: "布局检查功能",
                 link: "/advance/layout-inspect/intro",
               },
+              {
+                text: "使用方法",
+                link: "/advance/layout-inspect/usage",
+              },
             ],
           },
           {
@@ -109,8 +113,16 @@ export default defineConfig(
                 link: "/advance/custom-config/intro",
               },
               {
-                text: "可配置字段",
-                link: "/advance/custom-config/fields",
+                text: "可配置字段数据结构",
+                link: "/advance/custom-config/data-structure",
+              },
+              {
+                text: "可配置字段含义",
+                link: "/advance/custom-config/field-meaning",
+              },
+              {
+                text: "完整的配置参考",
+                link: "/advance/custom-config/full-reference",
               },
             ],
           },

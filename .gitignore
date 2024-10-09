@@ -4,7 +4,7 @@
 *.ap_
 *.aab
 *.json
-!/app/src/main/res/raw/*.json
+!app/src/main/assets/*.json
 # Files for the ART/Dalvik VM
 *.dex
 
