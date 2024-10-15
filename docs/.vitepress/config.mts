@@ -8,7 +8,10 @@ export default defineConfig(
     description: "SKIP APP Docs",
     base: "/",
     lastUpdated: true,
-    head: [["link", { rel: "icon", type: "image/x-icon", href: "/images/favicon.ico" }]],
+    head: [
+      ["link", { rel: "icon", type: "image/x-icon", href: "/images/favicon.ico" }],
+      ["script", { src: "/js/baidu-analytics.js", async: true }],
+    ],
     themeConfig: {
       logo: "/images/favicon.ico",
       outline: {
