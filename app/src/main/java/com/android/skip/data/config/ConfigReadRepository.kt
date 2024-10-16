@@ -70,7 +70,7 @@ class ConfigReadRepository @Inject constructor(
 
             val configReadSchemaList = gson.fromJson<List<ConfigReadSchema>>(customContent, type)
 
-            ConfigPostSchema(ConfigState.SUCCESS, md5(customContent), configReadSchemaList)
+            ConfigPostSchema(ConfigState.SUCCESS, md5(unicodeToChinese(customContent)), configReadSchemaList)
         } catch (e: Exception) {
             ConfigPostSchema(ConfigState.FAIL, getString(R.string.invalid_config), null)
         }
@@ -142,8 +142,17 @@ class ConfigReadRepository @Inject constructor(
 
     // #region MD5
     private fun md5(input: String): String {
-        val bytes = MessageDigest.getInstance("MD5").digest(input.toByteArray())
+        val bytes = MessageDigest.getInstance("MD5").digest(input.toByteArray(Charsets.UTF_8))
         return bytes.joinToString("") { "%02x".format(it) }
     }
     // #endregion MD5
+
+    private fun unicodeToChinese(unicodeStr: String): String {
+        val unicodeRegex = Regex("""\\u([0-9A-Fa-f]{4})""")
+
+        return unicodeRegex.replace(unicodeStr) { matchResult ->
+            val unicodeValue = matchResult.groupValues[1].toInt(16)
+            unicodeValue.toChar().toString()
+        }
+    }
 }
