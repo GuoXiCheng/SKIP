@@ -21,7 +21,13 @@ export default defineConfig(
         { text: "首页", link: "/" },
         { text: "指南", link: "/guide/intro/what-is-skip" },
         { text: "进阶", link: "/advance/layout-inspect/intro" },
-        { text: "布局检查", link: "/inspect/index", target: "_blank" },
+        {
+          text: "辅助功能",
+          items: [
+            { text: "布局检查", link: "/inspect/index", target: "_blank" },
+            // { text: "可视化配置", link: "/visual/index", target: "_blank" },
+          ],
+        },
       ],
       sidebar: {
         "/guide/": [
@@ -131,6 +137,8 @@ export default defineConfig(
           },
         ],
       },
+
+      socialLinks: [{ icon: "github", link: "https://github.com/GuoXiCheng/SKIP" }],
     },
   })
 );
