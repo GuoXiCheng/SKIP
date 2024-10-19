@@ -24,6 +24,7 @@ import com.android.skip.ui.components.FlatButton
 import com.android.skip.ui.components.ResourceIcon
 import com.android.skip.ui.components.RowContent
 import com.android.skip.ui.components.ScaffoldPage
+import com.android.skip.ui.components.expandMenuItems
 import com.android.skip.ui.components.notification.NotificationDialog
 import com.android.skip.ui.components.notification.NotificationDialogViewModel
 import com.android.skip.ui.settings.theme.SwitchThemeViewModel
@@ -94,6 +95,7 @@ class AliveActivity : AppCompatActivity() {
                                 putExtra("url", R.string.alive_function_intro_url)
                             }
                             startActivity(intent)
+                            expandMenuItems = false
                         })
                 })
             }

@@ -12,6 +12,7 @@ import com.android.skip.MyApp
 import com.android.skip.R
 import com.android.skip.ui.components.ResourceIcon
 import com.android.skip.ui.components.ScaffoldPage
+import com.android.skip.ui.components.expandMenuItems
 import com.android.skip.ui.settings.theme.SwitchThemeViewModel
 import com.android.skip.ui.theme.AppTheme
 import com.android.skip.ui.webview.WebViewActivity
@@ -46,6 +47,7 @@ class WhiteListActivity : AppCompatActivity() {
                                 putExtra("url", R.string.whitelist_function_intro_url)
                             }
                             startActivity(intent)
+                            expandMenuItems = false
                         })
                     ShowSystemButton(showSystemViewModel)
                 })
