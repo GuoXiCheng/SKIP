@@ -23,6 +23,7 @@ import com.android.skip.ui.components.FlatButton
 import com.android.skip.ui.components.ResourceIcon
 import com.android.skip.ui.components.RowContent
 import com.android.skip.ui.components.ScaffoldPage
+import com.android.skip.ui.components.expandMenuItems
 import com.android.skip.ui.settings.theme.SwitchThemeViewModel
 import com.android.skip.ui.theme.AppTheme
 import com.android.skip.ui.webview.WebViewActivity
@@ -70,6 +71,7 @@ class AboutActivity : AppCompatActivity() {
                                 putExtra("url", R.string.about_function_intro_url)
                             }
                             startActivity(intent)
+                            expandMenuItems = false
                         })
                 })
             }

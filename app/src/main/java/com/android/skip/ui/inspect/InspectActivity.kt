@@ -19,6 +19,7 @@ import com.android.skip.service.AccessibilityInspectViewModel
 import com.android.skip.service.InspectService
 import com.android.skip.ui.components.ResourceIcon
 import com.android.skip.ui.components.ScaffoldPage
+import com.android.skip.ui.components.expandMenuItems
 import com.android.skip.ui.components.notification.NotificationDialog
 import com.android.skip.ui.components.notification.NotificationDialogViewModel
 import com.android.skip.ui.inspect.record.InspectRecordButton
@@ -66,6 +67,7 @@ class InspectActivity : AppCompatActivity() {
                                 putExtra("url", R.string.inspect_function_intro_url)
                             }
                             startActivity(intent)
+                            expandMenuItems = false
                         })
                 })
             }

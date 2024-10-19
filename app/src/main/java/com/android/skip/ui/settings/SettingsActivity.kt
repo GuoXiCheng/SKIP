@@ -20,6 +20,7 @@ import com.android.skip.data.SyncWorker
 import com.android.skip.data.config.ConfigViewModel
 import com.android.skip.ui.components.ResourceIcon
 import com.android.skip.ui.components.ScaffoldPage
+import com.android.skip.ui.components.expandMenuItems
 import com.android.skip.ui.components.notification.NotificationDialog
 import com.android.skip.ui.components.notification.NotificationDialogViewModel
 import com.android.skip.ui.settings.custom.CustomButton
@@ -85,6 +86,7 @@ class SettingsActivity : AppCompatActivity() {
                                 putExtra("url", R.string.settings_function_intro_url)
                             }
                             startActivity(intent)
+                            expandMenuItems = false
                         })
                 })
             }

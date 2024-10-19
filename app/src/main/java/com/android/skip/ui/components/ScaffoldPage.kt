@@ -19,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.skip.R
 
+var expandMenuItems by mutableStateOf(false)
+
 @Composable
 fun ScaffoldPage(
     barTitle: Int,
@@ -35,7 +36,6 @@ fun ScaffoldPage(
     content: @Composable (PaddingValues) -> Unit,
     menuItems: (@Composable (ColumnScope.() -> Unit))? = null
 ) {
-    var expanded by remember { mutableStateOf(false) }
     Scaffold(topBar = {
         Row(
             modifier = Modifier
@@ -61,11 +61,11 @@ fun ScaffoldPage(
 
             menuItems?.let {
                 Row {
-                    IconButton(onClick = { expanded = true }) {
+                    IconButton(onClick = { expandMenuItems = true }) {
                         Icon(Icons.Default.MoreVert, contentDescription = null)
-                        DropdownMenu(expanded = expanded,
+                        DropdownMenu(expanded = expandMenuItems,
                             modifier = Modifier.background(MaterialTheme.colorScheme.background),
-                            onDismissRequest = { expanded = false }) {
+                            onDismissRequest = { expandMenuItems = false }) {
                             menuItems()
                         }
                     }
