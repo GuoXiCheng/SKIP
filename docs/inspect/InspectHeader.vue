@@ -3,7 +3,8 @@
     <el-upload v-model:file-list="fileList" accept=".zip" multiple :show-file-list="false" :auto-upload="false">
       <el-button v-loading.fullscreen.lock="fullscreenLoading">批量上传</el-button>
     </el-upload>
-    <el-button @click="emits('onDelete')">批量删除</el-button>
+
+    <el-button @click="emits('onDelete')" class="ml-3">批量删除</el-button>
     <el-button @click="handleGetExample">获取示例</el-button>
   </div>
 </template>
