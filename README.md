@@ -38,7 +38,7 @@ SKIP 是一款免费开源的安卓应用，旨在利用安卓无障碍服务帮
   <tbody>
     <tr>
       <td>默认订阅</td>
-      <td><a href="https://skip.guoxicheng.top/skip_config_v3.yaml">链接地址</a></td>
+      <td><code>https://skip.guoxicheng.top/skip_config_v3.yaml</code></td>
       <td><a href="https://github.com/GuoXiCheng">GuoXiCheng</a></td>
       <td>
         <a href="https://github.com/GuoXiCheng/SKIP/blob/main/app/src/main/assets/skip_config_v3.yaml"
