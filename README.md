@@ -23,3 +23,31 @@ SKIP 是一款免费开源的安卓应用，旨在利用安卓无障碍服务帮
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=GuoXiCheng/SKIP&type=Date)](https://star-history.com/#GuoXiCheng/SKIP&Date)
+
+## 自定义规则订阅
+
+<table>
+  <thead>
+    <tr>
+      <th>规则描述</th>
+      <th>订阅链接</th>
+      <th>作者</th>
+      <th>源码地址</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>默认订阅</td>
+      <td><a href="https://skip.guoxicheng.top/skip_config_v3.yaml">链接地址</a></td>
+      <td><a href="https://github.com/GuoXiCheng">GuoXiCheng</a></td>
+      <td>
+        <a href="https://github.com/GuoXiCheng/SKIP/blob/main/app/src/main/assets/skip_config_v3.yaml"
+          >skip_config_v3</a
+        >
+      </td>
+    </tr>
+    <!-- 添加你的订阅 -->
+  </tbody>
+</table>
+
+> 添加自定义订阅规则订阅请修改[README.md](https://github.com/GuoXiCheng/SKIP/edit/main/README.md)提交 PR。

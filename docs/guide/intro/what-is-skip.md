@@ -7,3 +7,5 @@ SKIP 是一款免费开源的安卓应用，旨在利用安卓无障碍服务帮
 ## 主界面预览
 
 ![主界面预览](/images/main-interface-light.png)
+
+<!--@include: ../../../README.md{27,}-->
