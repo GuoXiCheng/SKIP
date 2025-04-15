@@ -49,6 +49,8 @@ class AccessibilityInspectRepository @Inject constructor() {
     }
 
     fun startAccessibilityInspect() {
+        if (_isStartCaptureScreen && _isStartCaptureNode) return
+
         val fileDir = File(filepath)
         if (!fileDir.exists()) {
             fileDir.mkdir()

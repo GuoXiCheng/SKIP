@@ -6,11 +6,13 @@
 
     <string name="inspect">布局检查</string>
     <string name="inspect_start_title">是否启用布局检查</string>
-    <string name="inspect_start_subtitle">启用后按下「音量-」按键执行布局检查</string>
+    <string name="inspect_start_subtitle">启用后点按「悬浮窗/音量-」执行布局检查</string>
     <string name="inspect_record_title">布局检查记录</string>
     <string name="inspect_record_subtitle">当前存在 %1$s 条记录</string>
     <string name="inspect_function_intro">功能介绍</string>
     <string name="inspect_function_intro_url">https://skip.guoxicheng.top/advance/layout-inspect/intro</string>
+    <string name="inspect_floating_window_title">是否启用悬浮窗</string>
+    <string name="inspect_floating_window_subtitle">通过悬浮窗执行布局检查</string>
 
 
     <string name="alive">应用保活</string>
@@ -71,6 +73,7 @@
     <string name="about_function_intro_url">https://skip.guoxicheng.top/guide/about/intro</string>
     <string name="about_discover_latest">发现新版本</string>
 
+    <string name="toast_start_inspect">请先开启布局检查服务</string>
     <string name="toast_start_accessibility_first">请先开启无障碍服务</string>
     <string name="toast_save_success">保存成功</string>
     <string name="toast_save_fail">保存失败</string>

@@ -3,7 +3,9 @@ package com.android.skip.ui.inspect
 import android.app.Activity
 import android.content.Intent
 import android.media.projection.MediaProjectionManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -16,12 +18,15 @@ import androidx.core.content.ContextCompat
 import com.android.skip.MyApp
 import com.android.skip.R
 import com.android.skip.service.AccessibilityInspectViewModel
+import com.android.skip.service.FloatingWindowService
 import com.android.skip.service.InspectService
 import com.android.skip.ui.components.ResourceIcon
 import com.android.skip.ui.components.ScaffoldPage
 import com.android.skip.ui.components.expandMenuItems
 import com.android.skip.ui.components.notification.NotificationDialog
 import com.android.skip.ui.components.notification.NotificationDialogViewModel
+import com.android.skip.ui.inspect.floating.FloatingWindowButton
+import com.android.skip.ui.inspect.floating.FloatingWindowViewModel
 import com.android.skip.ui.inspect.record.InspectRecordButton
 import com.android.skip.ui.inspect.record.InspectRecordViewModel
 import com.android.skip.ui.inspect.start.StartInspectButton
@@ -45,11 +50,34 @@ class InspectActivity : AppCompatActivity() {
 
     private val switchThemeViewModel by viewModels<SwitchThemeViewModel>()
 
+    private val floatingWindowViewModel by viewModels<FloatingWindowViewModel>()
+
+    private val requestOverlayPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (Settings.canDrawOverlays(this)) {
+            startService(Intent(this, FloatingWindowService::class.java))
+        }
+    }
+
+    private fun requestOverlayPermission() {
+        if (!Settings.canDrawOverlays(this)) {
+            val intent = Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:$packageName")
+            )
+            requestOverlayPermissionLauncher.launch(intent)
+        } else {
+            startService(Intent(this, FloatingWindowService::class.java))
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme(switchThemeViewModel) {
                 ScaffoldPage(R.string.inspect, { finish() }, {
+                    FloatingWindowButton(floatingWindowViewModel)
                     StartInspectButton(startInspectViewModel)
                     InspectRecordButton(inspectRecordViewModel) {
                         startActivity(Intent(MyApp.context, InspectRecordActivity::class.java))
@@ -114,12 +142,30 @@ class InspectActivity : AppCompatActivity() {
         accessibilityInspectViewModel.accessibilityInspectSuccess.observe(this) {
             inspectRecordViewModel.changeZipFileCount()
         }
+
+        floatingWindowViewModel.floatingWindowState.observe(this) { value ->
+            when (value) {
+                true -> {
+                    if (!ServiceUtils.isServiceRunning(FloatingWindowService::class.java)) {
+                        requestOverlayPermission()
+                    }
+                }
+                false -> {
+                    if (ServiceUtils.isServiceRunning(FloatingWindowService::class.java)) {
+                        ServiceUtils.stopService(FloatingWindowService::class.java)
+                    }
+                }
+            }
+        }
     }
 
     override fun onResume() {
         super.onResume()
         if (!ServiceUtils.isServiceRunning(InspectService::class.java)) {
             startInspectViewModel.changeInspectState(false)
+        }
+        if (!ServiceUtils.isServiceRunning(FloatingWindowService::class.java)) {
+            floatingWindowViewModel.changeFloatingWindowState(false)
         }
     }
 }

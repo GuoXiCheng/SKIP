@@ -348,5 +348,17 @@
                 "id": "com.byted.pangle.m:id/tt_splash_skip_btn"
             }
         ]
+    },
+    {
+        "appName": "人人视频",
+        "packageName": "com.example.pptv",
+        "skipIds": [
+            {
+                "id": "com.example.pptv:id/iv_close",
+                "activityName": "com.pptv.rrtvtrunk.main.presentation.MainActivity",
+                "file": "fileId=0f84d874-ada4-4b90-9829-a99f43950071&nodeId=5",
+                "desc": "开屏首页弹窗"
+            }
+        ]
     }
 ]
