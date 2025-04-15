@@ -1,0 +1,8 @@
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="64dp"
+    android:layout_height="64dp"
+    android:src="@drawable/photo_camera"
+    android:tint="#F44336"
+    android:clickable="true"
+    android:focusable="true"
+    android:scaleType="fitCenter" />
