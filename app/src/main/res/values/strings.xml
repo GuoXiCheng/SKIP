@@ -122,4 +122,5 @@
 
     <string name="loading">加载中…</string>
     <string name="checking">检查中…</string>
+    <string name="search_hint">搜索应用</string>
 </resources>

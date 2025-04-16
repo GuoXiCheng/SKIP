@@ -14,4 +14,8 @@ class ShowSystemViewModel @Inject constructor():ViewModel() {
     fun changeIsShowSystem(isShow: Boolean) {
         _isShowSystem.postValue(isShow)
     }
+
+    fun getIsShowSystem(): Boolean {
+        return _isShowSystem.value ?: false
+    }
 }
