@@ -5,9 +5,14 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.android.skip.MyApp
 import com.android.skip.R
 import com.android.skip.ui.components.ResourceIcon
@@ -18,6 +23,8 @@ import com.android.skip.ui.theme.AppTheme
 import com.android.skip.ui.webview.WebViewActivity
 import com.android.skip.ui.whitelist.list.AppListColumn
 import com.android.skip.ui.whitelist.list.AppListViewModel
+import com.android.skip.ui.whitelist.search.SearchTextField
+import com.android.skip.ui.whitelist.search.SearchViewModel
 import com.android.skip.ui.whitelist.system.ShowSystemButton
 import com.android.skip.ui.whitelist.system.ShowSystemViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,12 +39,21 @@ class WhiteListActivity : AppCompatActivity() {
 
     private val switchThemeViewModel by viewModels<SwitchThemeViewModel>()
 
+    private val searchViewModel by viewModels<SearchViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme(switchThemeViewModel) {
                 ScaffoldPage(R.string.whitelist, { finish() }, {
-                    AppListColumn(appListViewModel, whiteListViewModel)
+                    // 添加搜索栏和应用列表
+                    Column {
+                        // 搜索栏
+                        SearchTextField(searchViewModel)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        // 应用列表
+                        AppListColumn(appListViewModel, whiteListViewModel)
+                    }
                 }, {
                     DropdownMenuItem(
                         leadingIcon = { ResourceIcon(iconResource = R.drawable.help) },
@@ -55,7 +71,11 @@ class WhiteListActivity : AppCompatActivity() {
         }
 
         showSystemViewModel.isShowSystem.observe(this) {
-            appListViewModel.reloadData(it)
+            appListViewModel.reloadData(it, searchViewModel.getQuery())
+        }
+
+        searchViewModel.query.observe(this) {
+            appListViewModel.reloadData(showSystemViewModel.getIsShowSystem(), it)
         }
     }
 }

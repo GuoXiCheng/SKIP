@@ -7,7 +7,8 @@ import javax.inject.Inject
 
 class AppListPagingSource @Inject constructor(
     private val appListRepository: AppListRepository,
-    private val isShowSystem: Boolean
+    private val isShowSystem: Boolean,
+    private val query: String
 ) : PagingSource<Int, AppListItem>() {
     override fun getRefreshKey(state: PagingState<Int, AppListItem>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
@@ -20,7 +21,7 @@ class AppListPagingSource @Inject constructor(
         val currentPage = params.key ?: 0
         val pageSize = params.loadSize
 
-        val pageData = appListRepository.getData(currentPage, pageSize, isShowSystem)
+        val pageData = appListRepository.getData(currentPage, pageSize, isShowSystem, query)
 
         return LoadResult.Page(
             data = pageData,

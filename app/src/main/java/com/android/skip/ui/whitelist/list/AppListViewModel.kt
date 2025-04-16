@@ -22,19 +22,19 @@ class AppListViewModel @Inject constructor(
 
     private var currentPagingSource: AppListPagingSource? = null
 
-    fun reloadData(isShowSystem: Boolean) {
+    fun reloadData(isShowSystem: Boolean, query: String = "") {
         currentPagingSource?.invalidate()
-        _pagingData.value = createPager(isShowSystem).flow.cachedIn(viewModelScope)
+        _pagingData.value = createPager(isShowSystem, query).flow.cachedIn(viewModelScope)
     }
 
-    private fun createPager(isShowSystem: Boolean): Pager<Int, AppListItem> {
+    private fun createPager(isShowSystem: Boolean, query: String = ""): Pager<Int, AppListItem> {
         return Pager(
             config = PagingConfig(
                 pageSize = 20,
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {
-                val newPagingSource = AppListPagingSource(appListRepository, isShowSystem)
+                val newPagingSource = AppListPagingSource(appListRepository, isShowSystem, query)
                 currentPagingSource = newPagingSource
                 newPagingSource
             }

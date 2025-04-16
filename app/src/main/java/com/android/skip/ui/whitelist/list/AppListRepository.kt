@@ -16,19 +16,28 @@ class AppListRepository @Inject constructor() {
         MyApp.context.packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
     }
 
-    fun getData(currentPage: Int, pageSize: Int, isShowSystem: Boolean): List<AppListItem> {
+    fun getData(currentPage: Int, pageSize: Int, isShowSystem: Boolean, query: String = ""): List<AppListItem> {
         try {
             val pkgManager = MyApp.context.packageManager
 
+            // 是否显示系统应用的过滤
             val apps = if (isShowSystem) {
                 appInfos
             } else {
                 appInfos.filter { (it.flags and ApplicationInfo.FLAG_SYSTEM) == 0 }
             }
-            val fromIndex = currentPage * pageSize
-            val toIndex = minOf(fromIndex + pageSize, apps.size)
 
-            return apps.subList(fromIndex, toIndex)
+            // 根据关键字进行过滤
+            val filteredApps = if (query.isNotEmpty()) {
+                apps.filter { it.loadLabel(pkgManager).toString().contains(query, ignoreCase = true) }
+            } else {
+                apps
+            }
+
+            val fromIndex = currentPage * pageSize
+            val toIndex = minOf(fromIndex + pageSize, filteredApps.size)
+
+            return filteredApps.subList(fromIndex, toIndex)
                 .map {
                     AppListItem(
                         it.loadLabel(pkgManager).toString(),
