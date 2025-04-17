@@ -23,18 +23,28 @@ class ApkVersionRepository @Inject constructor(
 
     private suspend fun changeVersionState(versionPostState: VersionPostSchema) =
         withContext(Dispatchers.IO) {
-            _versionPostState.postValue(versionPostState)
-            val version1 = myApiNetwork.fetchLatestVersion()
             val version2 = AppUtils.getAppVersionName()
-            if (isVersionGreater(version1, version2)) {
-                _versionPostState.postValue(
-                    VersionPostSchema(
-                        VersionState.DISCOVER_LATEST,
-                        getString(R.string.about_discover_latest),
-                        version1
+            try {
+                _versionPostState.postValue(versionPostState)
+                val version1 = myApiNetwork.fetchLatestVersion()
+                if (isVersionGreater(version1, version2)) {
+                    _versionPostState.postValue(
+                        VersionPostSchema(
+                            VersionState.DISCOVER_LATEST,
+                            getString(R.string.about_discover_latest),
+                            version1
+                        )
                     )
-                )
-            } else {
+                } else {
+                    _versionPostState.postValue(
+                        VersionPostSchema(
+                            VersionState.CURRENT_LATEST,
+                            version2,
+                            version2
+                        )
+                    )
+                }
+            } catch (e: Exception) {
                 _versionPostState.postValue(
                     VersionPostSchema(
                         VersionState.CURRENT_LATEST,
