@@ -31,6 +31,7 @@ class ConfigViewModel @Inject constructor(
             if (configMap != null) {
                 configLoadRepository.loadConfig(configMap)
             } else {
+                configLoadRepository.loadConfig(mutableMapOf())
                 changeConfigPostState(ConfigPostSchema(ConfigState.FAIL, getString(R.string.invalid_config)))
             }
         }
