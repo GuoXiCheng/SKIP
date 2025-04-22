@@ -102,7 +102,7 @@ class ConfigLoadRepository @Inject constructor() {
 
                 val targetNode = if (foundNode != null) {
                     if (skipText.length != null) {
-                        if (foundNode.text.length <= skipText.length) {
+                        if (foundNode.text != null && foundNode.text.length <= skipText.length) {
                             foundNode
                         } else {
                             null
