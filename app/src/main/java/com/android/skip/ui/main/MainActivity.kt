@@ -1,5 +1,7 @@
 package com.android.skip.ui.main
 
+import android.app.ActivityManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
@@ -36,6 +38,7 @@ import com.android.skip.ui.main.start.StartButton
 import com.android.skip.ui.main.tutorial.TutorialDialog
 import com.android.skip.ui.main.tutorial.TutorialViewModel
 import com.android.skip.ui.settings.SettingsActivity
+import com.android.skip.ui.settings.recent.RecentViewModel
 import com.android.skip.ui.settings.theme.SwitchThemeViewModel
 import com.android.skip.ui.theme.AppTheme
 import com.android.skip.ui.webview.WebViewActivity
@@ -56,6 +59,8 @@ class MainActivity : AppCompatActivity() {
     private val tutorialViewModel by viewModels<TutorialViewModel>()
 
     private val disclaimerViewModel by viewModels<DisclaimerViewModel>()
+
+    private val recentViewModel by viewModels<RecentViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -123,6 +128,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         apkVersionViewModel.checkVersion()
+
+        recentViewModel.excludeFromRecent.observe(this) { exclude ->
+            (getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager).let { manager ->
+                manager.appTasks.forEach { task ->
+                    task?.setExcludeFromRecents(exclude)
+                }
+            }
+        }
     }
 
     override fun onResume() {
