@@ -98,14 +98,6 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-        recentViewModel.excludeFromRecent.observe(this) { exclude ->
-            (getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager).let { manager ->
-                manager.appTasks.forEach { task ->
-                    task?.setExcludeFromRecents(exclude)
-                }
-            }
-        }
-
         val periodicWorkRequest =
             PeriodicWorkRequestBuilder<SyncWorker>(12, TimeUnit.HOURS).build()
         val workManager = WorkManager.getInstance(this)
