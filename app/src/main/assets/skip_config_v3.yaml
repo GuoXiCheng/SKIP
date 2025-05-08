@@ -57,6 +57,11 @@
       file: fileId=5656e116-5a93-44da-8687-1a1dec170984&nodeId=11
       desc: 开屏广告
     - id: com.cainiao.wireless:id/tt_splash_skip_btn
+  skipBounds:
+    - bound: 1244,176,1384,316
+      activityName: com.cainiao.wireless.homepage.view.activity.AdsActivity
+      file: fileId=dba416c1-f18d-45c4-8042-16e2c15bead5&nodeId=18
+      desc: 圆形开屏广告按钮
 
 - appName: 豆瓣
   packageName: com.douban.frodo
