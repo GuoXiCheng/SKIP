@@ -99,16 +99,24 @@ class MyAccessibilityService : AccessibilityService() {
             if (!whiteListRepository.isAppInWhiteList(rootNodePackageName) && (isStrict || scanTimes < 50)) {
                 val that = this
                 serviceScope.launch {
-                    val targetRect =
-                        configLoadRepository.getTargetRect(rootNode, appActivityName, isStrict)
-                    targetRect?.let { rect ->
+                    val targetClick =
+                        configLoadRepository.getTargetClick(rootNode, appActivityName, isStrict)
+                    targetClick?.let { target ->
+                        val rect = target.rect
                         val rectStr = rect.toString()
                         if (!clickedRect.contains(rectStr)) {
                             withContext(Dispatchers.Main) {
-                                click(that, rect, rootNodePackageName, rectStr)
+                                val clickedByNode = target.node?.let { node ->
+                                    clickNodeOrParent(node)
+                                } ?: false
+                                if (!clickedByNode) {
+                                    click(that, rect, rootNodePackageName, rectStr)
+                                }
                             }
                             clickedRect.add(rectStr)
-                            LogUtils.d("clicked: packageName is $rootNodePackageName rect is $rectStr")
+                            LogUtils.d(
+                                "clicked: packageName is $rootNodePackageName rect is $rectStr"
+                            )
                         }
                     }
                 }
@@ -170,6 +178,20 @@ class MyAccessibilityService : AccessibilityService() {
             },
             null
         )
+    }
+
+    private fun clickNodeOrParent(node: AccessibilityNodeInfo): Boolean {
+        var currentNode: AccessibilityNodeInfo? = node
+        while (currentNode != null) {
+            if (currentNode.isClickable && currentNode.performAction(
+                    AccessibilityNodeInfo.ACTION_CLICK
+                )
+            ) {
+                return true
+            }
+            currentNode = currentNode.parent
+        }
+        return false
     }
 
     override fun onInterrupt() {

@@ -18,6 +18,11 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
 
+data class TargetClick(
+    val rect: Rect,
+    val node: AccessibilityNodeInfo? = null
+)
+
 @Singleton
 class ConfigLoadRepository @Inject constructor() {
     private var configLoadSchemaMap: Map<String, ConfigLoadSchema> = mutableMapOf()
@@ -26,9 +31,9 @@ class ConfigLoadRepository @Inject constructor() {
         configLoadSchemaMap = config
     }
 
-    suspend fun getTargetRect(
+    suspend fun getTargetClick(
         rootNode: AccessibilityNodeInfo, activityName: String?, isStrict: Boolean?
-    ): Rect? {
+    ): TargetClick? {
         val targetAppPackage = rootNode.packageName.toString()
         var targetConfig = configLoadSchemaMap[targetAppPackage]
 
@@ -90,8 +95,8 @@ class ConfigLoadRepository @Inject constructor() {
         rootNode: AccessibilityNodeInfo,
         skipTexts: List<LoadSkipText>?,
         activityName: String?
-    ): List<Deferred<Rect?>> {
-        val deferredResults = mutableListOf<Deferred<Rect?>>()
+    ): List<Deferred<TargetClick?>> {
+        val deferredResults = mutableListOf<Deferred<TargetClick?>>()
         if (skipTexts.isNullOrEmpty()) return deferredResults
 
         for (skipText in skipTexts) {
@@ -116,11 +121,11 @@ class ConfigLoadRepository @Inject constructor() {
 
                 if (targetNode != null) {
                     if (skipText.click != null) {
-                        skipText.click
+                        TargetClick(skipText.click)
                     } else {
                         val rect = Rect()
                         targetNode.getBoundsInScreen(rect)
-                        rect
+                        TargetClick(rect, targetNode)
                     }
                 } else {
                     null
@@ -135,8 +140,8 @@ class ConfigLoadRepository @Inject constructor() {
         rootNode: AccessibilityNodeInfo,
         skipIds: List<LoadSkipId>?,
         activityName: String?
-    ): List<Deferred<Rect?>> {
-        val deferredResults = mutableListOf<Deferred<Rect?>>()
+    ): List<Deferred<TargetClick?>> {
+        val deferredResults = mutableListOf<Deferred<TargetClick?>>()
         if (skipIds.isNullOrEmpty()) return deferredResults
 
         for (skipId in skipIds) {
@@ -146,11 +151,11 @@ class ConfigLoadRepository @Inject constructor() {
 
                 if (foundNode != null) {
                     if (skipId.click != null) {
-                        skipId.click
+                        TargetClick(skipId.click)
                     } else {
                         val rect = Rect()
                         foundNode.getBoundsInScreen(rect)
-                        rect
+                        TargetClick(rect, foundNode)
                     }
                 } else {
                     null
@@ -165,17 +170,25 @@ class ConfigLoadRepository @Inject constructor() {
         rootNode: AccessibilityNodeInfo,
         skipBounds: List<LoadSkipBound>?,
         activityName: String?
-    ): List<Deferred<Rect?>> {
-        val deferredResults = mutableListOf<Deferred<Rect?>>()
+    ): List<Deferred<TargetClick?>> {
+        val deferredResults = mutableListOf<Deferred<TargetClick?>>()
         if (skipBounds.isNullOrEmpty()) return deferredResults
 
         for (skipBound in skipBounds) {
             if (skipBound.activityName != null && skipBound.activityName != activityName) continue
 
             deferredResults.add(scope.async {
-                val foundRect = traverseNode(rootNode, skipBound.bound)
+                val foundNode = traverseNode(rootNode, skipBound.bound)
 
-                skipBound.click ?: foundRect
+                if (skipBound.click != null) {
+                    TargetClick(skipBound.click)
+                } else {
+                    foundNode?.let { node ->
+                        val rect = Rect()
+                        node.getBoundsInScreen(rect)
+                        TargetClick(rect, node)
+                    }
+                }
             })
         }
         return deferredResults
@@ -183,7 +196,7 @@ class ConfigLoadRepository @Inject constructor() {
 
     private fun traverseNode(
         rootNode: AccessibilityNodeInfo, targetRect: Rect
-    ): Rect? {
+    ): AccessibilityNodeInfo? {
         val queue: MutableList<AccessibilityNodeInfo> = mutableListOf(rootNode)
 
         while (queue.isNotEmpty()) {
@@ -194,7 +207,7 @@ class ConfigLoadRepository @Inject constructor() {
                     nodeRect.right - targetRect.right
                 ) <= 1 && abs(nodeRect.bottom - targetRect.bottom) <= 1
             ) {
-                return nodeRect
+                return node
             }
 
             for (i in 0 until node.childCount) {
