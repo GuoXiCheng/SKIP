@@ -227,3 +227,11 @@
       activityName: com.pptv.rrtvtrunk.main.presentation.MainActivity
       file: fileId=0f84d874-ada4-4b90-9829-a99f43950071&nodeId=5
       desc: 开屏首页弹窗
+
+- appName: Suki
+  packageName: com.masseffect.suki
+  skipBounds:
+    - bound: 45,2105,157,2217
+      activityName: com.masseffect.suki.MainActivity
+      file: fileId=1a4eb428-e396-47a3-bd21-45fa2641dce2&nodeId=16
+      desc: 1080x2400分辨率下左下角圆形跳过按钮
