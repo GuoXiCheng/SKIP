@@ -56,4 +56,10 @@ SKIP 是一款免费开源的安卓应用，旨在利用安卓无障碍服务帮
   </tbody>
 </table>
 
-> 添加自定义订阅规则订阅请修改[README.md](https://github.com/GuoXiCheng/SKIP/edit/main/README.md)提交 PR。
+> > - 发布你自己的规则订阅源：在本表格中添加一行（订阅链接 / 作者 / 源码地址），然后提交 PR。
+> >
+> > - 为某个 App 补充跳过规则：在 [app/src/main/assets/skip_config_v3.yaml](https://github.com/GuoXiCheng/SKIP/blob/main/app/src/main/assets/skip_config_v3.yaml)
+> >   末尾追加一条规则，然后提交 PR。若同时更新同目录的 skip_config_v3.json（文档用的 JSON 镜像）更佳；
+> >   建议把「布局检查」导出的抓取包一并放入 capture/ 目录，供他人复核。
+> >
+> > > 注意：skipBounds 使用绝对像素坐标，仅对抓取时的设备分辨率有效，添加规则时请在 desc 中注明分辨率。
